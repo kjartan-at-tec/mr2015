@@ -1,0 +1,24 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{5}
+\pgfmathsetmacro\wswidth{0.6*\circuitwidth}
+\pgfmathsetmacro\wsheight{0.5*\circuitheight}
+
+\begin{circuitikz}[scale=1]
+  \node[coordinate] (wsleft) at ($(\circuitwidth, \wsheight) - (\wswidth, 0)$) {};
+  \node[coordinate] (wsright) at ($(\circuitwidth, \wsheight) + (\wswidth, 0)$) {};
+
+  \draw (0,0) to[american voltage source, label=12V] (0, \circuitheight) 
+  to node[above] {$\longrightarrow \quad i$} ++(\circuitwidth,0);
+  \draw (\circuitwidth, \circuitheight) to[R=$R_1$] (wsright) node[right] {B};
+  \draw (\circuitwidth, \circuitheight) to[R=$R_1$] (wsleft) node[left] {A};
+  \draw  (wsleft) to[R=$R_1$]  (\circuitwidth, 0);
+  \draw  (wsright) to[R=$R_1$]  (\circuitwidth, 0) to (0,0);
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,175 @@
+\documentclass[letter, 10pt]{scrartcl}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage[margin=23mm]{geometry}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{colortbl}
+
+\usepackage{hyperref}
+\usepackage[spanish]{babel}
+\usepackage{enumitem}
+
+%\usepackage{pdflscape}
+
+
+\newif\ifGroupOne
+
+%\GroupOnetrue
+\GroupOnefalse
+
+\newcommand{\AW}[1]{Å\&{}W #1.}
+
+
+\begin{document}
+
+\definecolor{tecblue}{RGB}{0,57,166}
+\definecolor{teclight}{RGB}{0,82,255}
+
+\begin{tabularx}{\linewidth}{Xc}
+\includegraphics[width=\linewidth]{tec-logo.png}
+&
+\begin{minipage}[b]{0.6\linewidth}
+\centering
+Instituto Tecnol\'ogico y de Estudios Superiores de Monterrey\\
+Campus Estado de M\'exico\\
+Escuela de Ingeniería y Ciencias\\
+Departamento de Mecatr\'onica
+\end{minipage}
+\end{tabularx} 
+
+\newcolumntype{L}{>{\hsize=4cm}X}%
+\section*{Course information}
+\begin{tabularx}{\linewidth}{|L|X|}
+\hline
+Name & Process Automation Laboratory\\\hline
+Course code & MR2015\\\hline
+Link to course plan & \url{https://samp.itesm.mx/Materias/VistaPreliminarMateria?clave=MR2015&lang=EN}\\\hline
+Course objective 
+& \begin{minipage}[t]{\linewidth}
+On completing the course the student will be able to carry out the analysis, design and implementation of automatic control systems for continuous processes and logic control in batch-type processes.
+\end{minipage}\\\hline
+Language & \textbf{The course will be given in english}\\\hline
+\end{tabularx}
+
+\section*{Course information}
+\begin{tabularx}{\linewidth}{|L|X|}
+\hline
+Name & Control Engineering Laboratory\\\hline
+Sessions &  \ifGroupOne Thursday 16:05 --- 18:55 \else Wednesday 19.05 --- 21:55 \fi\\\hline
+Location & Laboratorio de automatización de procesos, CEDETEC 01L07\\\hline
+Teacher & Kjartan Halvorsen\\\hline
+Contact info & \href{mailto:kjartan@itesm.mx}{\nolinkurl{kjartan@tec.mx} }, tel.~55 62 19 40 48\\\hline
+\end{tabularx}
+
+
+\section*{Course objective}
+Upon completion of this course, students will be able to operate and implement control loops based on PID controllers in servo- and regulation-type systems; design and implement HMIs for monitoring and digital control; and design logic control automatisms using diverse industrial software and hardware tools.
+
+\section*{Course policy}
+\begin{description}
+\item[Rules] It is your responsibility as student to know and comply with the rules of ITESM. For instance, work in the laboratory requires wearing a lab coat.
+\item[In class] In class we work on tasks related to process automation, and nothing else. I expect every student to take an active part in the class. 
+\item[Punctuality and absence] There is a maximum 5 minute tolerance for coming late. If you miss a session, you will not get all the points that your group earn on the lab activity you miss. Writing the report counts as one session, so, if you miss one session of an activity which is scheduled for two sessions (with report due after the second session) you'll get 2/3 of your groups score on that report. 
+
+%\item[Academic honesty] You will not learn the material unless you work diligently and independently. This applies both to work in class and outside. I strongly encourage discussing the topics of the course,  as well as assignments and homework with other students. But copying the work of others (even parts of work) and hand in under own name is plagiarism and a dishonest act that will \emph{not} help you become a productive and valuable professional engineer. 
+\end{description}
+
+\section*{Learning methodology}
+The course is based on problem-based learning, collaborative learning and project-oriented learning.
+\begin{description}
+\item[Lab activities] You will carry out a number of different group activities during the lab sessions. The instructions for the activities are found on Canvas, and each ativity should be documented in a report (one for each group). Make sure to take pictures of your setup and save graphs and results during the work in the lab, so that you have the needed material for the report.
+\item[Project] The group project takes place in the last partial Students form project groups of up to four (4) members. Progress reports are due at the end of each partial, and a final report at the end.
+\item[Project presentation] In the final project presentations, the project will be evaluated by external examinors. 
+\item[Partial exams] There are two partial exams. These are 1.5 hours. 
+\end{description}
+
+\section*{Bibliography}
+
+\begin{tabularx}{\linewidth}{|L|X|}
+\hline
+Text book
+& \begin{minipage}[t]{\linewidth}
+\begin{itemize}[noitemsep] 
+\item Smith, Carlos A, Priciples and practice of automatic process control, 2nd Ed, New York : J. Wiley, 1997.
+\end{itemize}
+\end{minipage}\\\hline
+Reference books
+& 
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[noitemsep] 
+\item Åström, K.~J. \& Wittenmark, B. Computer-controlled systems – Theory and design, 3rd Ed., Dover publications, 2011.\\
+\item Dorf, R.~C., \& Robert H. Bishop. Modern control systems. Pearson, 2011.
+\end{itemize}
+\end{minipage} \\\hline
+\end{tabularx}
+
+\section*{About the professor}
+\begin{itemize}[noitemsep]
+\item PhD in Electrical Engineering with specialization in Systems Analysis, 2002, Uppsala University, Sweden. MSc in Vehicle Engineering, 1996, KTH -- Royal Institute of Technology, Stockholm, Sweden
+\item Associate Professor / Senior Lecturer in Systems and Control, 2009-2017, Department of Information Technology, Uppsala University, Sweden
+\item Researcher, 2017-, Department of Information Technology, Uppsala University, Sweden
+\item Guest professor, 2012-2013,  Department of Mechatronics, CEM, ITESM
+\item Profesor de cátedra, 2015-,  Department of Mechatronics, CEM, ITESM
+\end{itemize}
+
+\section*{Course plan and evaluation system}
+
+%\newcolumntype{A}{>{\columncolor[gray]{.7}[.5\tabcolsep]\raggedright}X}
+
+\newcolumntype{t}{>{\hsize=6.03cm}X}
+\newcolumntype{s}{>{\hsize=2.06cm}X}
+
+
+\begin{tabularx}{\linewidth}{|stsss|}
+\hline
+\rowcolor[gray]{0.6}
+\multicolumn{5}{|c|}{First partial}\\\hline\hline
+Week & Theme & Lab/proj report & Exam  & Total\\\hline
+1 & Intro, Electrical circuits    & 5\%  & & \\
+\rowcolor[gray]{0.8}
+2 & First-order systems &   &  & \\
+\rowcolor[gray]{0.8}
+3 & Second-order systems & 8\%    & & \\
+4 & PID design   & &   & \\
+5 & PID implementation &  8\%    & &\\
+6 & Proj report, partial exam  & 6\%   & 8\% &  \\
+\rowcolor[gray]{0.8}
+ &   & 27\%  & 8\% & \textbf{35\%} \\\hline
+
+\multicolumn{5}{c}{}\\
+
+\hline
+\rowcolor[gray]{0.6}
+\multicolumn{5}{|c|}{Second partial}\\\hline\hline
+Week & Theme & Lab/proj report & Exam  & Total\\\hline
+7  & Boolean logic & 5\%  & & \\
+\rowcolor[gray]{0.8}
+8  & Pneumatics &  &     & \\
+\rowcolor[gray]{0.8}
+9 & Electro-pneumatics & 8\%  & & \\
+10 & Programmable Logic Controllers   &   & & \\
+11 & PLC for controlling pneumatic systems&  8\% & & \\
+12 & Proj report, partial exam  & 6\%   & 8\% &  \\
+\rowcolor[gray]{0.8}
+ & &  27\% & 8\% & \textbf{35\%} \\\hline
+
+\multicolumn{5}{c}{}\\
+
+\hline
+\rowcolor[gray]{0.6}
+\multicolumn{5}{|c|}{Third partial}\\\hline\hline
+Week & Theme & Project & Exam  & Total\\\hline
+13 & Instrumentation symbols &    & & \\
+14 & Project work &    & & \\
+15 & Project work &    Report 15\%& & \\
+16 & Project work &    Presentation 15\% & & \\
+\rowcolor[gray]{0.8}
+ &  & 30\%  &  & \textbf{30\%} \\\hline
+
+\rowcolor{tecblue}
+& \textcolor{white}{\textbf{Final grade}} &&&  \textcolor{white}{\textbf{100\%}}\\\hline
+\end{tabularx}
+
+\end{document}

@@ -1,0 +1,19 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{5}
+
+\begin{circuitikz}[scale=1]
+  \node[coordinate] (midpoint) at ($(\circuitwidth, 0.5*\circuitheight)$) {};
+
+  \draw (0,0) to[american voltage source, label=5V] (0, \circuitheight) 
+  to ++(\circuitwidth,0);
+  \draw (\circuitwidth, \circuitheight) to[R=$R_1$] (midpoint) node[right] {A};
+  \draw  (midpoint) to[R=$R_2$]  (\circuitwidth, 0) to (0,0);
+\end{circuitikz}
+\end{document}
