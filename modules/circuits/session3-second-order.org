@@ -1,0 +1,135 @@
+#+OPTIONS: toc:nil
+#+LaTeX_CLASS: koma-article 
+
+# #+LATEX_CLASS: beamer
+# #+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+# #+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepackage{circuitikz}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usetikzlibrary{positioning}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\bar{#1}}}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\overline{#1}}}
+
+#+title: Inductors, RLC-circuit, second-order response
+#+date: 2020-02-19
+
+* What do I want the students to understand?			   :noexport:
+  - Analogy current to water-flow
+  - How a capacitor works
+  - Laplace-domain -> Impedance
+  - RC-circuit equation and solution
+  - Implement in simulink 2 ways
+  - Using an oscilloscope
+
+
+* Which activities will the students do? 			   :noexport:
+  - Practice 2, instructions on Canvas
+
+* Inductors
+
+** Inductor and water flow analogy
+** Working principle of inductors
+   An inductor is a coil of wire. When current flows through the coil, it generates a magnetic field. When the current is constant, then the magnetic field is also constant. If we can ignore the the resistance in the copper wires of the coil, then the inductor has no resistance whenever the current is constant. However, the magnetic field opposes changes in current.  By opposing, we mean that if we try to increase the current through the coil, the inductor causes a *voltage drop*. If we try to decrease the current, there will be a *voltage jump* across the inductor. In the idealized inductor, the voltage \(v(t)\) across the inductor is proportional to the rate of change of the current (the time-derivative of the current).
+   \begin{equation}
+   v(t) = L \frac{d}{dt} i(t),
+   \label{eq:ode}
+   \end{equation}
+   where the proportionality constant \(L\) is called the *inductance*. It depends on physical properties of the inductor, such as the number of windings of the coil and properties of the its core.
+
+* Impedance
+  Taking the Laplace transform of \eqref{eq:ode} we get 
+   \begin{equation}
+   V(s) = sL I(s).
+   \label{eq:Ltrf}
+   \end{equation}
+   This means that the *impedance* of the inductor is 
+   \[Z_i(s) = sL.\]
+   We see directly that the impedance is 0 for constant currents $s=0$. 
+
+
+* The RLC circuit
+  Let us consider a circuit consisting of a resistor $R$, an inductor $L$ and a capacitans $C$ connected in series. From Kirchoff's voltage law we have
+  \[ u(t) = Ri(t) + L\frac{d}{dt} i(t) + \frac{1}{C}\int_0^t i(s) ds.\]
+  Taking the derivative we get
+  \[ \dot{u} = R\dot{i} + L\ddot{i} + \frac{1}{C} i. \]
+  Assume that we are interested in the voltage over the capacitans as the output of the system. We then need to determine i, and then we obtain u_c as 
+  \[ u_c = \frac{1}{C} \int i\]
+  Taking the laplace of the ODEs give
+  \[ sU = sRI + s^2LI + \frac{1}{C}I\]
+  or 
+  \[ I = \frac{s}{s^2L + sR + \frac{1}{C}}U(s) = \frac{s/L}{s^2 + s\frac{R}{L} + \frac{1}{LC}} U(s).\]
+  We can directly see that in steady-state the current will be 0, by substituting $s=0$ in the transfer function.
+  
+  To get the capacitor voltage we have
+  \[ U_c = \frac{1}{sC}I(s) = \frac{1/(LC)}{s^2 + \frac{R}{L}s + \frac{1}{LC}} U(s). \]
+  
+  This gives a second-order response with natural frequency
+  \[ \omega_0 = \frac{1}{\sqrt{LC}}. \]
+  Assume we want this to be 10*2*pi
+  \[ 20*pi = \sqrt{1/LC}\]
+  \[ LC = 1/(20*pi)^2 \approx 
+
+** Simulate
+
+** From "scratch"
+
+                  volt
+volt in -----> o -----
+* Experiment
+** Get the material
+
+** Present the lab instructions
+
+** Circuit and physical implementation
+
+#+BEGIN_CENTER 
+ \includegraphics[width=0.4\linewidth]{../../figures/R-circuit}
+Draw breadboard with resistor. Connect!
+#+END_CENTER
+
+Describe the ideal voltage source: Will provide any current that the circuit may demand, at a perfectly constant voltage $u$. 
+ 
+** Important relationsships
+
+*** Ohm's law
+    \(u = Ri\)
+
+*** Kirchoff's current law
+
+*** Kirchoff's voltage law
+
+** Series connection
+#+BEGIN_CENTER 
+ \includegraphics[width=0.4\linewidth]{../../figures/voltage-divider-circuit}
+#+END_CENTER
+In the equivalent circuit with a single resistor $R_3$, then clearly $u_3=u$. And for the original circuit $u = u_1 + u_2$. The same current $i$ flows through all the elements, so from Ohm's law $u_k = R_k i_k$, we get
+\( u_3 = u_1 + u_2\) and
+\[ R_3 i = R_1 i + R_2 i = (R_1 + R_2) i \]
+\[ R_3 = R_1 + R_2\]
+
+This means that $i = \frac{u}{R_1 + R_2}$. So what is the voltage over $R_2$?
+\[ u_2 = R_2 i = u \frac{R_2}{R_1 + R_2}. \]
+
+** Parallel connection
+
+#+BEGIN_CENTER 
+ \includegraphics[width=0.4\linewidth]{../../figures/parallel-circuit}
+#+END_CENTER
+
+In an equivalent circuit with only one resistor $R_3$, we must have \(u_3 = u = R_3 i_0\), which implies \(i_0 = \frac{u}{R_3}\).
+For the two resistors in the circuit, we have \(u_1 = u = R_1 i_1\) and \(u_2 = u = R_1 i_1\), which gives \[i_1 = \frac{u}{R_1} \qquad \text{and} \qquad \(i_2 = \frac{u}{R_2}\]
+From Kirchoff's current law \(i_0 = i_1 + i_2\), so  we get
+\[ \frac{u}{R_3} = \frac{u}{R_1} + \frac{u}{R_2} = u \left( \frac{1}{R_1} + \frac{1}{R_2}\right)\]
+hence
+\[ \frac{1}{R_3} =  \frac{1}{R_1} + \frac{1}{R_2}\]
+The reciprocal \(\frac{1}{R}\) of a resistance is called \emph{admittance}. 
+
+** Safety instructions
+
+*** Connect everything first, then turn on the power supply
+
+*** Use low voltage, 5V

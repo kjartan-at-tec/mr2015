@@ -1,0 +1,14 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+%\pgfmathsetmacro\circuitheight{5}
+%\pgfmathsetmacro\circuitwidth{5}
+
+\begin{circuitikz}[scale=1]
+  \draw (0,0) to[C=$C_1$,o-] (2,0) to[R=$R$] (4,0) to[C=$C_2$, -o] (6,0);
+\end{circuitikz}
+\end{document}

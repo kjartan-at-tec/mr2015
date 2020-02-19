@@ -1,0 +1,16 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{5}
+\pgfmathsetmacro\circuitwidth{5}
+
+\begin{circuitikz}[scale=1]
+  \draw (0,0) to[sqV, label=$u(t)$] (0, \circuitheight) 
+  to[R=$R$] ++(\circuitwidth,0);
+  \draw (0,0) to (\circuitwidth, 0) to[pC=$C$] (\circuitwidth, \circuitheight);
+\end{circuitikz}
+\end{document}

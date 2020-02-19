@@ -11,7 +11,7 @@
 
 \begin{circuitikz}[scale=1]
   \draw (0,0) to[american voltage source, label=$u$] (0, \circuitheight);
-  \draw (0,\circuitheight) to ++(\circuitwidth,0) to[R=$R_2$] (\circuitwidth, 0) to (0,0);
-  \draw (0,\circuitheight) to ++(\halfcircuitwidth,0) to[R=$R_1$] (\halfcircuitwidth, 0) to (0,0);
+  \draw (0,\circuitheight) to ++(\circuitwidth,0) to[R=$R_2$, i=$i_2$] (\circuitwidth, 0) to (0,0);
+  \draw (0,\circuitheight) to[short, i=$i_0$] ++(\halfcircuitwidth,0) to[R=$R_1$, i=$i_1$] (\halfcircuitwidth, 0) to (0,0);
 \end{circuitikz}
 \end{document}
