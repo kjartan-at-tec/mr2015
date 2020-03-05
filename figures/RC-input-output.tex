@@ -11,7 +11,7 @@
 \begin{circuitikz}[scale=1]
   \draw (0,\circuitheight) to[R=$R$, o-] (5, \circuitheight) to (\circuitwidth, \circuitheight);
   \draw (0,0) to[short, o-o] (\circuitwidth, 0);
-  \draw (4,\circuitheight) to[pC=$C$] (4, 0);
+  \draw (4, 0) to[pC=$C$] (4,\circuitheight) ;
   \node at (0,2.5) {$u(t)$};
   \node at (\circuitwidth,2.5) {$u_c(t)$};
 

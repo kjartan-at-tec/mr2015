@@ -1,0 +1,15 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+%\pgfmathsetmacro\circuitheight{5}
+%\pgfmathsetmacro\circuitwidth{5}
+
+\begin{circuitikz}[scale=1]
+  \draw (0,0) to[short, o-]  (1,0) to (1,1) to [C=$C$] (3,1) to[] (3,0) to[short,-o] (4,0);
+  \draw (1,0) to (1,-1) to [L=$L$] (3,-1) to[] (3,0);
+\end{circuitikz}
+\end{document}

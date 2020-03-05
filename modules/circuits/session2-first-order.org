@@ -56,12 +56,29 @@
        \end{tikzpicture}
      \end{center}
    #+END_LaTeX
+*** Exercise
+    #+BEGIN_LaTeX
+        \begin{center}
+        \begin{tikzpicture}
+          \begin{axis}[
+            width=8cm,
+            height=3cm,
+            ylabel={$u(t)$, $u_2(t)$},
+            xlabel={Time},
+            ]
+            \addplot[no marks] coordinates {(0,0) (0,1) (1, 1) (1,0) (2,0) (2,1) (3,1) (3,) (4,1) (4,0) (5,0)};
+          \end{axis}
+        \end{tikzpicture}
+        \end{center}
+    #+END_LaTeX
+*Draw the signal \(u_2(t)\)*
 
 No you see that the simple voltage-divider can be very useful in an analog filter circuit. Just to mention this, to get a gain higher than 1 you cannot use a voltage divider of course. For this one uses a very useful circuit element called an *operational amplifier*. The use of these fall outside the scope of this course.
 
-* Capacitors
-
 ** Current and water flow analogy
+We also talked last week about the water flow, or hydraulic analogy to electric circuits. This is useful, because we may use our intuition for how such a system works to understand the electric circuit. 
+With this analogy, the circuit is like a closed hydraulic system. Voltage is then equivalent to pressure, so the voltage source is a pump that provides an increase in the pressure. The ideal pump (voltage source) is able to produce this increase in pressure no-matter how much water is flowing through the pump (and circuit). The resistors are like pieces of tubing with significant resistance to flow (narrow tubes). Over such pieces of tubes there will be a drop in pressure.  
+
    When trying to understand what is going on in electrical circuits it can be very helpful to use theintuition we have about the flow of water. All of us have a much stronger intuition for things like water pressure and flows, than we have about voltage and current. This comes from the simple fact that we observe, perceive and interact with water every single day since we were born. But we hardly ever sense or perceive voltage and electrical current (when we do it can be rather painful and something we remember for along time, though). 
 
    All the concepts of electricity and circuit elements we will see in this course have direct analogies in realm of fluids. Last week we worked with voltages, resistance and current. Voltage is the difference in electric potential between two points, and corresponds to the different in pressure between two bodies of water (high and low reservoirs, for instance). In fact, voltage is sometimes called *electric pressure*. Voltage is measured in Volt. 
@@ -84,6 +101,10 @@ A resistor is a resistance to electric current. It corresponds to a tube in a hy
    |                                                            | pressure at both sides           |
    | Capacitans charge/voltage                                  | Compliance of membrane           |
 
+** Testing the intuition
+   Consider braking the voltage divider circuit at A. What is the voltage at the two different open ends?
+
+* Capacitors
 ** Working principle of capacitors
    - Two plates (metal sheets) with non-conducting medium between.
    - Charge is accumulated on either side
@@ -131,56 +152,4 @@ Electrical energy conists in the form of
                   volt
 volt in -----> o -----
 * Experiment
-** Get the material
-
-** Present the lab instructions
-
-** Circuit and physical implementation
-
-#+BEGIN_CENTER 
- \includegraphics[width=0.4\linewidth]{../../figures/R-circuit}
-Draw breadboard with resistor. Connect!
-#+END_CENTER
-
-Describe the ideal voltage source: Will provide any current that the circuit may demand, at a perfectly constant voltage $u$. 
- 
-** Important relationsships
-
-*** Ohm's law
-    \(u = Ri\)
-
-*** Kirchoff's current law
-
-*** Kirchoff's voltage law
-
-** Series connection
-#+BEGIN_CENTER 
- \includegraphics[width=0.4\linewidth]{../../figures/voltage-divider-circuit}
-#+END_CENTER
-In the equivalent circuit with a single resistor $R_3$, then clearly $u_3=u$. And for the original circuit $u = u_1 + u_2$. The same current $i$ flows through all the elements, so from Ohm's law $u_k = R_k i_k$, we get
-\( u_3 = u_1 + u_2\) and
-\[ R_3 i = R_1 i + R_2 i = (R_1 + R_2) i \]
-\[ R_3 = R_1 + R_2\]
-
-This means that $i = \frac{u}{R_1 + R_2}$. So what is the voltage over $R_2$?
-\[ u_2 = R_2 i = u \frac{R_2}{R_1 + R_2}. \]
-
-** Parallel connection
-
-#+BEGIN_CENTER 
- \includegraphics[width=0.4\linewidth]{../../figures/parallel-circuit}
-#+END_CENTER
-
-In an equivalent circuit with only one resistor $R_3$, we must have \(u_3 = u = R_3 i_0\), which implies \(i_0 = \frac{u}{R_3}\).
-For the two resistors in the circuit, we have \(u_1 = u = R_1 i_1\) and \(u_2 = u = R_1 i_1\), which gives \[i_1 = \frac{u}{R_1} \qquad \text{and} \qquad \(i_2 = \frac{u}{R_2}\]
-From Kirchoff's current law \(i_0 = i_1 + i_2\), so  we get
-\[ \frac{u}{R_3} = \frac{u}{R_1} + \frac{u}{R_2} = u \left( \frac{1}{R_1} + \frac{1}{R_2}\right)\]
-hence
-\[ \frac{1}{R_3} =  \frac{1}{R_1} + \frac{1}{R_2}\]
-The reciprocal \(\frac{1}{R}\) of a resistance is called \emph{admittance}. 
-
-** Safety instructions
-
-*** Connect everything first, then turn on the power supply
-
-*** Use low voltage, 5V
+  See instructions on Canvas
