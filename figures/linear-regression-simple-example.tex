@@ -1,0 +1,27 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage{pgfplots}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+
+\begin{document}
+
+  \begin{tikzpicture}
+  \begin{axis}[
+    width = 6cm,
+    height = 4cm,
+    %ytick  = data,
+    %    ytick = {0,4,6, 10},
+    %xtick = {0,2, 4, 6, 8, 10, 12},
+    %ymin = 0,
+    %ymax = 10,
+    ylabel = {$y$},
+    xlabel = {$x$},
+    ]
+
+    \addplot[only marks, blue, domain=1:8, samples=8] { 0.5*x + 0.4*rand};
+    
+  \end{axis}
+\end{tikzpicture}
+
+\end{document}
