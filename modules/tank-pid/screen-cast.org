@@ -1,0 +1,71 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+
+#+title: Pneumatic tank system
+# #+date: 2019-02-28
+
+* Intro    
+** Lab experiment
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/tank-lab-setup.png}
+#+END_CENTER
+
+** Simulink simulation
+#+BEGIN_CENTER 
+  \includegraphics[width=0.8\linewidth]{../../figures/tank-simscape-model.png}
+#+END_CENTER
+
+* Modeling
+** Pneumatic elements
+
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/tank-lab-setup.png}
+#+END_CENTER
+
+** Valve
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/proportional-directional-control-valve-concept.png}
+#+END_CENTER
+#+BEGIN_LATEX
+  \tiny From ''An improved nonlinear modelling and identification
+methodology of a servo-pneumatic actuating system with
+complex internal design for high-accuracy motion control
+applications'' Simulation Modelling Practice and Theory 2017
+#+END_LATEX
+
+** Valve, contd
+#+BEGIN_CENTER 
+  \includegraphics[width=0.7\linewidth]{../../figures/valve-volt-opening.png}
+#+END_CENTER
+
+** Experiment
+
+#+BEGIN_CENTER 
+  \includegraphics[width=0.65\linewidth]{../../figures/tank-lab-setup.png}
+  \includegraphics[width=0.35\linewidth]{../../figures/square-wave-pressure-valve.png}
+#+END_CENTER
+
+** Result
+#+BEGIN_CENTER 
+  \includegraphics[width=0.7\linewidth]{../../figures/tank-response-scope.png}
+#+END_CENTER
+
+** Simscape
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/simscape.png}
+#+END_CENTER
+
+** Simulation model
+#+BEGIN_CENTER 
+  \includegraphics[width=0.8\linewidth]{../../figures/tank-simscape-model.png}
+#+END_CENTER
+
