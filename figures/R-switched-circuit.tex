@@ -1,0 +1,16 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{3}
+\pgfmathsetmacro\circuitwidth{3}
+
+\begin{circuitikz}[scale=1]
+  \draw (0,0) to[american voltage source, label=5V] (0, \circuitheight) 
+  to[push button, label=$a$] (\circuitwidth, \circuitheight)
+  to[R=$R$] (\circuitwidth,0) to [short] (0,0);
+\end{circuitikz}
+\end{document}

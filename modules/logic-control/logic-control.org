@@ -1,0 +1,231 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepackage{circuitikz}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usetikzlibrary{positioning}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\bar{#1}}}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\overline{#1}}}
+
+#+title: Boolean algebra, logic diagrams and truth tables
+# #+date: 2019-03-07
+
+* What do I want the students to understand?			   :noexport:
+  - Logic control
+  - Boolean algebra
+
+* Which activities will the students do? 			   :noexport:
+  1. Diagram to function
+  2. Function to diagram
+  3. Truthtable f = (a+b')(a+b)
+  4. Simplify f = (a+b')(a+b)
+     
+* Boolean algebra, minterms and maxterms   
+** AND and OR
+   $a, b \in \{0,1\}$
+*** AND
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+    #+attr_latex: :align |cc|c|
+    |-----+-----+-------------------|
+    | $a$ | $b$ | $a$ AND $b$, $ab$ |
+    |-----+-----+-------------------|
+    |   0 |   0 |                 0 |
+    |   0 |   1 |                 0 |
+    |   1 |   0 |                 0 |
+    |   1 |   1 |                 1 |
+    |-----+-----+-------------------|
+
+    \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) to[switch, label=$a$, o-] (2,0) to[switch, label=$b$, -o] (4, 0);
+    \end{tikzpicture}
+    \end{center}
+    *Closed circuit \(\Leftrightarrow\) 1*
+
+    *Open circuit \(\Leftrightarrow\) 0*
+
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{../../figures/and-gate.pdf}
+    \end{center}
+
+*** OR
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:
+    #+attr_latex: :align |cc|c|
+    |-----+-----+-------------------|
+    | $a$ | $b$ | $a$ OR $b$, $a+b$ |
+    |-----+-----+-------------------|
+    |   0 |   0 |                 0 |
+    |   0 |   1 |                 1 |
+    |   1 |   0 |                 1 |
+    |   1 |   1 |                 1 |
+    |-----+-----+-------------------|
+
+    \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) to[switch, label=$a$, o-o] (4,0);
+      \draw (1,0) to[short] (1,-1) to[switch, l_=$b$, ] (3, -1) to[short] (3, 0);
+    \end{tikzpicture}
+    \end{center}
+
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{../../figures/or-gate.pdf}
+    \end{center}
+
+
+** NAND and NOR
+   $a, b \in \{0,1\}$
+*** NAND
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+    #+attr_latex: :align |cc|c|
+    | $a$ | $b$ | $a$ NAND $b$, $\overline{a\cdot{}b}$ |
+    |-----+-----+--------------------------------------|
+    |   0 |   0 |                                    1 |
+    |   0 |   1 |                                    1 |
+    |   1 |   0 |                                    1 |
+    |   1 |   1 |                                    0 |
+    |-----+-----+--------------------------------------|
+
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{../../figures/nand-gate.pdf}
+    \end{center}
+
+*** NOR
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:
+    #+attr_latex: :align |cc|c|
+    | $a$ | $b$ | $a$ NOR $b$, $\overline{a+b}$ |
+    |-----+-----+-------------------|
+    |   0 |   0 |                   |
+    |   0 |   1 |                   |
+    |   1 |   0 |                   |
+    |   1 |   1 |                   |
+    |-----+-----+-------------------|
+
+    \begin{center}
+    \includegraphics[width=0.5\linewidth]{../../figures/nor-gate.pdf}
+    \end{center}
+
+** Boolean algebra, contd
+   $x, y, z \in \{0,1\}$
+   
+   #+attr_latex: :align r|c|c|
+   |                       | Property                 | Dual                  |
+   |-----------------------+--------------------------+-----------------------|
+   | Properties of 0 and 1 | $x+0=x$                  | $x\cdot 0=0$          |
+   |                       | $x+1=1$                  | $x \cdot 1 = x$       |
+   | Idempotency           | $x+x=x$                  | $x\cdot x = x$        |
+   | Complementarity       | $x+\not{x}=1$            | $x\cdot \not{x}=0$    |
+   | Involution            | $\not{\not{x}}=x$        |                       |
+   | Commutative           | $x+y=y+x$                | $x\cdot y = y\cdot x$ |
+   | Associative           | $(x+y) + z = x + (y+z)$  | $(xy)z = z(yz)$       |
+   | Distributive          | $x\cdot (y+z) = xy + xz$ | $x+yz=(x+y)(x+z)$     |
+   |-----------------------+--------------------------+-----------------------|
+
+** Boolean algebra, contd
+   $x, y \in \{0,1\}$
+   
+   #+attr_latex: :align r|c|c|
+   |                 | Theorem                           | Dual                           |
+   |-----------------+-----------------------------------+--------------------------------|
+   | Absorption      | $x+xy=x(1+y)=x$                   | $x(x+y)=x$                     |
+   | Logic adjacency | $xy + x\not{y} = x(y+\not{y}) =x$ | $(x+y)(x+\not{y}) = x$         |
+   | De Morgan's     | $\not{x+y}=\not{x}\cdot{}\not{y}$ | $\not{xy} = \not{x} + \not{y}$ |
+   |-----------------+-----------------------------------+--------------------------------|
+
+** DeMorgan's theorem
+   #+begin_center
+   \includegraphics[width=0.4\linewidth]{../../figures/Demorganlaws.png} From wikipedia
+   #+end_center
+** Simplify functions
+   1. \(f = (a+b)(a+c)\)
+   2. \(f = a + \not{a}b\)
+
+
+** Logic diagram \(\rightarrow\) function
+   Determine the function represented by the logic diagrams
+   #+begin_center
+   \includegraphics[width=0.7\linewidth]{../../figures/exercise-gate-4.pdf}
+   #+end_center
+
+   
+** Function \(\rightarrow\) logic diagram
+   Draw the diagram corresponding to the boolean function
+   1. \(f = (a+b)(a+c)\)
+   2. \(f = a + \not{a}b\)
+
+
+** Group exercise
+   1. Enter breakout room
+   2. One of you downloads and shares this presentation
+   3. Work together on the problems in the previous three slides
+      1. Simplify functions
+      2. Determine function from logic diagram
+      3. Draw logic diagram from function
+   
+   
+** Minterms                                                        :noexport:
+
+
+   *A minterm is a boolean expression that is TRUE (=1) for one and only one row in the truth table.* For instance $Y=X_1X_2X_3$ will only be true when $X_1=X_2=X_3=1$, and $Y=\not{X_1}X_2\not{X_3}$ will only be true if $X_1=X_3=0$ and $X_2=1$. The combination $Y=X_1X_2X_3 + \not{X_1}X_2\not{X_3}$ will have *only two rows* equal to 1 in the truth table.   
+   
+   Example:
+   #+attr_latex: :align |ccc|cc|
+   |--------+-------+-------+---------+-------|
+   | Inputs |       |       | Outputs |       |
+   |  $X_1$ | $X_2$ | $X_3$ |   $Y_1$ | $Y_2$ |
+   |--------+-------+-------+---------+-------|
+   |      0 |     0 |     0 |       0 |     1 |
+   |      0 |     0 |     1 |       0 |     0 |
+   |      0 |     1 |     0 |       1 |     0 |
+   |      0 |     1 |     1 |       1 |     0 |
+   |      1 |     0 |     0 |       0 |     0 |
+   |      1 |     0 |     1 |       0 |     0 |
+   |      1 |     1 |     0 |       0 |     0 |
+   |      1 |     1 |     1 |       0 |     1 |
+   |--------+-------+-------+---------+-------|
+
+   \(Y_1 = m_2 + m_3 = \not{X_1}X_2\not{X_3} + \not{X_1}X_2X_3, \qquad   Y_2 = \) 
+   
+
+** Maxterms							   :noexport:
+   *A maxterm is a boolean expression that is FALSE (=0) for one and only one row in the truth table.* For instance $Y=X_1+X_2+X_3$ will only be false when $X_1=X_2=X_3=0$, and $Y=\not{X_1}+X_2+\not{X_3}$ will only be false if $X_1=X_3=1$ and $X_2=0$. The combination $Y=(X_1+X_2+X_3)(\not{X_1}+X_2+\not{X_3})$ will have *only two rows* equal to 0 in the truth table.   
+   
+   Example:
+   #+attr_latex: :align |ccc|cc|
+   |--------+-------+-------+---------+-------|
+   | Inputs |       |       | Outputs |       |
+   |  $X_1$ | $X_2$ | $X_3$ |   $Y_1$ | $Y_2$ |
+   |--------+-------+-------+---------+-------|
+   |      0 |     0 |     0 |       0 |     1 |
+   |      0 |     0 |     1 |       0 |     1 |
+   |      0 |     1 |     0 |       1 |     1 |
+   |      0 |     1 |     1 |       1 |     1 |
+   |      1 |     0 |     0 |       1 |     1 |
+   |      1 |     0 |     1 |       1 |     1 |
+   |      1 |     1 |     0 |       1 |     0 |
+   |      1 |     1 |     1 |       1 |     0 |
+   |--------+-------+-------+---------+-------|
+
+
+   \(Y_1 = M_0M_1 = (X_1+X_2+X_3)(X_1+X_2+\not{X_3}), \qquad   Y_2 = \) 
+
+
+   

@@ -1,0 +1,31 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \node[and port] (myor) at (0,0) {};
+    \node[or port] (myand) at (-2, -1) {};
+    \draw (myand.out) |- (myor.in 2);
+    \draw (myor.in 1) ++(-2.6,0) node[anchor=east] {$a$} to (myor.in 1);
+    \draw (myor.in 1) ++(-2,0) |- (myand.in 1);
+    \draw (myand.in 2) node[anchor=east] {$b$}; 
+    \draw (myor.out) node[anchor=west] {$a$}; 
+  \end{scope}    
+\end{circuitikz}
+\end{document}
+\draw
+    (0,0) node[or port] (myor) {}
+    (myand.in) node[anchor=east] {$a$};
+    \draw (2,0) node[not port] (neg) {}
+    (neg.out) node[anchor=west] {$a$};
+    \draw (myand.out) to node[above] {$\bar{a}$} (neg.in);
+  \end{scope}
+\end{circuitikz}
+\end{document}

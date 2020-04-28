@@ -1,0 +1,207 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+
+#+title: System identification of the pneumatic tank model
+# #+date: 2019-02-28
+
+* Intro    
+** Lab experiment
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/tank-lab-setup.png}
+#+END_CENTER
+
+** Simulink simulation
+#+BEGIN_CENTER 
+  \includegraphics[width=0.8\linewidth]{../../figures/tank-simscape-model.png}
+#+END_CENTER
+
+* Models
+** System identification 
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+    
+       \node[coordinate] (input) {};
+       \node[block, right of=input, node distance=20mm] (plant)  {System};
+       \node[coordinate, right of=plant, node distance=20mm] (output) {};
+
+       \draw[->] (input) -- node[above, pos=0.3, color=blue!80!black] {$u(t)$} (plant);
+       \draw[->] (plant) -- node[above, near end, color=orange!80!black] {$p(t)$} (output);
+     \end{tikzpicture}
+   \end{center}   
+#+end_export
+
+   Given input-output data \(\{ \big( \textcolor{blue!80!black}{u(1)}, \textcolor{orange!80!black}{p(1)} \big), \big( \textcolor{blue!80!black}{u(2)}, \textcolor{orange!80!black}{p(2)} \big), \ldots, \big( \textcolor{blue!80!black}{u(N)}, \textcolor{orange!80!black}{p(N)} \big) \} \) find a *good description* of the system that generated the data.
+ 
+** Flow through the valve
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}
+       \node {\includegraphics[width=0.7\linewidth]{../../figures/valve-volt-opening.png}};
+       \node[coordinate] (five) at (0.54,-2.8) {};
+       \node[coordinate, below of=five, node distance=1.8cm] (origin) {};
+       \draw[color=red!80!black] (five) to (origin);
+       \draw[color=blue!80!black, ->, thick] (origin) ++(0,0.4cm) -- node[below, near end] {$u(t)$} ++(1.5cm, 0); 
+      \end{tikzpicture}
+   \end{center}
+   #+end_export
+
+
+** Nonlinear model 1
+
+*** Flow into the tank, \(V_{in}(t) > 5\)
+\[ \dot{p}(t) = a_0(\underbrace{V_{in}(t) - 5}_{u(t)})\sqrt{|\underbrace{p_s - p(t)}_{\Delta p(t)}|} \]
+*** Flow out the tank, \(V_{in}(t) < 5\)
+\[ \dot{p}(t) = a_0u(t)\sqrt{|\underbrace{p(t)-0}_{\Delta p(t)}|} \]
+
+** Nonlinear model 2
+
+
+    \[ \dot{p}(t) = a_0u(t)|\Delta p(t))|^{a_1} \]
+
+** Converting to a regression model which is linear in the parameters
+    \[ \dot{p}(t) = a_0u(t)|\Delta p(t)|^{a_1} \]
+
+Take the logarithm of the equation to get
+
+\[ \log \dot{p} = \log a_0 + \log u + a_1 \log |\Delta p|\]
+
+** Linear model
+
+Introduce $y(t) = p(t)-p_0$, where $p_0$ is a chosen operating point.
+
+\[ \dot{p}(t) = \dot{y}(t) = -a y(t) + ku(t)\]
+
+
+* Experiments and results
+
+** Input-output data
+#+BEGIN_CENTER 
+  \includegraphics[width=0.88\linewidth]{../../figures/tank-sysid-input-output.png}
+#+END_CENTER
+
+** Fitting nonlinear model 1
+
+#+BEGIN_CENTER 
+  \includegraphics[width=0.9\linewidth]{../../figures/tank-sysid-sqrt-deltaP}
+#+END_CENTER
+
+** Fitting nonlinear model 2
+#+BEGIN_CENTER 
+  \includegraphics[width=0.8\linewidth]{../../figures/tank-sysid-log}
+#+END_CENTER
+
+** Fitting linear model
+
+#+BEGIN_CENTER 
+  \includegraphics[width=0.8\linewidth]{../../figures/tank-sysid-linear-model}
+#+END_CENTER
+
+** Validation
+
+#+BEGIN_CENTER 
+  \includegraphics[width=0.55\linewidth]{../../figures/sysid-tank-validation-model.png}
+#+END_CENTER
+
+** Validation results
+#+BEGIN_CENTER 
+  \includegraphics[width=\linewidth]{../../figures/sysid-tank-valudation-results.png}
+#+END_CENTER
+
+
+* Least squares                                                    :noexport:
+** Least-squares estimate, nonlinear model
+Separate the measurements into a set of length $N$ for which $u>0$ and (to avoid taking the log of a negative number) $\dot{p} > 0$
+
+Form the set of equations 
+\begin{align*}
+ \log a_0 + a_1 \log |p_s-p(t_1)| &= \log \dot{p}(t_1) - \log u(t_1)\\ 
+ \log a_0 + a_1 \log |p_s-p(t_2)| &= \log \dot{p}(t_2) - \log u(t_2)\\ 
+ & \vdots \\
+ \log a_0 + a_1 \log |p_s-p(t_N)| &= \log \dot{p}(t_N) - \log u(t_N) 
+\end{align*}
+
+Similarly for the set of $M$ measurements with $u < 0$ and $\dot{p} < 0$
+\begin{align*}
+ \log a_0 + a_1 \log p(T_1) &= \log |\dot{p}(T_1)| - \log |u(T_1)|\\ 
+ \log a_0 + a_1 \log p(T_2) &= \log |\dot{p}(T_2)| - \log |u(T_2)|\\ 
+ & \vdots \\
+ \log a_0 + a_1 \log p(T_M) &= \log |\dot{p}(T_M)| - \log |u(T_M)| 
+\end{align*}
+
+** Least-squares estimate, nonlinear model
+On matrix form 
+
+\[ \underbrace{\begin{bmatrix} 1 & \log |p_s-p(t_1)| \\
+                   1 & \log |p_s - p(t_2)| \\
+		   \vdots & \vdots \\
+		   1 & \log |p_s - p(t_N)| \\
+		   1 & \log p(T_1)\\
+		   1 & \log p(T_2)\\
+		   \vdots & \vdots \\
+		   1 & \log p(T_M)\end{bmatrix}}_{A_{nonlin}}
+		   \underbrace{\begin{bmatrix} \log a_0 \\ a_1 \end{bmatrix}}_{\theta_{nonlin}}
+		   = \underbrace{ \begin{bmatrix} \log \dot{p}(t_1) - \log u(t_1)\\ 
+		   \log \dot{p}(t_2) - \log u(t_2)\\
+		   \vdots\\
+		   \log \dot{p}(t_N) - \log u(t_N)\\
+		   \log |\dot{p}(T_1)| - \log |u(T_1)|\\ 
+		   \log |\dot{p}(T_2)| - \log |u(T_2)|\\ 
+		   \vdots\\
+		   \log |\dot{p}(T_M)| - \log |u(T_M)| \end{bmatrix}}_{b_{nonlin}} \] 
+
+		   
+** Least-squares estimate, nonlinear model
+
+
+\[ \theta_{nonlin} = \big( A_{nonlin}^T A_{nonlin} \big)^{-1} A_{nonlin}^T b_{nonlin} \]
+
+in matlab
+#+begin_src octave
+	theta_nl = A_nl \ b_nl
+#+end_src
+
+** Least-squares estimate, linear model
+The model is 
+\[ \dot{p}(t) = \frac{d}{dt} y(t) = -a y(t) + ku(t)\]
+with $y(t) = p(t)-p_0$. Form the set of equations 
+\begin{align*}
+ -a (p(1) - p_0)  +  ku(1) &= \dot{p}(1)\\
+ -a (p(2)-p_0)  +  ku(2) &= \dot{p}(2)\\
+ & \vdots \\
+ -a (p(N)-p_0)  +  ku(N) &= \dot{p}(N)
+\end{align*}
+
+On matrix form 
+
+\[ \underbrace{\begin{bmatrix} -(p(1)-p_0) & u(1) \\
+                   -(p(2) - p_0) & u(2) \\
+		   \vdots & \vdots \\
+                   -(p(N) - p_0) & u(N) \end{bmatrix}}_{A_{lin}}
+		   \underbrace{\begin{bmatrix} a\\k \end{bmatrix}}_{\theta_{lin}}
+		   = \underbrace{\begin{bmatrix} \dot{p}(1)\\\dot{p}(2)\\\vdots\\\dot{p}(N) \end{bmatrix}}_{b_{lin}} \]
+
+** Least-squares estimate, linear model
+The solution is
+\[ \theta_{lin} = \big( A_{in}^T A_{lin} \big)^{-1} A_{lin}^T b_{lin} \]
+
+in matlab
+#+begin_src octave
+	theta_l = A_l \ b_l
+#+end_src
+
+
+** The derivative \(\dot{p}\)
+
+   We don't measure the derivative of the pressure $\dot{p}$ directly, but we can estimate it from the measurements of the pressure using, for instance, the central difference 
+\[ \dot{p}(t_k) \approx \frac{p(t_{k+1}) - p(t_{k-1})}{t_{k+1}-t_{k-1}}. \]
+ 

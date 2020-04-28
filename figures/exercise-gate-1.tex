@@ -1,0 +1,34 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \node[nand port] (mynand1) at (0,0) {};
+    \node[nand port] (mynand2) at (0,-2) {};
+    \node[or port] (myor) at (2, -1) {};
+    \draw (mynand1.out) |- (myor.in 1);
+    \draw (mynand2.out) |- (myor.in 2);
+    \draw (mynand1.in 2) node[anchor=east] {$b$}; 
+    \draw (mynand2.in 1) node[anchor=east] {$\bar{a}$}; 
+    \draw (mynand1.in 1) node[anchor=east] {$a$}; 
+    \draw (mynand2.in 2) node[anchor=east] {$c$}; 
+    \draw (myor.out) node[anchor=west] {$f$}; 
+  \end{scope}    
+\end{circuitikz}
+\end{document}
+\draw
+    (0,0) node[or port] (myor) {}
+    (myand.in) node[anchor=east] {$a$};
+    \draw (2,0) node[not port] (neg) {}
+    (neg.out) node[anchor=west] {$a$};
+    \draw (myand.out) to node[above] {$\bar{a}$} (neg.in);
+  \end{scope}
+\end{circuitikz}
+\end{document}

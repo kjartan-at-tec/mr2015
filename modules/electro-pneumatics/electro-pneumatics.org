@@ -1,0 +1,726 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepackage{circuitikz}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usetikzlibrary{positioning}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\bar{#1}}}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\overline{#1}}}
+
+#+title: Logic control and boolean algebra
+# #+date: 2019-03-07
+
+* What do I want the students to understand?			   :noexport:
+  - Logic control
+  - Boolean algebra
+  - Latching circuits
+
+* Which activities will the students do? 			   :noexport:
+  1. Simscape implementation and simulation
+
+* Intro    
+** Double-switching for safety                                     :noexport:
+   #+begin_export latex
+\begin{center}
+ \includegraphics[width=0.6\linewidth]{../../figures/single-switch-wikimedia.png}\\
+ \includegraphics[width=0.6\linewidth]{../../figures/double-switch-wikimedia.png}\\
+ \end{center}
+{\hfill \footnotesize From \url{https://en.wikipedia.org/wiki/Double_switching}}
+   #+end_export
+
+
+   
+* Logic control and boolean algebra
+** A logic control loop
+   #+BEGIN_CENTER 
+    \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
+   #+END_CENTER
+
+** Cheese pressing example 
+#+BEGIN_CENTER 
+ \includegraphics[width=0.5\linewidth]{../../figures/cheese-stamping.png}
+#+END_CENTER
+#+BEGIN_LaTeX
+{\tiny From FESTO Didactic}
+#+END_LaTeX
+
+** Cheese pressing example - Variables
+Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
+*** Vars
+     :PROPERTIES:
+     :BEAMER_col: 0.5
+     :END:      
+**** State variable
+     \[ x_k = \begin{cases} 0 & \text{Cylinder retracted}\\1 & \text{Cylinder extended}\end{cases}\]
+**** Control signal
+    \[ u = \begin{bmatrix} u_1\\u_2 \end{bmatrix}, \]
+    with
+    \begin{align*}
+    u_1 &= \begin{cases} 0 & \text{Don't activate S1}\\1 & \text{Activate S1 }\end{cases}\\
+    u_2 &= \begin{cases} 0 & \text{Don't activate S2}\\1 & \text{Activate S2}\end{cases}\\
+    \end{align*}
+
+*** Command signal
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+    \[ u_{c} = \begin{cases} 0 & \text{Button unpushed}\\1 & \text{Button pushed}\end{cases}. \]
+
+** Cheese pressing example - Plant dynamics and control law
+Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
+*** Plant dynamics
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |cc|cc|
+    |-----------+-----------+-------+-----------|
+    |           |           | state |           |
+    | $u_{1,k}$ | $u_{2,k}$ | $x_k$ | $x_{k+1}$ |
+    |-----------+-----------+-------+-----------|
+    |         0 |         0 |     0 |         0 |
+    |         0 |         1 |     0 |         0 |
+    |         1 |         0 |     0 |         1 |
+    |       (1) |       (1) |     0 | undefined |
+    |         0 |         0 |     1 |         1 |
+    |         0 |         1 |     1 |         0 |
+    |         1 |         0 |     1 |         1 |
+    |       (1) |       (1) |     1 | undefined |
+    |-----------+-----------+-------+-----------|
+    
+#    \begin{align*} 
+#      x_{k+1} &= u_{1,k}\not{u_{2,k}}\not{x_k} + \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}x_k\\ &=  \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}
+#    \end{align*}
+
+*** Control law
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |cc|cc|
+     |-----+---------+-------+-------|
+     | $x$ | $u_{c}$ | $u_1$ | $u_2$ |
+     |-----+---------+-------+-------|
+     |   0 |       0 |     0 | 0     |
+     |   0 |       1 |     1 | 0     |
+     |   1 |       0 |     0 | 1     |
+     |   1 |       1 |     0 | 1     |
+     |-----+---------+-------+-------|
+     
+#     \begin{align*}
+#       u_1 &= \not{x}u_c\\
+#       u_2 &= x\not{u_c} + xu_c = x
+#     \end{align*}
+
+
+* Boolean algebra, minterms and maxterms   
+** Boolean algebra
+   $X, Y \in \{0,1\}$
+*** AND
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+    #+attr_latex: :align |cc|c|
+    |-----+-----+-------------|
+    | $X$ | $Y$ | $X$ AND $Y$ |
+    |-----+-----+-------------|
+    |   0 |   0 |           0 |
+    |   0 |   1 |           0 |
+    |   1 |   0 |           0 |
+    |   1 |   1 |           1 |
+    |-----+-----+-------------|
+
+    \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) to[switch, label=$X$, o-] (2,0) to[switch, label=$Y$, -o] (4, 0);
+    \end{tikzpicture}
+    \end{center}
+    *Closed circuit \(\Leftrightarrow\) 1*
+
+    *Open circuit \(\Leftrightarrow\) 0*
+
+*** OR
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:
+    #+attr_latex: :align |cc|c|
+    |-----+-----+------------|
+    | $X$ | $Y$ | $X$ OR $Y$ |
+    |-----+-----+------------|
+    |   0 |   0 |          0 |
+    |   0 |   1 |          1 |
+    |   1 |   0 |          1 |
+    |   1 |   1 |          1 |
+    |-----+-----+------------|
+
+    \begin{center}
+    \begin{tikzpicture}
+      \draw (0,0) to[switch, label=$X$, o-o] (4,0);
+      \draw (1,0) to[short] (1,-1) to[switch, l_=$Y$, ] (3, -1) to[short] (3, 0);
+    \end{tikzpicture}
+    \end{center}
+** Boolean algebra, contd
+   $X, Y, Z \in \{0,1\}$
+   
+   #+attr_latex: :align r|c|c|
+   |                       | Property                 | Dual                  |
+   |-----------------------+--------------------------+-----------------------|
+   | Properties of 0 and 1 | $X+0=X$                  | $X\cdot 0=0$          |
+   |                       | $X+1=1$                  | $X \cdot 1 = X$       |
+   | Idempotent            | $X+X=X$                  | $X\cdot X = X$        |
+   | Complementarity       | $X+\not{X}=1$            | $X\cdot \not{X}=0$    |
+   | Involution            | $\not{\not{X}}=X$        |                       |
+   | Commutative           | $X+Y=Y+X$                | $X\cdot Y = Y\cdot X$ |
+   | Associative           | $(X+Y) + Z = X + (Y+Z)$  | $(XY)Z = Z(YZ)$       |
+   | Distributive          | $X\cdot (Y+Z) = XY + XZ$ | $X+YZ=(X+Y)(X+Z)$     |
+   |-----------------------+--------------------------+-----------------------|
+
+** Boolean algebra, contd
+   $X, Y, Z \in \{0,1\}$
+   
+   #+attr_latex: :align r|c|c|
+   |                 | Theorem                           | Dual                           |
+   |-----------------+-----------------------------------+--------------------------------|
+   | Absorption      | $X+XY=X(1+Y)=X$                   | $X(X+Y)=X$                     |
+   | Logic adjacency | $XY + X\not{Y} = X(Y+\not{Y}) =X$ | $(X+Y)(X+\not{Y}) = X$         |
+   | De Morgan's     | $\not{X+Y}=\not{X}\not{Y}$        | $\not{XY} = \not{X} + \not{Y}$ |
+   |-----------------+-----------------------------------+--------------------------------|
+
+
+** Minterms							   :noexport:
+   *A minterm is a boolean expression that is TRUE (=1) for one and only one row in the truth table.* For instance $Y=X_1X_2X_3$ will only be true when $X_1=X_2=X_3=1$, and $Y=\not{X_1}X_2\not{X_3}$ will only be true if $X_1=X_3=0$ and $X_2=1$. The combination $Y=X_1X_2X_3 + \not{X_1}X_2\not{X_3}$ will have *only two rows* equal to 1 in the truth table.   
+   
+   Example:
+   #+attr_latex: :align |ccc|cc|
+   |--------+-------+-------+---------+-------|
+   | Inputs |       |       | Outputs |       |
+   |  $X_1$ | $X_2$ | $X_3$ |   $Y_1$ | $Y_2$ |
+   |--------+-------+-------+---------+-------|
+   |      0 |     0 |     0 |       0 |     1 |
+   |      0 |     0 |     1 |       0 |     0 |
+   |      0 |     1 |     0 |       1 |     0 |
+   |      0 |     1 |     1 |       1 |     0 |
+   |      1 |     0 |     0 |       0 |     0 |
+   |      1 |     0 |     1 |       0 |     0 |
+   |      1 |     1 |     0 |       0 |     0 |
+   |      1 |     1 |     1 |       0 |     1 |
+   |--------+-------+-------+---------+-------|
+
+   \(Y_1 = m_2 + m_3 = \not{X_1}X_2\not{X_3} + \not{X_1}X_2X_3, \qquad   Y_2 = \) 
+   
+
+** Maxterms							   :noexport:
+   *A maxterm is a boolean expression that is FALSE (=0) for one and only one row in the truth table.* For instance $Y=X_1+X_2+X_3$ will only be false when $X_1=X_2=X_3=0$, and $Y=\not{X_1}+X_2+\not{X_3}$ will only be false if $X_1=X_3=1$ and $X_2=0$. The combination $Y=(X_1+X_2+X_3)(\not{X_1}+X_2+\not{X_3})$ will have *only two rows* equal to 0 in the truth table.   
+   
+   Example:
+   #+attr_latex: :align |ccc|cc|
+   |--------+-------+-------+---------+-------|
+   | Inputs |       |       | Outputs |       |
+   |  $X_1$ | $X_2$ | $X_3$ |   $Y_1$ | $Y_2$ |
+   |--------+-------+-------+---------+-------|
+   |      0 |     0 |     0 |       0 |     1 |
+   |      0 |     0 |     1 |       0 |     1 |
+   |      0 |     1 |     0 |       1 |     1 |
+   |      0 |     1 |     1 |       1 |     1 |
+   |      1 |     0 |     0 |       1 |     1 |
+   |      1 |     0 |     1 |       1 |     1 |
+   |      1 |     1 |     0 |       1 |     0 |
+   |      1 |     1 |     1 |       1 |     0 |
+   |--------+-------+-------+---------+-------|
+
+
+   \(Y_1 = M_0M_1 = (X_1+X_2+X_3)(X_1+X_2+\not{X_3}), \qquad   Y_2 = \) 
+
+
+* Latching circuit
+** An electrical circuit with memory
+
+*** Latching circuit
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :BEAMER_env: block
+    :END:      
+
+     #+BEGIN_LaTeX
+            \begin{center}
+                     \begin{tikzpicture}
+                       \node at (0,0.5) {+24V};
+                       \node at (6,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-3);
+                       \draw (6,0) to[short, o-](6,-3);
+                       \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$, -*] (6,-0.3);
+                       \draw (0,-2) to[switch, *-, label=$R$] (2,-2)  to[short,-*] (2,-0.3);
+                     \end{tikzpicture}
+            \end{center}
+#+END_LaTeX
+
+*** Truth table
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |ccc|c|
+    | $X$ | $Y$ | $R_k$ | $R_{k+1}$ |
+    |-----+-----+-------+-----------|
+    |   0 |   0 |     0 |           |
+    |   0 |   0 |     1 |           |
+    |   0 |   1 |     0 |           |
+    |   0 |   1 |     1 |           |
+    |   1 |   0 |     0 |           |
+    |   1 |   0 |     1 |           |
+    |   1 |   1 |     0 |           |
+    |   1 |   1 |     1 |           |
+    |-----+-----+-------+-----------|
+
+#    \begin{align*}
+#     R_{k+1} &= \not{X}\not{Y}R_k  + X\not{Y}\not{R_k} + X\not{Y}R_k\\ 
+#     &= \not{X}\not{Y}R_k + X\not{Y}
+#    \end{align*}
+
+** An electrical circuit with memory
+
+*** Latching circuit
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :BEAMER_env: block
+    :END:      
+
+     #+BEGIN_LaTeX
+            \begin{center}
+                     \begin{tikzpicture}
+                       \node at (0,0.5) {+24V};
+                       \node at (6,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-3);
+                       \draw (6,0) to[short, o-](6,-3);
+                       \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$, -*] (6,-0.3);
+                       \draw (0,-2) to[switch, *-, label=$R$] (2,-2)  to[short,-*] (2,-0.3);
+                     \end{tikzpicture}
+            \end{center}
+#+END_LaTeX
+
+*** Truth table
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |ccc|c|
+    | $X$ | $Y$ | $R_k$ | $R_{k+1}$ |
+    |-----+-----+-------+-----------|
+    |   0 |   0 |     0 |         0 |
+    |   0 |   0 |     1 |         1 |
+    |   0 |   1 |     0 |         0 |
+    |   0 |   1 |     1 |         0 |
+    |   1 |   0 |     0 |         1 |
+    |   1 |   0 |     1 |         1 |
+    |   1 |   1 |     0 |         0 |
+    |   1 |   1 |     1 |         0 |
+    |-----+-----+-------+-----------|
+
+#    \begin{align*}
+#     R_{k+1} &= \not{X}\not{Y}R_k  + X\not{Y}\not{R_k} + X\not{Y}R_k\\ 
+#     &= \not{X}\not{Y}R_k + X\not{Y}
+#    \end{align*}
+
+* Return to example   
+** Cheese pressing example - Plant dynamics and control law revisited
+Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
+*** Plant dynamics
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |cc|cc|
+    |-----------+-----------+-------+-----------|
+    |           |           | state |           |
+    | $u_{1,k}$ | $u_{2,k}$ | $x_k$ | $x_{k+1}$ |
+    |-----------+-----------+-------+-----------|
+    |         0 |         0 |     0 |         0 |
+    |         0 |         1 |     0 |         0 |
+    |         1 |         0 |     0 |         1 |
+    |       (1) |       (1) |     0 | undefined |
+    |         0 |         0 |     1 |         1 |
+    |         0 |         1 |     1 |         0 |
+    |         1 |         0 |     1 |         1 |
+    |       (1) |       (1) |     1 | undefined |
+    |-----------+-----------+-------+-----------|
+    
+    \begin{align*} 
+      x_{k+1} &= u_{1,k}\not{u_{2,k}}\not{x_k} + \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}x_k\\ &=  \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}
+    \end{align*}
+
+*** Control law
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |cc|cc|
+     |-----+---------+-------+-------|
+     | $x$ | $u_{c}$ | $u_1$ | $u_2$ |
+     |-----+---------+-------+-------|
+     |   0 |       0 |     0 | 0     |
+     |   0 |       1 |     1 | 0     |
+     |   1 |       0 |     0 | 1     |
+     |   1 |       1 |     0 | 1     |
+     |-----+---------+-------+-------|
+     
+     \begin{align*}
+       u_1 &= \not{x}u_c\\
+       u_2 &= x\not{u_c} + xu_c = x
+     \end{align*}
+
+
+
+** Cheese pressing example - Control law
+*** Solenoid S1
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+     \[u_1 = \not{x}u_c \]
+     #+BEGIN_LaTeX
+            \begin{center}
+              \begin{tikzpicture}
+                \draw (0,0) to[opening switch, o-, label=$x$] (2,0) to[ switch, label=$u_c$, -o] (4,0);
+              \end{tikzpicture}
+            \end{center}
+            
+     #+END_LaTeX
+
+*** Solenoid S2
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+     \[u_2 = x \]
+     #+BEGIN_LaTeX
+            \begin{center}
+              \begin{tikzpicture}
+                \draw (0,0) to[opening switch, o-o, label=$x$] (4,0);
+              \end{tikzpicture}
+            \end{center}
+            
+     #+END_LaTeX
+
+
+** Cheese pressing example - Implementation of the control law
+     #+BEGIN_LaTeX
+        \begin{center}
+                 \begin{tikzpicture}
+                   \node at (0,0.5) {+24V};
+                   \node at (10,0.5) {0V};
+                   \draw (0,0) to[short, o-]  (0,-5);
+                   \draw (10,0) to[short, o-](10,-5);
+                 \end{tikzpicture}
+        \end{center}
+               
+     #+END_LaTeX
+   
+** Cheese pressing example - Implementation of the control law, solution
+     #+BEGIN_LaTeX
+          \begin{center}
+                   \begin{tikzpicture}
+                     \node at (0,0.5) {+24V};
+                     \node at (10,0.5) {0V};
+                     \draw (0,0) to[short, o-]  (0,-6);
+                     \draw (10,0) to[short, o-](10,-6);
+                     \draw (0,-0.3) to[opening switch, *-, label=$x$] (2,-0.3) to[ switch, label=$u_c$, ] (4,-0.3) to[short] (7,-0.3) to[twoport, label=$u_1$, -*] (10,-0.3);
+                     \draw (0,-2) to[switch, *-, label=$x$] (3,-2)  to[short] (7,-2) to[twoport, label=$u_2$, -*] (10,-2);
+                     \draw (0,-4) to[switch, *-, label=$u_1$] (2,-4) to[short] (7,-4)  to[twoport, label=S1, -*] (10,-4);
+                     \draw (0,-5.7) to[switch, *-, label=$u_2$] (2,-5.7)  to[short] (7,-5.7)  to[twoport, label=S2, -*] (10,-5.7);
+
+                   \end{tikzpicture}
+          \end{center}
+#+END_LaTeX
+
+* The lab assignment
+** Implementing the sequence A+B+B-A-
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../figures/AplusBplusBminAmin}
+#+END_CENTER
+
+** Implementing the sequence A+B+B-A-, control signal
+#+BEGIN_CENTER 
+ \includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
+ \includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+#+END_CENTER
+
+*** Control signal 
+    \[ u = \begin{bmatrix} u_A+ & u_A- & u_B+ & u_B- \end{bmatrix}^T, \]
+    with
+    \[ u_A+ = \begin{cases} 0 & \text{Solenoid extending A is not activated}\\
+                               1&\text{Solenoid extending A is activated}\\
+              \end{cases}
+   \]
+    \[ u_A- = \begin{cases} 0 & \text{Solenoid retracting A is not activated}\\
+                               1&\text{Solenoid retracting A is activated}\\
+              \end{cases}
+   \]
+   Similar for B.
+
+** Implementing the sequence A+B+B-A-, state variables
+#+BEGIN_CENTER 
+ \includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
+ \includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+#+END_CENTER
+
+*** State variables (naive)
+    \[ x = \begin{bmatrix} x_A & x_B \end{bmatrix}^T, \]
+    with
+    \[ x_{\{A,B\}} = \begin{cases} 0 & \text{Cylinder \{A,B\} retracted}\\
+                               1& \text{Cylinder \{A,B\} extended}
+                 \end{cases}
+   \]
+
+** Implementing the sequence A+B+B-A-, control law
+#+BEGIN_CENTER 
+ \includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
+ \includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+#+END_CENTER
+*** Control law (problematic)
+    Ignoring input signal $u_c$. Movement should be cyclic
+
+     #+attr_latex: :align |cc|cccc|
+     |-------+-------+--------+--------+--------+--------|
+     | $x_A$ | $x_B$ | $u_A+$ | $u_A-$ | $u_B+$ | $u_B-$ |
+     |-------+-------+--------+--------+--------+--------|
+     |     0 |     0 |        |        |        |        |
+     |     0 |     1 |        |        |        |        |
+     |     1 |     0 |        |        |        |        |
+     |     1 |     1 |        |        |        |        |
+     |-------+-------+--------+--------+--------+--------|
+
+    
+
+** Implementing the sequence A+B+B-A-, control law
+#+BEGIN_CENTER 
+ \includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
+ \includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+#+END_CENTER
+*** Control law (problematic)
+    Ignoring input signal $u_c$. Movement should be cyclic
+
+     #+attr_latex: :align |cc|cccc|
+     |-------+-------+--------+--------+--------+--------|
+     | $x_A$ | $x_B$ | $u_A+$ | $u_A-$ | $u_B+$ | $u_B-$ |
+     |-------+-------+--------+--------+--------+--------|
+     |     0 |     0 |      1 |      0 |      0 |      0 |
+     |   (0) |   (1) |      0 |      0 |      0 |      1 |
+     |     1 |     0 |      0 | 1 or 0 | 1 or 0 |      0 |
+     |     1 |     1 |      0 |      0 |      0 |      1 |
+     |-------+-------+--------+--------+--------+--------|
+
+    
+
+** Implementing the sequence A+B+B-A-, state variables
+
+*** State variables (better)
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+
+    \[ x = \begin{bmatrix} x_A & x_B & x_P\end{bmatrix}^T, \]
+    with
+    \[ x_{\{A,B\}} = \begin{cases} 0 & \text{Cylinder \{A,B\} retracted}\\
+                               1& \text{Cylinder \{A,B\} extended}
+                 \end{cases}
+   \]
+    \[ x_{P} = \begin{cases} 0 & \text{Cheese not yet pressed}\\
+                               1& \text{Cheese pressed}
+                 \end{cases}
+   \]
+
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :BEAMER_env: block
+    :END:      
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
+#+END_CENTER
+
+    
+** Implementing the sequence A+B+B-A-, control law
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: block
+    :END:      
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
+#+END_CENTER
+
+*** Control law (better)
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |ccc|cccc|
+     |-------+-------+-------+--------+--------+--------+--------|
+     | $x_A$ | $x_B$ | $x_P$ | $u_A+$ | $u_A-$ | $u_B+$ | $u_B-$ |
+     |-------+-------+-------+--------+--------+--------+--------|
+     |     0 |     0 |     0 |        |        |        |        |
+     |     1 |     0 |     0 |        |        |        |        |
+     |     1 |     0 |     1 |        |        |        |        |
+     |     1 |     1 |     1 |        |        |        |        |
+     |-------+-------+-------+--------+--------+--------+--------|
+
+    
+** Implementing the sequence A+B+B-A-, control law
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: block
+    :END:      
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
+#+END_CENTER
+
+*** Control law (better)
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |ccc|cccc|
+     |-------+-------+-------+--------+--------+--------+--------|
+     | $x_A$ | $x_B$ | $x_P$ | $u_A+$ | $u_A-$ | $u_B+$ | $u_B-$ |
+     |-------+-------+-------+--------+--------+--------+--------|
+     |     0 |     0 |     0 |      1 |      0 |      0 |      0 |
+     |     1 |     0 |     0 |      0 |      0 |      1 |      0 |
+     |     1 |     0 |     1 |      0 |      1 |      0 |      0 |
+     |     1 |     1 |     1 |      0 |      0 |      0 |      1 |
+     |-------+-------+-------+--------+--------+--------+--------|
+
+    
+** Implementing the sequence A+B+B-A-, control law
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :BEAMER_env: block
+    :END:      
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
+#+END_CENTER
+
+*** Control law (better)
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :BEAMER_env: block
+    :END:      
+
+     #+attr_latex: :align |ccc|cccc|
+     |-------+-------+-------+--------+--------+--------+--------|
+     | $x_A$ | $x_B$ | $x_P$ | $u_A+$ | $u_A-$ | $u_B+$ | $u_B-$ |
+     |-------+-------+-------+--------+--------+--------+--------|
+     |     0 |     0 |     0 |      1 |      0 |      0 |      0 |
+     |     1 |     0 |     0 |      0 |      0 |      1 |      0 |
+     |     1 |     0 |     1 |      0 |      1 |      0 |      0 |
+     |     1 |     1 |     1 |      0 |      0 |      0 |      1 |
+     |-------+-------+-------+--------+--------+--------+--------|
+
+     \begin{align*}
+       u_A+ &= \not{x_A}\\
+       u_A- &= x_A\not{x_B}x_P\\
+       u_B+ &= x_A\not{x_B}\not{x_P}\\
+       u_B- &= x_B
+     \end{align*}
+       
+    
+** Implementing the sequence A+B+B-A-, latching circuit for \(x_P\)
+
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:      
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
+#+END_CENTER
+
+*** Circuit for x_P
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:      
+     #+BEGIN_LaTeX
+            \begin{center}
+                     \begin{tikzpicture}
+                       \node at (0,0.5) {+24V};
+                       \node at (6,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-3);
+                       \draw (6,0) to[short, o-](6,-3);
+                       \draw (0,-0.3) to[switch, *-, ] (2,-0.3) to[ opening switch,  ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$x_P$, -*] (6,-0.3);
+                       \draw (0,-2) to[switch, *-, label=$x_P$] (2,-2)  to[short,-*] (2,-0.3);
+                     \end{tikzpicture}
+            \end{center}
+#+END_LaTeX
+
+Implement the circuit!
+
+** Implementing the sequence A+B+B-A-,  circuit diagram		   :noexport:
+   Assuming existence of latching circuit for $x_P$. Proximity sensors providing $\not{x_a}$ (A retracted) and $x_B$ (B extended).
+
+*** Control law
+    :PROPERTIES:
+    :BEAMER_col: 0.25
+    :BEAMER_env: block
+    :END:      
+     \begin{align*}
+       u_A+ &= \not{x_A}\\
+       u_A- &= x_A\not{x_B}x_P\\
+       u_B+ &= x_A\not{x_B}\not{x_P}\\
+       u_B- &= x_B
+     \end{align*}
+       
+*** Control law
+    :PROPERTIES:
+    :BEAMER_col: 0.75
+    :END:      
+  
+   #+BEGIN_LaTeX
+       \begin{center}
+                \begin{tikzpicture}
+                  \node at (0,0.5) {+24V};
+                  \node at (9,0.5) {0V};
+                  \draw (0,0) to[short, o-]  (0,-6);
+                  \draw (9,0) to[short, o-](9,-6);
+                  \draw (0,-0.3) to[switch, *-, label=$\not{x_A}$] (2,-0.3) (4,-0.3) to[short] (7,-0.3) to[twoport, label=$u_A+$, -*] (9,-0.3);
+                  \draw (0,-2) to[opening switch, *-, label=$\not{x_A}$] (2,-2)  to[ opening switch, label=$x_B$] (4,-2) to [switch, label=$x_P$] (6,-2) to[short] (7,-2) to[twoport, label=$u_A-$, -*] (9,-2);
+                  \draw (0,-3.7) to[opening switch, *-, label=$\not{x_A}$] (2,-3.7)  to[opening switch, label=$x_B$] (4,-3.7) to [opening switch, label=$x_P$] (6,-3.7) to[short] (7,-3.7) to[twoport, label=$u_B+$, -*] (9,-3.7);
+                  \draw (0,-5.4) to[switch, *-, label=$x_B$] (2,-5.4) to[short] (7,-5.4) to[twoport, label=$u_B-$, -*] (9,-5.4);
+                \end{tikzpicture}
+       \end{center}
+#+END_LaTeX
+
+    
+** For the report
+
+   - Truth table for the control law
+   - Control law as boolean expression
+   - Circuit diagram for the controller
+   - Screen shot and short video showing working solution in FluidSim
+   - Short video showing working solution in hardware

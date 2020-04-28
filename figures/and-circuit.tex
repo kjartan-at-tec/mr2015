@@ -1,0 +1,36 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \draw
+    (0,0) node[and port] (myand) {}
+    (myand.in 1) node[anchor=east] {A}
+    (myand.in 2) node[anchor=east] {B}
+    (myand.out) node[anchor=west] {AB};
+  \end{scope}
+  \begin{scope}[yshift=-7cm]
+    \node[coordinate] (Aplus) at (1.5, \circuitheight) {};
+    \node[coordinate] (Amin) at (1.5, 0) {};
+    \node[coordinate] (Bplus) at (3, \circuitheight) {};
+    \node[coordinate] (Bmin) at (3, 0) {};
+    \draw (0,0) to[american voltage source, label=5V] (0, \circuitheight) 
+    to[short,-o] ++(\circuitwidth,0);
+    \draw (0,0) to[short, -o] (\circuitwidth,0);
+    \node[and port] (and1) at (6, 4)  {};
+    \draw (Aplus) to[switch=A, -*] (Aplus |- and1.in 1) node[coordinate] (Ac) {} to[R=$R_1$] (Amin);
+    \draw (Bplus) to[switch=B, -*] (Bplus |- and1.in 2)  node[coordinate] (Bc) {} to[R=$R_1$] (Bmin);
+    \draw (Ac) to[short,] (and1.in 1);
+    \draw (Bc) to[short,] (and1.in 2);
+    \draw (and1.out) to[R=$R_2$,] ++(0,-1.6) to[empty led,] (and1.out |- 0,0);
+    \draw (0,0) to[short,] (0,-0.5) node[ground] {};
+  \end{scope}
+\end{circuitikz}
+\end{document}

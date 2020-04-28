@@ -1,0 +1,20 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \draw
+    (0,0) node[and port] (myand) {}
+    (myand.in 1) node[anchor=east] {$a$}
+    (myand.in 2) node[anchor=east] {$1$}
+    (myand.out) node[anchor=west] {$a$};
+  \end{scope}
+\end{circuitikz}
+\end{document}

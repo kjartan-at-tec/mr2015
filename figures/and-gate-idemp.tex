@@ -1,0 +1,20 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \node[and port] (myor) {};
+    \node[coordinate,left of=myor, node distance=2cm] (input) {};
+    \draw (input) node[anchor=east] {$a$} to[short] ++(0.4,0) |- (myor.in 1);
+    \draw (input) to[short] ++(0.4,0) |- (myor.in 2);
+    \node[anchor=west] at (myor.out) {$a$};
+  \end{scope}
+\end{circuitikz}
+\end{document}

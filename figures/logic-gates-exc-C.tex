@@ -1,0 +1,23 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning,circuits.logic.US,circuits.logic.IEC}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \node[nand port] (nand1) at (0,0) {};
+  \node[or port] (or1) at (4,-1) {};
+  \node[coordinate] (input3) at (nand1.in 2 |- or1.in 2) {};
+ 
+  \draw
+  (nand1.out) -| (or1.in 1)
+  (input3) -| (or1.in 2)
+  (nand1.in 1) node[anchor=east] {$x$}
+  (nand1.in 2) node[anchor=east] {$y$}
+  (input3) node[anchor=east] {$z$};
+\end{circuitikz}
+\end{document}

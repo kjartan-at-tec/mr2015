@@ -1,0 +1,280 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{epigraph}
+
+#+LaTex_HEADER:\definecolor{inputclr}{rgb}{1, 0.49, 0.0}
+#+LaTex_HEADER:\definecolor{outputclr}{rgb}{0., 0.3, 0.6}
+
+
+#+title: Process automation laboratory - linearization
+# #+date: 2019-02-27
+
+* What do I want the students to understand?			   :noexport:
+  - How to linearize a nonlinear system
+
+* Which activities will the students do?			   :noexport:
+  1. Concept question: What if operating point changes?
+
+* Intro
+** Why linear systems?
+   #+begin_export latex
+   \setlength\epigraphwidth{.8\textwidth}
+   \epigraph{Finally, we make some remarks on why linear systems are so important. The answer is simple: because we can solve them!}{\textit{Richard Feynman}\\\url{https://www.feynmanlectures.caltech.edu/I_25.html}}
+   #+end_export
+
+*** Notes                                                          :noexport:
+    I start by this quote from Richard Feynman, which was a really smart guy. In general linear systems are popular, because we can do so much with them. There is a very rich and powerful theory for these. And many times they are very useful too. 
+
+** Linear first-order system
+   \[ x + \tau \dot{x} = u \qquad \Leftrightarrow \qquad \dot{x} = \underbrace{-\frac{1}{\tau}x + \frac{1}{\tau} u}_{f(x, u)} \]
+
+*** equation
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+   Step response \[u(t) = \begin{cases} u_0, & t \ge 0,\\ 0, & \text{otherwise} \end{cases}\]
+
+*** graph
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}
+       \pgfmathsetmacro{\tconst}{2}
+       \pgfmathsetmacro{\kgain}{1}
+       \pgfmathsetmacro{\uconst}{1}
+       \pgfmathsetmacro{\xmax}{\uconst}
+       \pgfmathsetmacro{\ymax}{\uconst/\tconst}
+       \begin{axis}[
+	 %yshift=-5cm,
+	 clip=false,
+	 axis lines=middle,
+	 width = 8cm,
+	 height = 6cm,
+	 xlabel = {$x$},
+	 ylabel = {$\dot{x}$},
+	 xtick={0, \xmax},
+	 xticklabels={0, $u_0$},
+	 ytick={0, \ymax},
+	 yticklabels={0, $\frac{u_0}{\tau}$},
+	 %title={$\dot{x} = f(x) = -\frac{1}{\tau} x + \frac{1}{\tau}u_0$},
+	 ]
+	 \addplot[outputclr, thick, no marks, domain=-0.2:\xmax+0.2, samples=10] {-1.0/\tconst * x + 1.0/\tconst * \uconst} node[coordinate, pin=0:{$\dot{x}=f(x,u=u_0) = -\frac{1}{\tau} x + \frac{1}{\tau}u_0$}, pos=0.3] {};
+       \end{axis}
+     \end{tikzpicture}
+   \end{center}
+   #+end_export
+
+*** Notes                                                          :noexport:
+Let's start by looking at the first-order system that you should all be very familiar with by now. It has time-constant tau, and gain equal to one. I have written it so that the derivative term is a function of the state, x and the input u. This is a function of two variables, and it could be plotted as the surface, with xdot representing the height over the x-u plane [DRAW]. Now, if u is a constant (a step input) then we can graph xdot as a function of x only. It becomes a straight line. This is what it means for a differential equation to be linear. That the derivative depends linearly on the state and represented this way, it becomes a straight line. In the two-dimensional  case, it would be slanting plane, with We can use this graph to visualize the behaviour of the system. Think of the x-axis as a tight string, and the state at time t (the value of x at time t) represented as the position of a bead on this wire. So for a step-response, we have x=0 at t=0, and the bead starts in the origin. The velocity of the bead is given by xdot, which is positive, so the bead will move to the right (draw arrow). As it moves, the velocity (given by the straight line) decreases, which can be represented by a shorter arrow. As we approach u_0, the bead continues to move to the right (increasing x) but slower and slower. As t goes to infinity it will approach u0. x=u0 is an equilibrium state, since the derivative is zero there, so there is no change. Note also that it is a stable equilibrium, since a small deviation away from the equilibrium point will cause x to go back to x=u0. 
+
+Note that the slope is -1/tau, which is the same as the value of the pole of the system. 
+
+** Another relevant first-order system: Logistic growth
+   \[ \dot{x} = \underbrace{a\big(1 - \frac{x}{x_{max}}\big)x}_{f(x)} \]
+
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}
+       \pgfmathsetmacro{\gconst}{2}
+       \pgfmathsetmacro{\xmax}{1}
+       \pgfmathsetmacro{\ymax}{\gconst*\xmax/4}
+       \begin{axis}[
+	 %yshift=-5cm,
+	 clip=false,
+	 axis lines=middle,
+	 width = 8cm,
+	 height = 6cm,
+	 xlabel = {$x$},
+	 ylabel = {$\dot{x}$},
+	 xtick={0, \xmax},
+	 xticklabels={0, $x_{max}$},
+	 ytick={0, \ymax},
+	 yticklabels={0, $a\frac{x_{max}}{4}$},
+	 ymax=\ymax+0.1,
+	 xmax=\xmax+0.1,
+	 %title={$\dot{x} = f(x) = -\frac{1}{\tau} x + \frac{1}{\tau}u_0$},
+	 ]
+	 \addplot[outputclr, thick, no marks, domain=-0.05:\xmax+0.05, samples=100] {\gconst * (1- x/\xmax)*x} node[coordinate, pin=0:{$\dot{x}=f(x) = a\big(1 - \frac{x}{x_{max}}\big)x$}, pos=0.7] {};
+       \end{axis}
+     \end{tikzpicture}
+   \end{center}
+   {\footnotesize See 3Blue1Brown \texit{Exponential growth and epidemics} \url{https://youtu.be/Kas0tIxDvrg}}
+   #+end_export
+
+*** Notes                                                          :noexport:
+    Let's use the same idea, but now for a very relevant nonlinear system: Logistic growth. Have you talked about logistic growth in other classes? 
+    The model represents growth of a species. You can also think of it as the spread of the corona virus if nothing is done to prevent the spread. The model has two parameters: The base growth rate a, and the carrying capacity, x_max. In the context of the spread of the virus x_max as the population size. Note that there are two equilibrium points x=0 (no infected person) and x=x_max (everyone are infected). In both cases, there will be no change in the number of infected persons. 
+
+Now, think again on the bead on the wire. We start at t=0 with just very few infected people. So at t=0, the bead representing the value of x, is close to the origin, but positive. Then, since the derivative is positive, it will start to move to the right, away from the equilibrium point. This equilibrium point is unstable, and it has to do with the SLOPE of the line at the intersection, which is positive. And it will move faster and faster to the right, until we reach the midpoint. At some point half the population is infected, and that is when the growth of the infected population is fastest. After that the growth is positive, but not as fast, and we approach the case when all the population is infected. This equilibrium point is stable, and the slope is negative. In fact, to linearize the model about this equilibrium, is to determine the tangent at this point, and the slope of that tangent is equal to the POLE of the system. So if the tangent is positive the pole is in the right-half plane.  
+
+** Do in groups
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}
+       \pgfmathsetmacro{\gconst}{2}
+       \pgfmathsetmacro{\xmax}{1}
+       \pgfmathsetmacro{\ymax}{\gconst*\xmax/4}
+       \begin{axis}[
+	 %yshift=-5cm,
+	 clip=false,
+	 axis lines=middle,
+	 width = 8cm,
+	 height = 6cm,
+	 xlabel = {$x$},
+	 ylabel = {$\dot{x}$},
+	 xtick={0, \xmax},
+	 xticklabels={0, $x_{max}$},
+	 ytick={0, \ymax},
+	 yticklabels={0, $a\frac{x_{max}}{4}$},
+	 ymax=\ymax+0.1,
+	 xmax=\xmax+0.1,
+	 %title={$\dot{x} = f(x) = -\frac{1}{\tau} x + \frac{1}{\tau}u_0$},
+	 ]
+	 \addplot[outputclr, thick, no marks, domain=-0.05:\xmax+0.05, samples=100] {\gconst * (1- x/\xmax)*x} node[coordinate, pin=0:{$\dot{x}=f(x) = a\big(1 - \frac{x}{x_{max}}\big)x$}, pos=0.7] {};
+       \end{axis}
+     \end{tikzpicture}
+   \end{center}
+   #+end_export
+   1) In breakout rooms: One of you shares this slide (found on canvas, link in the program for the session)
+   2) Sketch the solution \(x(t)\) using the "bead-on-a-wire" idea for the inital value problem \(x(0) = 0.1x_{max}\).
+
+*** Notes                                                          :noexport:
+Now, think again on the bead on the wire. We start at t=0 with just very few infected people. So at t=0, the bead representing the value of x, is close to the origin, but positive. Then, since the derivative is positive, it will start to move to the right, away from the equilibrium point. This equilibrium point is unstable, and it has to do with the SLOPE of the line at the intersection, which is positive. And it will move faster and faster to the right, until we reach the midpoint. At some point half the population is infected, and that is when the growth of the infected population is fastest. After that the growth is positive, but not as fast, and we approach the case when all the population is infected. This equilibrium point is stable, and the slope is negative. In fact, to linearize the model about this equilibrium, is to determine the tangent at this point, and the slope of that tangent is equal to the POLE of the system. So if the tangent is positive the pole is in the right-half plane.  
+
+* Linearization
+** The general idea
+   Given a dynamical system described by a nonlinear differential equation
+      #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm, minimum height=12mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+    
+       \node[coordinate] (input) {};
+       \node[block, right of=input, node distance=20mm] (plant)  {System};
+       \node[coordinate, right of=plant, node distance=20mm] (output) {};
+
+       \draw[->] (input) -- node[above, pos=0.3, color=inputclr] {$u(t)$} (plant);
+       \draw[->] (plant) -- node[above, near end, color=outputclr] {$x(t)$} (output);
+     \end{tikzpicture}
+   \end{center}   
+#+end_export
+   \[ \dot{\textcolor{outputclr}{x}} = f(\textcolor{outputclr}{x}, \textcolor{inputclr}{u})\]
+
+   Find a linear approximation to the differential equation about an *operating point* \( (\textcolor{outputclr}{x_0}, \, \textcolor{inputclr}{u_0})\)
+  
+*** Notes                                                          :noexport:
+
+** The general picture
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}
+       \pgfmathsetmacro{\xnoll}{1.5}
+       \pgfmathsetmacro{\xmax}{2}
+       \pgfmathsetmacro{\fnoll}{sqrt(2-\xnoll)}
+       \begin{axis}[
+	 %yshift=-5cm,
+	 clip=false,
+	 axis lines = middle,
+	 width = 12cm,
+	 height = 8cm,
+	 %xlabel = {$x$},
+	 %ylabel = {$\dot{x}$},
+	 xtick={0, \xnoll, \xmax},
+	 xticklabels={0, $x_0$, $x_{max}$},
+	 ytick={0},
+	 %title={$\dot{x} = f(x) = \sqrt{x_{max} -  x}$},
+	 ]
+	 \addplot[outputclr, thick, no marks, domain=0:\xmax, samples=100] {sqrt(\xmax-x)} node[coordinate, pin=-120:{$\dot{x}=f(x)= \sqrt{x_{max} -  x}$}, pos=0.1] {};
+	 \addplot[green!70!black, thick, no marks, domain=0.8:\xmax, samples=10] {sqrt(\xmax-\xnoll) - 0.5/sqrt(\xmax-\xnoll)*(x-\xnoll)} node[coordinate, pin=0:{$\dot{x}\approx f(x_0) + \frac{d}{dx}f|_{x_0}(x-x_0)$}, pos=0.1] {};
+	 \node[coordinate, pin=180:{$f(x_0)$},] at (axis cs: 0.02, \fnoll) {};
+	 \node at (axis cs: -0.3, 1.5) {$\dot{x}$};
+	 \node at (axis cs: 1.9, -0.3) {$x$};
+	 %\node[coordinate, pin=-90:{$x_0$},] at (axis cs: \xnoll, -0.2) {};
+       \end{axis}
+
+     \end{tikzpicture}
+   \end{center}
+   #+end_export
+
+*** Notes                                                          :noexport:
+For a linear system the derivative xdot must be a linear function of the variabel x. So we obtain such a model by approximating the function by a straight line. In this case we have the function xdot = sqrt{xmax-x}, which resembles the model we have for the pneumatic tank-valve system. And we see that a straight line would be a good approximation over a rather large span of x-values over to the left [DRAW]. But close to xmax, the curvature is much higher, and a linear approximation is only good for a smaller range of x [DRAW]. 
+
+In the standard linearization procedure, the straight line we approximate with is the tangen line. But it could also be a useful approximation to take some line with average slope over a larger span. But here, we'll follow the standard linearization procedure. 
+
+We choose a point on the line, which corresponds to the typical value of x, and call that the *operating point* x. The tangent line has a slope which is given by the derivative of the function f(x), evaluated at this operating point. This means that we can express the tangent line as the function value at the operating point + the slope times a deviation from the operating point. 
+
+** Linearizing the tank-valve nonlinear model
+
+\[ \dot{p} = a_0(u_v - 5)|p_s - p|^{a_1} = f(p, u_v), \quad \text{with} \; a_0=1.1\; \text{and}\; a_1 = 0.47\]
+1. Given operating pressure $p_0$. Choose operating point $u_0$ which gives equilibrium \(f(p_0, u_0) = 0\). 
+ 
+
+** Linearizing the tank-valve nonlinear model
+
+\[ \dot{p} = a_0(u_v - 5)|p_s - p|^{a_1} = f(p, u_v), \quad \text{with} \; a_0=1.1\; \text{and}\; a_1 = 0.47\]
+1. Given operating pressure $p_0$. Choose operating point $u_0$ which gives equilibrium \(f(p_0, u_0) = 0\). 
+2. Introduce deviation variables: \(u_v = 5 + \textcolor{inputclr}{u}\) and \(p = p_0 + \textcolor{outputclr}{y}\).
+ 
+
+** Linearizing the tank-valve nonlinear model
+
+\[ \dot{p} = a_0(u_v - 5)|p_s - p|^{a_1} = f(p, u_v), \quad \text{with} \; a_0=1.1\; \text{and}\; a_1 = 0.47\]
+3. [@3] Determine partial derivatives
+   \begin{align*}
+   \frac{\partial f}{\partial p} &= a_0(u_v-5)a_1|p_s - p|^{a_1-1}(-1)\\
+   \frac{\partial f}{\partial u_v} &= a_0|p_s - p|^{a_1}
+   \end{align*}
+4. Evaluate partial derivatives at the operating point \((p_0, u_0\).
+   \begin{align*}
+   \frac{\partial f}{\partial p}\big|_{p_0, u_0} &= 0\\
+   \frac{\partial f}{\partial u_v}\big|_{p_0, u_0} &=  a_0|p_s - p_0|^{a_1}
+   \end{align*}
+
+
+
+
+** Linearizing the tank-valve nonlinear model
+
+\[ \dot{p} = a_0(u_v - 5)|p_s - p|^{a_1} = f(p, u_v), \quad \text{with} \; a_0=1.1\; \text{and}\; a_1 = 0.47\]
+4. [@4] Evaluate partial derivatives at the operating point \((p_0, u_0\).
+   \begin{align*}
+   \frac{\partial f}{\partial p}\big|_{p_0, u_0} &= 0\\
+   \frac{\partial f}{\partial u_v}\big|_{p_0, u_0} &=  a_0|p_s - p_0|^{a_1}
+   \end{align*}
+5. Form the linearized model
+   \begin{equation}
+   \begin{aligned} \dot{p} = \dot{\textcolor{outputclr}{y}} &= f(p, u_v) \approx f(p_0, u_0) + \frac{\partial f}{\partial p}|_{p_0, u_0}(p-p_0) + \frac{\partial f}{\partial u_v}|_{p_0, u_0}(u_v - u_0)\\
+    &=  a_0|p_s - p_0|^{a_1} \textcolor{inputclr}{u}.
+   \end{aligned}
+   \end{equation}
+
+** Linearizing the tank-valve nonlinear model
+   We arrive at the linear model
+   \begin{equation*}
+   \begin{aligned}
+    \dot{\textcolor{outputclr}{y}} &= a_0|p_s - p_0|^{a_1} \textcolor{inputclr}{u}, \qquad \text{which in the Laplace domain is}\\[4mm]
+    \textcolor{outputclr}{Y(s)} &= \frac{a_0|p_s - p_0|^{a_1}}{s} \textcolor{inputclr}{U(s)}    
+   \end{aligned}
+   \end{equation}
+
+   
+
+** Do in groups
+
+\[ \dot{p} = a_0(u_v - 5)|p_s - p|^{a_1}\; \textcolor{red!90!black}{-\, v} = f(p, u_v)\]
+
+1. Given operating pressure $p_0$. Choose operating point $u_0$ which gives equilibrium \(f(p_0, u_0) = 0\).
+2. Introduce deviation variables: \(u_v = u_0 + \textcolor{inputclr}{u}\) and \(p = p_0 + \textcolor{outputclr}{y}\).
+3. Determine partial derivatives.
+4. Evaluate partial derivatives at the operating point.
+5. Form the linearized model
+

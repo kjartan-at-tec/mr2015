@@ -1,0 +1,561 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169]
+#+OPTIONS: H:2
+# #+BEAMER_THEME: Madrid
+#+COLUMNS: %45ITEM %10BEAMER_ENV(Env) %10BEAMER_ACT(Act) %4BEAMER_COL(Col) %8BEAMER_OPT(Opt)
+     
+#+LaTex_HEADER: \usepackage{khpreamble}
+
+#+title: Process automation laboratory - Root locus, PI control
+# #+date: 2019-02-27
+
+* What do I want the students to understand?			   :noexport:
+  - How to read and sketch a root locus
+
+* Which activities will the students do?			   :noexport:
+  1. Sktech simple root locus
+  2. Concept question: Values of K and step responses
+
+* Intro
+
+** Repetition: The RC-circuit - a first-order system
+#+begin_export latex
+\begin{center}
+\begin{tikzpicture}
+\node (circuit) {\includegraphics[width=0.4\linewidth]{../../figures/RC-input-output.pdf}};
+\begin{scope}[xshift=6cm, yshift=-0.8cm]
+  \draw[->] (-2,0) to (1,0);
+  \draw[->] (0,-1) to (0,1);
+  \node at (1,1) {$s$-plane};
+  \node[color=red!80!black] (pole) at (-1.2, 0) {\large $\times$};
+  \node[below of=pole, node distance=5mm, ] {$-\frac{1}{\tau}$};
+\end{scope}
+\node (laplace) at(6,1.5)  {$U_C(s) = \frac{1}{s\underbrace{RC}_{\tau} + 1} U(s)$};
+\begin{axis}[
+yshift=-5cm,
+clip=false,
+width = 12cm,
+height = 3.5cm,
+xlabel = {$t$},
+ylabel = {V},
+title = {$u_C(t) = 10 (1 - \mathrm{e}^{\frac{t}{\tau}})$, for $u(t)$ step of size 10},
+]
+\addplot[blue!80!black, thick, no marks, const plot] coordinates {
+(-0.2,0)
+(0,10)
+(2,0)
+(4,10)
+(6,0)
+} node[coordinate, pos=0.75, pin=180:{$u(t)$}] {};
+\addplot[orange!80!black, thick, no marks, domain=-0.2:0, samples=2] {0};
+\addplot[orange!90!black, thick, no marks, domain=0:2, samples=40] {10*(1-exp(-x/0.2)};
+\addplot[orange!90!black, thick, no marks, domain=4:6, samples=40] {10*(1-exp(-(x-4)/0.2)} node[coordinate, pos=0.84, pin=-90:{$u_C(t)$}] {};
+\addplot[orange!90!black, thick, no marks, domain=2:4, samples=40] {10*exp(-(x-2)/0.2)};
+\end{axis}
+
+\end{tikzpicture}
+\end{center}
+#+end_export
+** A concept to keep in mind
+   In a system with an *integrator* steady-state can only exist if the signal to the integrator is zero
+
+#+BEGIN_CENTER 
+ \includegraphics[width=0.4\linewidth]{../../figures/RC-input-output.pdf}
+#+END_CENTER
+
+   \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=25mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (input) {};
+     \node[block, right of=input] (cap) {$C$};
+     \node[coordinate, right of=cap] (output) {};
+
+     \draw[->] (finput) -- node[above, pos=0.3] {$i(t)$} (cap);
+     \draw[->] (cap) -- node[above, pos=0.7] {$u_C(t)$} (output);
+
+     \node[right of=output, node distance=40mm] {$u_C(t) = u_C(0) + \frac{1}{C}\int i(s) ds$};
+     \end{tikzpicture}
+   \end{center}
+
+   
+
+** Feedback control 
+
+   \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=25mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr] (controller) {$F(s)$};
+     \node[above of=controller, node distance=6mm] {controller};
+     \node[sumnode, right of=controller, node distance=20mm] (sumdist) {\tiny $\sum$};
+     \node[block, right of=sumdist, node distance=20mm] (plant) {$G(s)$};
+     \node[above of=plant, node distance=6mm] {plant};
+     \node[coordinate, right of=plant, node distance=20mm] (output) {};
+     \node[coordinate, above of=sumdist, node distance=20mm] (dist) {};
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above] {$e(t)$} (controller);
+     \draw[->] (controller) -- node[above] {$u(t)$} (sumdist);
+     \draw[->] (sumdist) -- node[above] {$$} (plant);
+     \draw[->] (plant) -- node[coordinate] (measure) {} node[above, pos=0.8] {$y(t)$} (output);
+     \draw[->] (measure) -- ++(0,-14mm) -| node[right, pos=0.95] {$-$} (sumerr);
+     \draw[->] (dist) -- node[right, pos=0.3] {$v(t)$} (sumdist);
+
+     \end{tikzpicture}
+   \end{center}
+
+   For the closed-loop system we get
+   \[ Y(s) = \frac{G_o(s)}{1+G_o(s)}Y_{ref}(s) + \frac{G(s)}{1 + G_o(s)} V(s), \]
+   where $G_o(s)=G(s)F(s)$ is called the /loop gain/.
+
+** Feedback control 
+
+   \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=25mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr] (controller) {$F(s)$};
+     \node[above of=controller, node distance=6mm] {controller};
+     \node[sumnode, right of=controller, node distance=20mm] (sumdist) {\tiny $\sum$};
+     \node[block, right of=sumdist, node distance=20mm] (plant) {$G(s)$};
+     \node[above of=plant, node distance=6mm] {plant};
+     \node[coordinate, right of=plant, node distance=20mm] (output) {};
+     \node[coordinate, above of=sumdist, node distance=12mm] (dist) {};
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above] {$e(t)$} (controller);
+     \draw[->] (controller) -- node[above] {$u(t)$} (sumdist);
+     \draw[->] (sumdist) -- node[above] {$$} (plant);
+     \draw[->] (plant) -- node[coordinate] (measure) {} node[above, pos=0.8] {$y(t)$} (output);
+     \draw[->] (measure) -- ++(0,-14mm) -| node[right, pos=0.95] {$-$} (sumerr);
+     \draw[->] (dist) -- node[right, pos=0.3] {$v(t)$} (sumdist);
+
+     \end{tikzpicture}
+   \end{center}
+
+   \[ Y(s) = \frac{G_o(s)}{1+G_o(s)}Y_{ref}(s) + \frac{G(s)}{1+G_o(s)}V(s), \quad G_o(s)=G(s)F(s). \]
+
+   Let $G(s) = \frac{1}{s}$ and $F(s)=K$. 
+   1) Will there be a steady-state control error ($\lim_{t\to\infty} e(t)$  \neq 0) if $y_{ref}(t)=0$ and $v(t)$ is a unit step? Why? *Answer on Socrative*
+   2) What is the *characteristic equation* for the closed-loop system? 
+   3) Sketch the location of the poles in the imaginary plane as the gain $K$ varies from 0 to $\infty$. *Group exercise in breakout room*
+#   What is the closed-loop system from the disturbance $v(t)$ to the control signal $u(t)$?
+
+# Use Mason
+
+
+** How to get rid of the steady-state error
+   Use a proportional-integral controller (PI controller)
+   \[ F(s) = K_p + \frac{K_i}{s}. \]
+   This gives closed-loop system
+
+  \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=20mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr, node distance=24mm] (Ipart) {$\frac{K_i}{s}$};
+     \node[block, above of=Ipart, node distance=11mm] (Ppart) {$K_p$};
+     \node[sumnode, right of=Ipart, node distance=14mm] (sumcontrol) {\tiny $\sum$};
+     \node[sumnode, right of=sumcontrol, node distance=20mm] (sumdist) {\tiny $\sum$};
+     \node[block, right of=sumdist, node distance=20mm] (plant) {$G(s)$};
+     \node[coordinate, right of=plant, node distance=24mm] (output) {};
+     \node[coordinate, above of=sumdist, node distance=12mm] (dist) {};
+     
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above, near start] {$e(t)$} node[coordinate] (split) {} (Ipart);
+     \draw[->] (split) |- (Ppart);
+     \draw[->] (Ppart) -| (sumcontrol);
+     \draw[->] (Ipart) -- (sumcontrol);
+
+     \draw[->] (sumcontrol) -- node[above] {$u(t)$} (sumdist);
+     \draw[->] (sumdist) -- node[above] {$$} (plant);
+     \draw[->] (plant) -- node[coordinate] (measure) {} node[above, pos=0.8] {$y(t)$} (output);
+     \draw[->] (measure) -- ++(0,-14mm) -| node[right, pos=0.95] {$-$} (sumerr);
+     \draw[->] (dist) -- node[right, pos=0.3] {$v(t)$} (sumdist);
+
+     \end{tikzpicture}
+   \end{center}
+
+
+** How to get rid of the steady-state error
+   Use a proportional-integral controller (PI controller)
+   \[ F(s) = K_p + \frac{K_i}{s}. \]
+   This gives closed-loop system
+
+  \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=20mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr, node distance=24mm] (Ipart) {$\frac{K_i}{s}$};
+     \node[block, above of=Ipart, node distance=11mm] (Ppart) {$K_p$};
+     \node[sumnode, right of=Ipart, node distance=14mm] (sumcontrol) {\tiny $\sum$};
+     \node[sumnode, right of=sumcontrol, node distance=20mm] (sumdist) {\tiny $\sum$};
+     \node[block, right of=sumdist, node distance=20mm] (plant) {$G(s)$};
+     \node[coordinate, right of=plant, node distance=24mm] (output) {};
+     \node[coordinate, above of=sumdist, node distance=12mm] (dist) {};
+     
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above, near start] {$e(t)$} node[coordinate] (split) {} (Ipart);
+     \draw[->] (split) |- (Ppart);
+     \draw[->] (Ppart) -| (sumcontrol);
+     \draw[->] (Ipart) -- (sumcontrol);
+
+     \draw[->] (sumcontrol) -- node[above] {$u(t)$} (sumdist);
+     \draw[->] (sumdist) -- node[above] {$$} (plant);
+     \draw[->] (plant) -- node[coordinate] (measure) {} node[above, pos=0.8] {$y(t)$} (output);
+     \draw[->] (measure) -- ++(0,-14mm) -| node[right, pos=0.95] {$-$} (sumerr);
+     \draw[->] (dist) -- node[right, pos=0.3] {$v(t)$} (sumdist);
+
+     \end{tikzpicture}
+   \end{center}
+
+   *The only way that steady-state can exist is if the input to the integrator of the controller is zero.*
+
+
+* The root locus diagram
+
+** Root locus
+   Given loop gain \[G_o(s) = K \frac{Q(s)}{P(s)}\] how does the solutions to the characteristic equation 
+   \[ 1 + G_o(s) = 0 \quad \Leftrightarrow\quad P(s) + KQ(s) = 0 \]
+   (i.e. the *poles* of the closed-loop system) depend on $K$?
+
+** The root locus for PI-control of the integrator
+
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../../figures/rlocus-integrator-PI}
+#+END_CENTER
+
+** Root locus question 
+
+** Root locus definition
+Let
+\[\begin{cases} P(s)&=s^n+a_1s^{n-1}+\dots+a_n = (s-p_1)(s-p_2)\cdots(s-p_n)\\ 
+Q(s)&=s^m+b_1s^{m-1}+\dots+b_m=(s-q_1)(s-q_2)\cdots(s-q_m) \end{cases},\ \ \ n\ge m \]
+The root locus shows how the roots to the equation
+\begin{equation}
+\label{eq:P(s)+KQ(s)=0}
+P(s)+K\cdot Q(s)=0,\ \ \ 0\le K<\infty
+\end{equation}
+ depend on the parameter $K$. The root locus consists of the set of all points in the complex plane that are roots to \eqref{eq:P(s)+KQ(s)=0} for some non-negative value of $K$.
+
+** Characteristics of the root locus
+The polynomial \( P(s)+KQ(s)=0 \) above will always have $n$ roots. Each gives a /branch/ in the root locus. Since the polynomials $P(s)$ and $Q(s)$ have real-valued coefficients, all roots are either real or complex-conjugated pairs. This means that the root locus is /symmetric about the real axis./ Other characteristics
+- Start points - marked by crosses
+- End points - marked  by circles
+- Asymptotes
+- Pieces of the real axis
+
+** Start- and end points
+- Start points ::  These are the $n$ roots of \(P(s) + KQ(s)\) for $K=0$, i.e. the roots of $P(s)$. These are the open-loop poles, and are marked with crosses '\(\times\)'
+- End points :: These are the $m$ (finite) roots of \(P(s)+KQ(s)\) when $K\to\infty$, and are hence the roots of $Q(s)$. The end points are marked with circles '\(\circ\)'
+
+** The real axis
+
+Those parts of the real axis that have an *odd number* of real-valued start- or end points to the right (including multiplicity) belong to the root locus. 
+
+*** Explanation							   :noexport:
+The reason is as follows. Write the equation to solve
+\[\frac{P(s)}{Q(s)} = -K, \quad \text{and factorize to get} \]
+\[\frac{(s-p_1)(s-p_2) \cdots (s-p_n)}{(s-q_1)(s-q_2)\cdots(s-q_m)} = -K\]
+The values $p_1, \ldots, p_n$ are the start points and $q_1, \ldots q_m$ are the end points. Sufficiently far to the right on the real axis all the factors will be positive (or have postive real part). The fraction is positive and so the equation does not have a solution. Hence, the part of the real axis to the right of all real-valued start- and end points is *not* part of the root locus. As $s$ decreases, the fraction on the left will change sign every time one passes a real-valued start- or end point.
+
+# The branches of the root locus cannot cross, so when two branches meet (in a double root), the branches must "break out" in the complex plane. This happens at 90 degrees.
+
+
+** Asymptotes
+With $n$ starting points and $m$ end points, then $m$ of the branches will go to end points. The rest will go out towards infinity along $n-m$ asymptotes. The asymptotes go out symmetrically from a point on the real axis. 
+
+
+** Asymptotes, directions
+The directions of the asymptotes are given by the expression
+\[ \theta_k = \arg s = \frac{(2k+1)\pi}{n-m}, \; k \in \mathbb{Z} \]
+Example: 6 start points and 3 end points gives \(n-m = 6-3 = 3 \) and the directions
+
+*** math
+    :PROPERTIES:
+    :BEAMER_col: 0.35
+    :END:
+
+\[ \theta = \begin{cases} \frac{\pi}{3}, & k=0\\ \pi, & k=1\\ -\frac{\pi}{3}, & k=-1 \end{cases}. \]
+
+*** fig	
+    :PROPERTIES:
+    :BEAMER_col: 0.65
+    :END:
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../../MR2004/figures/root-locus-ex-3asymptotes-crop}
+#+END_CENTER
+
+** Asymptotes, intersection with the real axis			   :noexport:
+ Consider again 
+ \[ \left(s + \frac{a_1 - b_1}{n-m}\right)^{n-m} = -K \]
+The intersection with the real axis is found for $K=0$, which leads to the equation
+\[ \left(s + \frac{a_1 - b_1}{n-m}\right)^{n-m} = 0 \]
+with solution
+\[ s = \frac{ -a_1 + b_1}{n-m}. \]
+
+The coefficients $a_1$ and $b_1$ are related to the roots of $P(s)$ and $Q(s)$, respectively, as
+\begin{align*}
+a_1 &= - \sum_{i=0}^n p_i\\
+b_1 &= - \sum_{i=0}^m q_i
+\end{align*}
+
+** Asymptotes, intersection with the real axis 
+# The directions:
+# \[ \theta_k = \frac{(2k+1)\pi}{n-m}, \; k \in \mathbb{Z} \]
+  
+\[ i.p. = \frac{ \sum_{i=0}^n p_i - \sum_{i=0}^m q_i}{n-m}, \]
+where $\{p_i\}$ are the starting points (open-loop poles) and $\{q_i\}$ are the end points (open-loop zeros). 
+
+* Examples
+** PI-Control of the integrator
+   Write the controller 
+   \[ F(s) = K_p + \frac{K_i}{s} = K\big(( 1 + \frac{1}{sT_i}\Big) = K/T_i \frac{sT_i + 1}{s}, \]
+   and let $T_i = 2$. 
+   The characteristic equation can be written
+   \[ s^2 + \frac{K}{2}(2s + 1) = 0\]
+  
+   - Start points: $n=2$, in  $s=0$
+   - End points: $m=1$, $s=-\frac{1}{2}$
+   - Asymptotes: $m-n=1$, with directions $\theta=\pi$
+   - The real line: The real-line left of the end-point is part of the root locus.
+
+** PI-Control of the integrator
+
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../../figures/rlocus-integrator-PI}
+#+END_CENTER
+
+** Do on your own: First-order system
+   Instead of the plant being an integrator
+   \[ F(s) = \frac{1}{s}\]
+   consider a stable first order system
+   \[ F(s) = \frac{1}{s+a}\]
+   How does the root locus change?
+
+* Old exercises                                                    :noexport:
+** Do on your own: P-control 
+
+   \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=20mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr] (controller) {$K$};
+     \node[above of=controller, node distance=6mm] {controller};
+     \node[block, right of=controller, node distance=24mm] (valve) {$\frac{2}{s+2}$};
+     \node[above of=valve, node distance=6mm] {valve};
+     \node[sumnode, right of=valve, node distance=16mm] (sum) {\tiny $\sum$};
+     \node[block, right of=sum, node distance=20mm] (tank) {$\frac{4}{s+1}$};
+     \node[above of=tank, node distance=6mm] {tank};
+     \node[coordinate, right of=tank, node distance=20mm] (output) {};
+     \node[coordinate, above of=sum, node distance=12mm] (disturbance) {};
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)=0$} (sumerr);
+     \draw[->] (sumerr) -- node[above] {$e(t)$} (controller);
+     \draw[->] (controller) -- node[above] {$u(t)$} (valve);
+     \draw[->] (valve) -- node[above] {} (sum);
+     \draw[->] (sum) -- node[above] {$w(t)$} (tank);
+     \draw[->] (tank) -- node[coordinate] (measure) {} node[above, pos=0.8] {$y(t)$} (output);
+     \draw[->] (disturbance) -- node[right, pos=0.2] {$v(t)$} (sum);
+     \draw[->] (measure) -- ++(0,-14mm) -| node[right, pos=0.95] {$-$} (sumerr);
+     
+
+     \end{tikzpicture}
+   \end{center}
+
+   /Draw the root-locus to find out how the poles of the closed-loop system depends on \(K\)!/
+
+
+** Pair the root locus plots with the correct loop gain
+   \begin{align*}
+   G_1(s) &= K\frac{s+2}{s(s+4)}, \qquad G_2(s) = K\frac{s+2}{s(s+4)(s+8)}\\
+   G_3(s) &= K\frac{s+2}{s^2(s+4)}, \qquad G_4(s) = K \frac{1}{s^2(s+4)}.
+   \end{align*}
+   
+   #+BEGIN_CENTER 
+    \includegraphics[width=0.6\linewidth]{../../MR2004/matlab/rlocus_2x2-crop}
+   #+END_CENTER
+
+
+
+* PID control                                                      :noexport:
+
+** The PID controller
+
+  \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=20mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr] (controller) {$F(s)$};
+     \node[above of=controller, node distance=6mm] {controller};
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above] {$e(t)$} (controller);
+     \draw[->] (sumerr) ++(0,-12mm) node[below] {$y(t)$} -- node[left, pos=0.8] {$-$}  (sumerr);
+     \draw[->] (controller) -- ++(22mm,0mm) node[above] {$u(t)$};
+
+     \end{tikzpicture}
+   \end{center}
+
+\begin{equation*}
+u(t)=\underbrace{K_pe(t)}_{\text{{\bf P}roportional}}+
+\underbrace{K_i\int_0^t e(\tau)d\tau}_{\text{{\bf I}ntegrating}}+
+\underbrace{K_d\frac{de}{dt}}_{\text{{\bf D}erivating}}
+\end{equation*}
+where $e(t)=r(t)-y(t)$ is the control error. Taking the Laplacetransform
+\begin{equation*}
+U(s)=\underbrace{\left(K_p+\frac{K_i}{s}+K_ds\right)}_{=F(s)}E(s),\ \ \ E(s)=R(s)-Y(s)
+\end{equation*}
+Alternative parameterization:
+\[F(s) = K \left( 1 + \frac{1}{sT_i} + sT_d\right).\]
+
+
+* Modification to the D-part                                       :noexport:
+** The problem with the D-part
+
+# \begin{equation*}
+# \begin{split}
+# u(t) &= \underbrace{K_pe(t)}_{\text{{\bf P}roportional}}+
+# \underbrace{K_i\int_0^t e(\tau)d\tau}_{\text{{\bf I}ntegrating}}+
+# \underbrace{K_d\frac{de}{dt}}_{\text{{\bf D}erivating}}\\
+#     &= u_p(t) + u_i(t) + u_d(t).
+# \end{split}
+# \end{equation*}
+
+  \begin{center}
+     \begin{tikzpicture}[scale = 0.8, node distance=20mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+     
+     \node[coordinate] (refinput) {};
+     \node[sumnode, right of=refinput, node distance=20mm] (sumerr) {\tiny $\sum$};
+     \node[block, right of=sumerr, node distance=24mm] (Ipart) {$\frac{K_i}{s}$};
+     \node[block, above of=Ipart, node distance=11mm] (Ppart) {$K_p$};
+     \node[block, below of=Ipart, node distance=11mm] (Dpart) {$sK_d$};
+     \node[sumnode, right of=Ipart, node distance=14mm] (sumcontrol) {\tiny $\sum$};
+     \node[block, right of=sumcontrol, node distance=30mm] (plant) {$G(s)$};
+     \node[coordinate, right of=plant, node distance=24mm] (output) {};
+     
+     \draw[->] (plant) -- node[coordinate, above] (yplot) {} node[coordinate] (measure) {} node[very near end, above] {$y(t)$} (output);
+     \node[sumnode, below of=measure, node distance=22mm] (sumnoise) {\tiny $\sum$};
+
+     \draw[->] (refinput) -- node[above, pos=0.3] {$y_{ref}(t)$} (sumerr);
+     \draw[->] (sumerr) -- node[above, near start] {$e(t)$} node[coordinate] (split) {} (Ipart);
+     \draw[->] (split) |- (Ppart);
+     \draw[->] (split) |- (Dpart);
+     \draw[->] (Dpart) -| (sumcontrol);
+     \draw[->] (Ppart) -| (sumcontrol);
+     \draw[->] (Ipart) -- (sumcontrol);
+
+     \draw[->] (sumcontrol) -- node[above] {$u(t)$} (plant);
+     \draw[->] (sumnoise) ++(14mm, 0) -- node[above, very near start] {$n(t)$} (sumnoise);
+     \draw[->] (sumnoise) -| node[left, pos=0.93] {$-$} (sumerr);
+     \draw[->] (measure) -- (sumnoise);
+
+     \draw[shift={(13.6,0.3)}, color=yellow!90!black, domain=0:2, samples=200] plot (\x, {0.4*exp(-0.5*\x)*sin(200*\x)});
+     \draw[shift={(13.6,-1.8)}, color=red, domain=0:2, samples=200] (yplot) plot (\x, {0.1*rand});
+     \draw[shift={(9,-1.9)}, color=orange, domain=0:2, samples=200] (yplot) plot (\x, {0.4*exp(-0.5*\x)*sin(200*\x)+0.1*rand});
+     
+     \end{tikzpicture}
+   \end{center}
+
+A pure derivative 
+\[ U_d(s)=sK_d E(s)\]
+cannot and should not be implemented in practice
+
+
+** Modified D-part
+   \[ U(s) = K\left(E(s) + \frac{1}{T_is}E(s) + T_dsE(s)\right) \]
+
+A simple modification to the D-part is to use the transfer function
+\[F_d(s) = \frac{sT_d}{1 + \frac{sT_d}{N}}, \]
+where \(N\) is typically in the range 3-20.
+
+ *Plot the pole and zero of the modified PD-controller*
+    \[F_{PD}(s) = K\left( 1 + \frac{sT_d}{1 + \frac{sT_d}{N}}\right)\]
+
+*** Notes							   :noexport:
+    Write \[F_{PD} = K \frac{ 1+sT_d/N + sTd }{1 + sT_d/N}
+                   = K \frac{ 1+ sT_d(1+1/N)}{1 + sT_d/N}\]
+
+    So, zero in s = - 1/(T_d(1+1/N)) \approx - 1/T_d
+
+    pole in s = - N/T_d 
+
+* Inverted pendulum example					   :noexport:
+** Example system - the inverted pendulum
+   #+BEGIN_CENTER 
+    \includegraphics[width=0.65\linewidth]{../figures/inverted-pendulum.png}
+   #+END_CENTER
+
+   \[ Y(s) = \underbrace{\frac{b}{s^2 + as - w^2}}_{G(s)}U(s).\]
+
+** Direct calculation of the PID parameters			   :noexport:
+*** pzmap
+   :PROPERTIES:
+   :BEAMER_col: 0.45
+   :END:
+\begin{center}
+
+  \begin{tikzpicture}[node distance=2cm]
+    \begin{axis} [
+      width=5cm,
+      height=5cm,
+      axis lines=middle,
+      xtick = {-1},
+      xticklabels = {$-\omega$},
+      xlabel = {Re},
+      ytick = {-2,2},
+      yticklabel pos=right,
+      yticklabels={$$, $$},
+      ylabel = Im,
+      xmin=-1.3, xmax=1.3,
+      ymin=-1.3, ymax=1.3,
+      ]
+      \addplot[mark=x, mark size=4pt, only marks]  coordinates {(-1,0) (-0.707,0.707) (-0.707,-0.707)};
+
+      \addplot[dashed] coordinates { (0,0) (-0.707, 0.707)} node[midway, above] {$\omega$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+*** text
+   :PROPERTIES:
+   :BEAMER_col: 0.65
+   :END:
+
+Assume we want a closed-loop system with the characteristic polynomial
+\begin{equation*}
+\begin{split}
+A_c(s) &= (s+\omega)(s^2 + 1.4\omegas + \omega^2)\\
+       &= s^3 + (1.4\omega + \omega)s^2 + (1.4\omega^2 + \omega^2)s + \omega^3\\
+       &= s^3 + 2.4\omegas^2 + 2.4\omega^2s + \omega^3.
+\end{split}
+\end{equation*}
+
+How should we choose $K$, $T_i$ and $T_d$?
+
+*** Notes							   :noexport:
+
+Loop gain 
+G_o(s) = G(s)F(s) = b/(s^2 + as - w^2)K \frac{ T_ds^2 + s + 1}{sT_i}
+       = K \frac{ b(T_ds^2 + s + 1}{(s^2 + as - w^2)sT_i
+Characteristic eqn
+
+P(s) + KQ(s) = 0
+
+T_is(s^2 + as - w^2) + Kb(T_ds^2 + s + 1) = 0
+
+s^3 + as^2 - w^2 s + KbT_d/T_i s^2 + Kb/T_is + Kb/T_i = 0
+
+s^3 + (a + KbT_d/T_i)s^2 + (Kb/T_i- w^2) s +  Kb/T_i = 0
+

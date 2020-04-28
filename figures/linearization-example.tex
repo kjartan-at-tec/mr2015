@@ -1,0 +1,38 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+
+\usepackage{pgf,tikz,pgfplots}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\definecolor{inputclr}{rgb}{1, 0.49, 0.0}
+\definecolor{outputclr}{rgb}{0., 0.3, 0.6}
+
+\begin{document}
+
+     \begin{tikzpicture}
+       \pgfmathsetmacro{\xnoll}{1.5}
+       \pgfmathsetmacro{\xmax}{2}
+       \pgfmathsetmacro{\fnoll}{sqrt(2-\xnoll)}
+       \begin{axis}[
+	 %yshift=-5cm,
+	 clip=false,
+	 axis lines = middle,
+	 width = 12cm,
+	 height = 8cm,
+	 %xlabel = {$x$},
+	 %ylabel = {$\dot{x}$},
+	 xtick={0, \xnoll, \xmax},
+	 xticklabels={0, $x_0$, $x_{max}$},
+	 ytick={0},
+	 %title={$\dot{x} = f(x) = \sqrt{x_{max} -  x}$},
+	 ]
+	 \addplot[outputclr, thick, no marks, domain=0:\xmax, samples=100] {sqrt(\xmax-x)} node[coordinate, pin=-120:{$\dot{x}=f(x)= \sqrt{x_{max} -  x}$}, pos=0.1] {};
+	 \addplot[green!70!black, thick, no marks, domain=0.8:\xmax, samples=10] {sqrt(\xmax-\xnoll) - 0.5/sqrt(\xmax-\xnoll)*(x-\xnoll)} node[coordinate, pin=0:{$\dot{x}\approx f(x_0) + \frac{d}{dx}f|_{x_0}(x-x_0)$}, pos=0.1] {};
+	 \node[coordinate, pin=180:{$f(x_0)$},] at (axis cs: 0.02, \fnoll) {};
+	 \node at (axis cs: -0.3, 1.5) {$\dot{x}$};
+	 \node at (axis cs: 1.9, -0.3) {$x$};
+	 %\node[coordinate, pin=-90:{$x_0$},] at (axis cs: \xnoll, -0.2) {};
+       \end{axis}
+
+     \end{tikzpicture}
+ \end{document}

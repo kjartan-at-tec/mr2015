@@ -1,0 +1,14 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \draw (0,0) to[push button, label=$a$, o-] (2,0) to[short, label=$1$, -o] (4,0);
+\end{circuitikz}
+\end{document}

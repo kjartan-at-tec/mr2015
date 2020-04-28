@@ -1,0 +1,21 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \draw
+    (0,0) node[not port] (myand) {}
+    (myand.in) node[anchor=east] {$a$};
+    \draw (2,0) node[not port] (neg) {}
+    (neg.out) node[anchor=west] {$a$};
+    \draw (myand.out) to node[above] {$\bar{a}$} (neg.in);
+  \end{scope}
+\end{circuitikz}
+\end{document}

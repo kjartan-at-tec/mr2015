@@ -1,0 +1,59 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\xs{5cm}
+\pgfmathsetmacro\ys{-4cm}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}[xshift=0]
+    \node[and port] (ingate1) at (0,0) {};
+    \node[or port] (outgate) at (2, -1) {};
+    \draw (ingate1.out) |- (outgate.in 1);
+    \draw (ingate1.in 2) node[anchor=east] {$b$}; 
+    \draw (ingate1.in 1) node[anchor=east] {$a$}; 
+    \draw (outgate.out) node[anchor=west] {$f$}; 
+    \node[anchor=east] (c) at (ingate1.in 1 |- outgate.in 2) {$c$};
+    \draw (outgate.in 2) -- (c);
+  \end{scope}    
+
+  \begin{scope}[xshift=\xs]
+    \node[and port] (ingate1) at (0,0) {};
+    \node[and port] (ingate2) at (0,-2) {};
+    \node[or port] (outgate) at (2, -1) {};
+    \draw (ingate1.out) |- (outgate.in 1);
+    \draw (ingate2.out) |- (outgate.in 2);
+    \draw (ingate1.in 2) node[anchor=east] {$b$}; 
+    \draw (ingate2.in 1) node[anchor=east] {$a$}; 
+    \draw (ingate1.in 1) node[anchor=east] {$a$}; 
+    \draw (ingate2.in 2) node[anchor=east] {$c$}; 
+    \draw (outgate.out) node[anchor=west] {$f$}; 
+  \end{scope}
+  
+  \begin{scope}[xshift=0, yshift=\ys]
+    \node[or port] (ingate1) at (0,0) {};
+    \node[and port] (outgate) at (2, -1) {};
+    \draw (ingate1.out) |- (outgate.in 1);
+    \draw (ingate1.in 2) node[anchor=east] {$b$}; 
+    \draw (ingate1.in 1) node[anchor=east] {$a$}; 
+    \draw (outgate.out) node[anchor=west] {$f$}; 
+    \node[anchor=east] (c) at (ingate1.in 1 |- outgate.in 2) {$\bar{b}$};
+    \draw (outgate.in 2) -- (c);
+  \end{scope}    
+  \begin{scope}[xshift=\xs, yshift=\ys]
+    \node[or port] (ingate1) at (0,0) {};
+    \node[and port] (ingate2) at (0,-2) {};
+    \node[nand port] (outgate) at (2, -1) {};
+    \draw (ingate1.out) |- (outgate.in 1);
+    \draw (ingate2.out) |- (outgate.in 2);
+    \draw (ingate1.in 2) node[anchor=east] {$b$}; 
+    \draw (ingate2.in 1) node[anchor=east] {$d$}; 
+    \draw (ingate1.in 1) node[anchor=east] {$a$}; 
+    \draw (ingate2.in 2) node[anchor=east] {$c$}; 
+    \draw (outgate.out) node[anchor=west] {$f$}; 
+  \end{scope}    
+\end{circuitikz}
+\end{document}

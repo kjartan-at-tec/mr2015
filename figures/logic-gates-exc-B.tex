@@ -1,0 +1,26 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning,circuits.logic.US,circuits.logic.IEC}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \node[nor port] (nor1) at (0,0) {};
+  \node[and port] (and1) at (3,-0.3) {};
+  \node[not port] (not1) at (-0.6,-2) {};
+  \node[nand port] (nand1) at (6,-1) {};
+
+  \draw
+  (nor1.out) -- node[coordinate, pos=0.6] (branch) {} (and1.in 1)
+  (nor1.in 2) ++(0.1,0) -- ++(0,-0.6) -| (and1.in 2)
+  (and1.out) -| (nand1.in 1)
+  (not1.out) -| (nand1.in 2)
+  (nor1.in 1) node[anchor=east] {$x$}
+  (nor1.in 2) node[anchor=east] {$y$}
+  (not1.in) node[anchor=east] {$z$};
+\end{circuitikz}
+\end{document}

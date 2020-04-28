@@ -1,0 +1,28 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \draw
+    (0,0) node[nand port] (myand) {}
+    (myand.in 1) node[anchor=east] {$a$}
+    (myand.in 2) node[anchor=east] {$b$}
+    (myand.out) node[anchor=west] {$\overline{a\cdot b}$};
+  \end{scope}
+  \node at (1.8,0) {$\Leftrightarrow$};
+  \begin{scope}[xshift=4cm]
+    \draw
+    (0,0) node[or port] (myand) {}
+    (myand.in 1) node[anchor=east] {$\bar{a}$}
+    (myand.in 2) node[anchor=east] {$\bar{b}$}
+    (myand.out) node[anchor=west] {$\bar{a} +  \bar{b}$};
+  \end{scope}
+\end{circuitikz}
+\end{document}

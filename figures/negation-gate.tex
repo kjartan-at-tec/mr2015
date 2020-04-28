@@ -1,0 +1,19 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \begin{scope}
+    \draw
+    (0,0) node[not port] (myand) {}
+    (myand.in) node[anchor=east] {$a$}
+    (myand.out) node[anchor=west] {$\bar{a}$};
+  \end{scope}
+\end{circuitikz}
+\end{document}
