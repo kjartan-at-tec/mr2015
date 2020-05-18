@@ -1,0 +1,27 @@
+\documentclass{standalone}
+\usepackage{tikz}
+\usetikzlibrary{positioning, calc}
+
+\begin{document}
+\begin{tikzpicture}
+  \node {\includegraphics[width=6cm]{./cheese-stamping.png}};
+  \node[coordinate] (cstart) at (-3.8,-3) {};
+  \node[coordinate] (cstart2) at (-1.1,-3) {};
+  \pgfmathsetmacro\sw{0.2}
+  \pgfmathsetmacro\sd{0.5}
+  \pgfmathsetmacro\slen{1.5}
+  \pgfmathsetmacro\skew{0.3}
+  \begin{scope}[rotate=30]
+    \draw[] (cstart) -- ++(-\sw*\skew,\sw) -- ++(\slen, 0) -- ++ (\skew*2*\sw, -2*\sw) node[coordinate] (corner) {} -- ++ (-\slen, 0) -- cycle;
+    \draw[] (cstart) ++(-\sw*\skew, \sw) -- ++(-0.5*\skew*\sd, -\skew*\sd) -- ++ (2*\sw*\skew, -2*\sw) -- ++(\slen, 0) -- (corner);
+    \draw[double] ($(corner) + (-0.01, 0.1)$) -- ++(0.4*\slen, 0);
+  \end{scope}
+  \begin{scope}[rotate=30]
+    \draw[] (cstart2) -- ++(-\sw*\skew,\sw) -- ++(\slen, 0) -- ++ (\skew*2*\sw, -2*\sw) node[coordinate] (corner) {} -- ++ (-\slen, 0) -- cycle;
+    \draw[] (cstart2) ++(-\sw*\skew, \sw) -- ++(-0.5*\skew*\sd, -\skew*\sd) -- ++ (2*\sw*\skew, -2*\sw) -- ++(\slen, 0) -- (corner);
+    \draw[double] ($(corner) + (-0.01, 0.1)$) -- ++(0.4*\slen, 0);
+  \end{scope}
+  \node at ($(cstart) + (0,6mm)$) {\large  A};
+  \node at (-2,1) {\large B};
+\end{tikzpicture}
+\end{document}

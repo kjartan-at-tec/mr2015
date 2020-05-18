@@ -1,4 +1,4 @@
-% Created 2020-04-24 vie 10:35
+% Created 2020-05-14 jue 12:30
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=1610]{beamer}
 \usepackage[utf8]{inputenc}
@@ -19,16 +19,17 @@
 \usepackage{pdfpages}
 \usepackage{circuitikz}
 \usepgfplotslibrary{groupplots}
-\usetikzlibrary{positioning}
+\usetikzlibrary{positioning,circuits.plc.ladder}
 \renewcommand*{\not}[1]{\ensuremath{\bar{#1}}}
 \renewcommand*{\not}[1]{\ensuremath{\overline{#1}}}
+\newcommand*{\coil}[1]{to[short] ++(0.5, 0) node[coordinate] (orig) {} arc [start angle=180, end angle=150,radius=8mm] (orig) arc [start angle=180, end angle=210,radius=8mm] (orig) ++(1cm, 0) node[coordinate] (coilend) {} arc [start angle=0, end angle=30,radius=8mm] (coilend) arc [start angle=0, end angle=-30,radius=8mm] (coilend) to[short] ++(0.5cm, 0) (orig) ++(0.5, 0.8) node {#1}}
 \usetheme{default}
 \author{Kjartan Halvorsen}
 \date{\today}
-\title{Logic control and boolean algebra}
+\title{Logic control of electro-pneumatic systems}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
- pdftitle={Logic control and boolean algebra},
+ pdftitle={Logic control of electro-pneumatic systems},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
@@ -38,57 +39,54 @@
 \maketitle
 
 \section{Intro}
-\label{sec:org67c67af}
+\label{sec:orge60d4be}
 
 
+\section{Logic control and boolean algebra - simple intro example}
+\label{sec:orgbd55af7}
+\begin{frame}[label={sec:org7c854ce}]{Cheese pressing example, sequence A+A-}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{../../figures/cheese-stamping.png}
+\end{center}
+{\tiny From FESTO Didactic}
+\end{frame}
 
-\section{Logic control and boolean algebra}
-\label{sec:org81ff278}
-\begin{frame}[label={sec:orgc2fb03f}]{A logic control loop}
+\begin{frame}[label={sec:org330cfec}]{A logic control loop}
 \begin{center}
 \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org895be34}]{Cheese pressing example}
-\begin{center}
-\includegraphics[width=0.5\linewidth]{../../figures/cheese-stamping.png}
-\end{center}
-\begin{LaTeX}
-\{\tiny From FESTO Didactic\}
-\end{LaTeX}
-\end{frame}
-
-\begin{frame}[label={sec:org3956e0f}]{Cheese pressing example - Variables}
-Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
+\begin{frame}[label={sec:org3a16aac}]{Cheese pressing example - Variables}
+Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylinder.
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{block}{State variable}
-\[ x_k = \begin{cases} 0 & \text{Cylinder retracted}\\1 & \text{Cylinder extended}\end{cases}\]
+\[ x = \begin{cases} 0 & \text{Cylinder retracted}\\1 & \text{Cylinder extended}\end{cases}\]
 \end{block}
 \begin{block}{Control signal}
 \[ u = \begin{bmatrix} u_1\\u_2 \end{bmatrix}, \]
 with
 \begin{align*}
-u_1 &= \begin{cases} 0 & \text{Don't activate S1}\\1 & \text{Activate S1 }\end{cases}\\
-u_2 &= \begin{cases} 0 & \text{Don't activate S2}\\1 & \text{Activate S2}\end{cases}\\
+u_1 &= \begin{cases} 0 & \text{Don't activate UA+}\\1 & \text{Activate UA+ }\end{cases}\\
+u_2 &= \begin{cases} 0 & \text{Don't activate UA-}\\1 & \text{Activate UA-}\end{cases}\\
 \end{align*}
 \end{block}
 \end{column}
 
 \begin{column}{0.5\columnwidth}
+\includegraphics[width=0.6\linewidth]{../../figures/AplAmin-solenoids.png}
 \begin{block}{Command signal}
 \[ u_{c} = \begin{cases} 0 & \text{Button unpushed}\\1 & \text{Button pushed}\end{cases}. \]
 \end{block}
 \end{column}
 \end{columns}
 \end{frame}
-
-\begin{frame}[label={sec:org08ed2a4}]{Cheese pressing example - Plant dynamics and control law}
-Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
+\begin{frame}[label={sec:orgdae007b}]{Cheese pressing example - Plant dynamics and control law}
+Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylinder.
 \begin{columns}
 \begin{column}{0.5\columnwidth}
-\begin{block}{Plant dynamics}
+\begin{block}{Plant dynamics \(x_{k+1} = g(x_k, u_k)\)}
 \begin{center}
 \begin{tabular}{|cc|cc|}
 \hline
@@ -98,11 +96,11 @@ Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the
 0 & 0 & 0 & 0\\
 0 & 1 & 0 & 0\\
 1 & 0 & 0 & 1\\
-(1) & (1) & 0 & undefined\\
+1 & 1 & 0 & 0\\
 0 & 0 & 1 & 1\\
 0 & 1 & 1 & 0\\
 1 & 0 & 1 & 1\\
-(1) & (1) & 1 & undefined\\
+1 & 1 & 1 & 1\\
 \hline
 \end{tabular}
 \end{center}
@@ -110,137 +108,72 @@ Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the
 \end{column}
 
 \begin{column}{0.5\columnwidth}
-\begin{block}{Control law}
+\begin{block}{Control law \(u_k = f(x, u_c)\)}
 \begin{center}
 \begin{tabular}{|cc|cc|}
 \hline
 \(x\) & \(u_{c}\) & \(u_1\) & \(u_2\)\\
 \hline
 0 & 0 & 0 & 0\\
-0 & 1 & 1 & 0\\
 1 & 0 & 0 & 1\\
+0 & 1 & 1 & 0\\
 1 & 1 & 0 & 1\\
 \hline
 \end{tabular}
 \end{center}
+
+\begin{align*}
+  u_1 &= \qquad\qquad\\
+  u_2 &= 
+\end{align*}
 \end{block}
 \end{column}
 \end{columns}
 \end{frame}
-
-
-\section{Boolean algebra, minterms and maxterms}
-\label{sec:org7d592ef}
-\begin{frame}[label={sec:orgf5ab4de}]{Boolean algebra}
-\(X, Y \in \{0,1\}\)
-\begin{columns}
-\begin{column}{0.5\columnwidth}
-\begin{block}{AND}
+\begin{frame}[label={sec:org168f725}]{Cheese pressing example - implementing the control  law}
 \begin{center}
-\begin{tabular}{|cc|c|}
-\hline
-\(X\) & \(Y\) & \(X\) AND \(Y\)\\
-\hline
-0 & 0 & 0\\
-0 & 1 & 0\\
-1 & 0 & 0\\
-1 & 1 & 1\\
-\hline
-\end{tabular}
+	 \begin{tikzpicture}
+	   \node at (-2,0.5) {+24V};
+	   \node at (8,0.5) {0V};
+	   \draw (-2,0) to[short, o-]  (-2,-3);
+	   \draw (8,0) to[short, o-](8,-3);
+	   \draw (6, -0.5) \coil{$u_1$};
+	   \draw (6,-2.5) \coil{$u_2$};
+      \end{tikzpicture}
 \end{center}
-
 \begin{center}
-\begin{tikzpicture}
-  \draw (0,0) to[switch, label=$X$, o-] (2,0) to[switch, label=$Y$, -o] (4, 0);
-\end{tikzpicture}
+  \begin{tikzpicture}[circuit plc ladder,]
+    \draw(0,0) to [contact NO={info={normally open}}] ++(2,0);
+    \draw(4,0) to [contact NC={info={normally closed}}] ++(2,0);
+  \end{tikzpicture}
 \end{center}
-\alert{Closed circuit \(\Leftrightarrow\) 1}
-
-\alert{Open circuit \(\Leftrightarrow\) 0}
-\end{block}
-\end{column}
-
-\begin{column}{0.5\columnwidth}
-\begin{block}{OR}
 \begin{center}
-\begin{tabular}{|cc|c|}
-\hline
-\(X\) & \(Y\) & \(X\) OR \(Y\)\\
-\hline
-0 & 0 & 0\\
-0 & 1 & 1\\
-1 & 0 & 1\\
-1 & 1 & 1\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{center}
-\begin{tikzpicture}
-  \draw (0,0) to[switch, label=$X$, o-o] (4,0);
-  \draw (1,0) to[short] (1,-1) to[switch, l_=$Y$, ] (3, -1) to[short] (3, 0);
-\end{tikzpicture}
-\end{center}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-\begin{frame}[label={sec:org442a143}]{Boolean algebra, contd}
-\(X, Y, Z \in \{0,1\}\)
-
-\begin{center}
-\begin{tabular}{r|c|c|}
- & Property & Dual\\
-\hline
-Properties of 0 and 1 & \(X+0=X\) & \(X\cdot 0=0\)\\
- & \(X+1=1\) & \(X \cdot 1 = X\)\\
-Idempotent & \(X+X=X\) & \(X\cdot X = X\)\\
-Complementarity & \(X+\not{X}=1\) & \(X\cdot \not{X}=0\)\\
-Involution & \(\not{\not{X}}=X\) & \\
-Commutative & \(X+Y=Y+X\) & \(X\cdot Y = Y\cdot X\)\\
-Associative & \((X+Y) + Z = X + (Y+Z)\) & \((XY)Z = Z(YZ)\)\\
-Distributive & \(X\cdot (Y+Z) = XY + XZ\) & \(X+YZ=(X+Y)(X+Z)\)\\
-\hline
-\end{tabular}
+  \begin{tikzpicture}
+    \draw(0,0) to [switch, label={normally open}] ++(2,0);
+    \draw(4,0) to [opening switch, label={normally closed}] ++(2,0);
+  \end{tikzpicture}
 \end{center}
 \end{frame}
-
-\begin{frame}[label={sec:org11fe889}]{Boolean algebra, contd}
-\(X, Y, Z \in \{0,1\}\)
-
-\begin{center}
-\begin{tabular}{r|c|c|}
- & Theorem & Dual\\
-\hline
-Absorption & \(X+XY=X(1+Y)=X\) & \(X(X+Y)=X\)\\
-Logic adjacency & \(XY + X\not{Y} = X(Y+\not{Y}) =X\) & \((X+Y)(X+\not{Y}) = X\)\\
-De Morgan's & \(\not{X+Y}=\not{X}\not{Y}\) & \(\not{XY} = \not{X} + \not{Y}\)\\
-\hline
-\end{tabular}
-\end{center}
-\end{frame}
-
 
 \section{Latching circuit}
-\label{sec:org21f48c3}
-\begin{frame}[label={sec:org1e4f80e}]{An electrical circuit with memory}
+\label{sec:org0c112cf}
+\begin{frame}[label={sec:org6a03413}]{Intermezzo - An electrical circuit with memory}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{block}{Latching circuit}
-\begin{LaTeX}
 \begin{center}
          \begin{tikzpicture}
            \node at (0,0.5) {+24V};
            \node at (6,0.5) {0V};
            \draw (0,0) to[short, o-]  (0,-3);
            \draw (6,0) to[short, o-](6,-3);
-           \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$, -*] (6,-0.3);
+           \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$] (6,-0.3); %\coil{$R$};
            \draw (0,-2) to[switch, *-, label=$R$] (2,-2)  to[short,-*] (2,-0.3);
          \end{tikzpicture}
 \end{center}
-\end{LaTeX}
 \end{block}
 \end{column}
+
 
 \begin{column}{0.4\columnwidth}
 \begin{block}{Truth table}
@@ -264,178 +197,31 @@ De Morgan's & \(\not{X+Y}=\not{X}\not{Y}\) & \(\not{XY} = \not{X} + \not{Y}\)\\
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgfc96bd9}]{An electrical circuit with memory}
-\begin{columns}
-\begin{column}{0.6\columnwidth}
-\begin{block}{Latching circuit}
-\begin{LaTeX}
-\begin{center}
-         \begin{tikzpicture}
-           \node at (0,0.5) {+24V};
-           \node at (6,0.5) {0V};
-           \draw (0,0) to[short, o-]  (0,-3);
-           \draw (6,0) to[short, o-](6,-3);
-           \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$, -*] (6,-0.3);
-           \draw (0,-2) to[switch, *-, label=$R$] (2,-2)  to[short,-*] (2,-0.3);
-         \end{tikzpicture}
-\end{center}
-\end{LaTeX}
-\end{block}
-\end{column}
-
-\begin{column}{0.4\columnwidth}
-\begin{block}{Truth table}
-\begin{center}
-\begin{tabular}{|ccc|c|}
-\(X\) & \(Y\) & \(R_k\) & \(R_{k+1}\)\\
-\hline
-0 & 0 & 0 & 0\\
-0 & 0 & 1 & 1\\
-0 & 1 & 0 & 0\\
-0 & 1 & 1 & 0\\
-1 & 0 & 0 & 1\\
-1 & 0 & 1 & 1\\
-1 & 1 & 0 & 0\\
-1 & 1 & 1 & 0\\
-\hline
-\end{tabular}
-\end{center}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-\section{Return to example}
-\label{sec:orgc94041b}
-\begin{frame}[label={sec:orge36e1ee}]{Cheese pressing example - Plant dynamics and control law revisited}
-Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the cylinder.
-\begin{columns}
-\begin{column}{0.5\columnwidth}
-\begin{block}{Plant dynamics}
-\begin{center}
-\begin{tabular}{|cc|cc|}
-\hline
- &  & state & \\
-\(u_{1,k}\) & \(u_{2,k}\) & \(x_k\) & \(x_{k+1}\)\\
-\hline
-0 & 0 & 0 & 0\\
-0 & 1 & 0 & 0\\
-1 & 0 & 0 & 1\\
-(1) & (1) & 0 & undefined\\
-0 & 0 & 1 & 1\\
-0 & 1 & 1 & 0\\
-1 & 0 & 1 & 1\\
-(1) & (1) & 1 & undefined\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{align*} 
-  x_{k+1} &= u_{1,k}\not{u_{2,k}}\not{x_k} + \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}x_k\\ &=  \not{u_{1,k}}\not{u_{2,k}}x_k + u_{1,k}\not{u_{2,k}}
-\end{align*}
-\end{block}
-\end{column}
-
-\begin{column}{0.5\columnwidth}
-\begin{block}{Control law}
-\begin{center}
-\begin{tabular}{|cc|cc|}
-\hline
-\(x\) & \(u_{c}\) & \(u_1\) & \(u_2\)\\
-\hline
-0 & 0 & 0 & 0\\
-0 & 1 & 1 & 0\\
-1 & 0 & 0 & 1\\
-1 & 1 & 0 & 1\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{align*}
-  u_1 &= \not{x}u_c\\
-  u_2 &= x\not{u_c} + xu_c = x
-\end{align*}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-
-\begin{frame}[label={sec:org4f9c0a5}]{Cheese pressing example - Control law}
-\begin{columns}
-\begin{column}{0.5\columnwidth}
-\begin{block}{Solenoid S1}
-\[u_1 = \not{x}u_c \]
-\begin{LaTeX}
-\begin{center}
-  \begin{tikzpicture}
-    \draw (0,0) to[opening switch, o-, label=$x$] (2,0) to[ switch, label=$u_c$, -o] (4,0);
-  \end{tikzpicture}
-\end{center}
-\end{LaTeX}
-\end{block}
-\end{column}
-
-\begin{column}{0.5\columnwidth}
-\begin{block}{Solenoid S2}
-\[u_2 = x \]
-\begin{LaTeX}
-\begin{center}
-  \begin{tikzpicture}
-    \draw (0,0) to[opening switch, o-o, label=$x$] (4,0);
-  \end{tikzpicture}
-\end{center}
-\end{LaTeX}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}[label={sec:org099ba24}]{Cheese pressing example - Implementation of the control law}
-\begin{LaTeX}
-\begin{center}
-         \begin{tikzpicture}
-           \node at (0,0.5) {+24V};
-           \node at (10,0.5) {0V};
-           \draw (0,0) to[short, o-]  (0,-5);
-           \draw (10,0) to[short, o-](10,-5);
-         \end{tikzpicture}
-\end{center}
-\end{LaTeX}
-\end{frame}
-
-\begin{frame}[label={sec:orge976c20}]{Cheese pressing example - Implementation of the control law, solution}
-\begin{LaTeX}
-\begin{center}
-         \begin{tikzpicture}
-           \node at (0,0.5) {+24V};
-           \node at (10,0.5) {0V};
-           \draw (0,0) to[short, o-]  (0,-6);
-           \draw (10,0) to[short, o-](10,-6);
-           \draw (0,-0.3) to[opening switch, *-, label=$x$] (2,-0.3) to[ switch, label=$u_c$, ] (4,-0.3) to[short] (7,-0.3) to[twoport, label=$u_1$, -*] (10,-0.3);
-           \draw (0,-2) to[switch, *-, label=$x$] (3,-2)  to[short] (7,-2) to[twoport, label=$u_2$, -*] (10,-2);
-           \draw (0,-4) to[switch, *-, label=$u_1$] (2,-4) to[short] (7,-4)  to[twoport, label=S1, -*] (10,-4);
-           \draw (0,-5.7) to[switch, *-, label=$u_2$] (2,-5.7)  to[short] (7,-5.7)  to[twoport, label=S2, -*] (10,-5.7);
-
-         \end{tikzpicture}
-\end{center}
-\end{LaTeX}
-\end{frame}
-
 \section{The lab assignment}
-\label{sec:orga08f675}
-\begin{frame}[label={sec:org4244982}]{Implementing the sequence A+B+B-A-}
+\label{sec:org84149d7}
+
+\begin{frame}[label={sec:org559d99e}]{The lab assignment}
 \begin{center}
-\includegraphics[width=0.8\linewidth]{../figures/AplusBplusBminAmin}
+\includegraphics[width=0.4\linewidth]{../../figures/cheese-pressing-two-cylinders}
+ \includegraphics[width=0.58\linewidth]{../../figures/AplusBplusBminAmin}
+\end{center}
+
+\begin{center}
+\includegraphics[width=0.8\linewidth]{../../figures/logic-control-loop}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgcbc9d84}]{Implementing the sequence A+B+B-A-, control signal}
+
+\begin{frame}[label={sec:org9570e2e}]{Implementing the sequence A+B+B-A-}
 \begin{center}
-\includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
-\includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+\includegraphics[width=0.8\linewidth]{../../figures/AplusBplusBminAmin}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgcc75451}]{Implementing the sequence A+B+B-A-, control signal}
+\begin{center}
+\includegraphics[width=0.42\linewidth]{../../figures/AplBplBminAmin-pneum.png}
+\includegraphics[width=0.58\linewidth]{../../figures/logic-control-loop}
 \end{center}
 
 \begin{block}{Control signal}
@@ -445,18 +231,14 @@ Activating solenoid S1 extends the cylinder, activating solenoid S2 retracts the
                                1&\text{Solenoid extending A is activated}\\
               \end{cases}
    \]
- \[ u_A- = \begin{cases} 0 & \text{Solenoid retracting A is not activated}\\
-                               1&\text{Solenoid retracting A is activated}\\
-              \end{cases}
-   \]
-Similar for B.
+etc.
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org15b87dc}]{Implementing the sequence A+B+B-A-, state variables}
+\begin{frame}[label={sec:org84cd8f8}]{Implementing the sequence A+B+B-A-, state variables}
 \begin{center}
-\includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
-\includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+\includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
+\includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
 \end{center}
 
 \begin{block}{State variables (naive)}
@@ -469,13 +251,13 @@ with
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org29852ff}]{Implementing the sequence A+B+B-A-, control law}
+\begin{frame}[label={sec:org8d7ec46}]{Implementing the sequence A+B+B-A-, control law}
 \begin{center}
-\includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
-\includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+\includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
+\includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
 \end{center}
 \begin{block}{Control law (problematic)}
-Ignoring input signal \(u_c\). Movement should be cyclic
+Ignoring input signal \(u_c\) (no start/stop buttons). Movement should be cyclic
 
 \begin{center}
 \begin{tabular}{|cc|cccc|}
@@ -483,9 +265,9 @@ Ignoring input signal \(u_c\). Movement should be cyclic
 \(x_A\) & \(x_B\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
 \hline
 0 & 0 &  &  &  & \\
-0 & 1 &  &  &  & \\
 1 & 0 &  &  &  & \\
 1 & 1 &  &  &  & \\
+0 & 1 &  &  &  & \\
 \hline
 \end{tabular}
 \end{center}
@@ -494,10 +276,10 @@ Ignoring input signal \(u_c\). Movement should be cyclic
 
 
 
-\begin{frame}[label={sec:orgfa37bcd}]{Implementing the sequence A+B+B-A-, control law}
+\begin{frame}[label={sec:org85c4849}]{Implementing the sequence A+B+B-A-, control law}
 \begin{center}
-\includegraphics[width=0.3\linewidth]{../figures/AplusBplusBminAmin}
-\includegraphics[width=0.68\linewidth]{../figures/logic-control-loop}
+\includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
+\includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
 \end{center}
 \begin{block}{Control law (problematic)}
 Ignoring input signal \(u_c\). Movement should be cyclic
@@ -508,9 +290,9 @@ Ignoring input signal \(u_c\). Movement should be cyclic
 \(x_A\) & \(x_B\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
 \hline
 0 & 0 & 1 & 0 & 0 & 0\\
-(0) & (1) & 0 & 0 & 0 & 1\\
-1 & 0 & 0 & 1 or 0 & 1 or 0 & 0\\
+1 & 0 & 0 & 1 or 0 & 0 or 1 & 0\\
 1 & 1 & 0 & 0 & 0 & 1\\
+(0) & (1) & 0 & 0 & 0 & 1\\
 \hline
 \end{tabular}
 \end{center}
@@ -519,165 +301,259 @@ Ignoring input signal \(u_c\). Movement should be cyclic
 
 
 
-\begin{frame}[label={sec:org078e432}]{Implementing the sequence A+B+B-A-, state variables}
+\begin{frame}[label={sec:orgb489c40}]{Implementing the sequence A+B+B-A-, the problem}
+\alert{The correct control signal (action) is not uniquely defined by the position of the cylinders}
+\begin{center}
+\includegraphics[width=0.5\linewidth]{../../figures/AplusBplusBminAmin}\\
+\includegraphics[width=0.8\linewidth]{../../figures/logic-control-loop}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgbd7ced9}]{Implementing the sequence A+B+|B-A-}
+\alert{Dividing the sequence into groups (a.k.a. cascade method)}
+\[ \underbrace{\text{A+B+}}_{\text{Group 1}}| \underbrace{\text{B-A-}}_{\text{Group 2}} \]
+ \begin{center}
+\begin{tikzpicture}
+%\pgfplotsset{set layers=default}
+  \begin{groupplot} [
+    group style={
+      group name=timeplot,
+      group size=1 by 2,
+      xlabels at=all,
+      horizontal sep=1cm,
+      vertical sep=1cm,
+    }, 
+    clip=false,
+    height=3.3cm, width=9.3cm,
+    axis line style={->},
+    axis lines=left,
+    xlabel={time },
+    ylabel={},
+    ytick={0,1},
+    xtick={0,1,2,3,4},
+    % grid=both,
+    % xtick=\empty,
+    % ytick=\XNOLL,
+    % yticklabel=$x_0$,
+    ]
+    \nextgroupplot [ylabel={A},]
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+
+    \nextgroupplot [ylabel={B},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+  \end{groupplot}
+\end{tikzpicture}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgd4ee8e6}]{Implementing the sequence A+B+|B-A-, state variables}
 \begin{columns}
-\begin{column}{0.5\columnwidth}
+\begin{column}{0.45\columnwidth}
 \begin{block}{State variables (better)}
-\[ x = \begin{bmatrix} x_A & x_B & x_P\end{bmatrix}^T, \]
+\[ x = \begin{bmatrix} x_A & x_B & x_{G1} & x_{G2}\end{bmatrix}^T, \]
 with
-\[ x_{\{A,B\}} = \begin{cases} 0 & \text{Cylinder \{A,B\} retracted}\\
-                               1& \text{Cylinder \{A,B\} extended}
-                 \end{cases}
-   \]
-\[ x_{P} = \begin{cases} 0 & \text{Cheese not yet pressed}\\
-                               1& \text{Cheese pressed}
-                 \end{cases}
-   \]
-\end{block}
-\end{column}
-
-\begin{column}{0.5\columnwidth}
-\begin{block}{State transitions}
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
-\end{center}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}[label={sec:org4339779}]{Implementing the sequence A+B+B-A-, control law}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{block}{State transitions}
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
-\end{center}
-\end{block}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-\begin{block}{Control law (better)}
-\begin{center}
-\begin{tabular}{|ccc|cccc|}
-\hline
-\(x_A\) & \(x_B\) & \(x_P\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
-\hline
-0 & 0 & 0 &  &  &  & \\
-1 & 0 & 0 &  &  &  & \\
-1 & 0 & 1 &  &  &  & \\
-1 & 1 & 1 &  &  &  & \\
-\hline
-\end{tabular}
-\end{center}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}[label={sec:org5db74ab}]{Implementing the sequence A+B+B-A-, control law}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{block}{State transitions}
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
-\end{center}
-\end{block}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-\begin{block}{Control law (better)}
-\begin{center}
-\begin{tabular}{|ccc|cccc|}
-\hline
-\(x_A\) & \(x_B\) & \(x_P\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
-\hline
-0 & 0 & 0 & 1 & 0 & 0 & 0\\
-1 & 0 & 0 & 0 & 0 & 1 & 0\\
-1 & 0 & 1 & 0 & 1 & 0 & 0\\
-1 & 1 & 1 & 0 & 0 & 0 & 1\\
-\hline
-\end{tabular}
-\end{center}
-\end{block}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}[label={sec:orge354360}]{Implementing the sequence A+B+B-A-, control law}
-\begin{columns}
-\begin{column}{0.4\columnwidth}
-\begin{block}{State transitions}
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
-\end{center}
-\end{block}
-\end{column}
-
-\begin{column}{0.6\columnwidth}
-\begin{block}{Control law (better)}
-\begin{center}
-\begin{tabular}{|ccc|cccc|}
-\hline
-\(x_A\) & \(x_B\) & \(x_P\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
-\hline
-0 & 0 & 0 & 1 & 0 & 0 & 0\\
-1 & 0 & 0 & 0 & 0 & 1 & 0\\
-1 & 0 & 1 & 0 & 1 & 0 & 0\\
-1 & 1 & 1 & 0 & 0 & 0 & 1\\
-\hline
-\end{tabular}
-\end{center}
-
-\begin{align*}
-  u_A+ &= \not{x_A}\\
-  u_A- &= x_A\not{x_B}x_P\\
-  u_B+ &= x_A\not{x_B}\not{x_P}\\
-  u_B- &= x_B
+ \begin{align*}
+  x_{\{A,B\}} &= \begin{cases} 0 & \text{Cylinder \{A,B\} retracted}\\
+                            1& \text{Cylinder \{A,B\} extended}
+              \end{cases}\\
+ x_{Gi} &= \begin{cases} 0 & \text{Group \(i\) not active}\\
+                            1& \text{Group \(i\) active}
+              \end{cases}
 \end{align*}
 \end{block}
 \end{column}
+
+\begin{column}{0.55\columnwidth}
+\begin{block}{State transitions}
+ \begin{center}
+\begin{tikzpicture}
+%\pgfplotsset{set layers=default}
+  \begin{groupplot} [
+    group style={
+      group name=timeplot,
+      group size=1 by 4,
+      xlabels at=edge bottom,
+      horizontal sep=1cm,
+      vertical sep=8mm,
+    }, 
+    clip=false,
+    height=2.6cm, width=7.3cm,
+    axis line style={->},
+    axis lines=left,
+    xlabel={time },
+    ylabel={},
+    ytick={0,1},
+    xtick={0,1,2,3,4},
+    % grid=both,
+    % xtick=\empty,
+    % ytick=\XNOLL,
+    % yticklabel=$x_0$,
+    ]
+    \nextgroupplot [ylabel={$x_A$},]
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+
+    \nextgroupplot [ylabel={$x_B$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+
+    \nextgroupplot [ylabel={$x_{G1}$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,1) (1, 1) (2,0) (3, 0) (4,1)};
+
+    \nextgroupplot [ylabel={$x_{G2}$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1, 0) (2,1) (3, 1) (4,0)};
+  \end{groupplot}
+\end{tikzpicture}
+  \end{center}
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org7e6d85e}]{Implementing the sequence A+B+|B-A-, control law}
+\begin{columns}
+\begin{column}{0.38\columnwidth}
+\begin{block}{State transitions}
+ \begin{center}
+\begin{tikzpicture}
+%\pgfplotsset{set layers=default}
+  \begin{groupplot} [
+    group style={
+      group name=timeplot,
+      group size=1 by 4,
+      xlabels at=edge bottom,
+      horizontal sep=1cm,
+      vertical sep=8mm,
+    }, 
+    clip=false,
+    height=2.2cm, width=5.3cm,
+    axis line style={->},
+    axis lines=left,
+    xlabel={time },
+    ylabel={},
+    ytick={0,1},
+    xtick={0,1,2,3,4},
+    % grid=both,
+    % xtick=\empty,
+    % ytick=\XNOLL,
+    % yticklabel=$x_0$,
+    ]
+    \nextgroupplot [ylabel={$x_A$},]
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+
+    \nextgroupplot [ylabel={$x_B$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+
+    \nextgroupplot [ylabel={$x_{G1}$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,1) (1, 1) (2,0) (3, 0) (4,1)};
+
+    \nextgroupplot [ylabel={$x_{G2}$},]
+    \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
+    \node at (axis cs: 1, 0.5) {Group 1};
+    \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
+    \node at (axis cs: 3, 0.5) {Group 2};
+    \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1, 0) (2,1) (3, 1) (4,0)};
+  \end{groupplot}
+\end{tikzpicture}
+  \end{center}
+\end{block}
+\end{column}
+
+
+\begin{column}{0.62\columnwidth}
+\begin{block}{Control law}
+\begin{center}
+\begin{tabular}{|cccc|cccc|}
+\hline
+\(x_A\) & \(x_B\) & \(x_{G1}\) & \(x_{G2}\) & \(u_A+\) & \(u_A-\) & \(u_B+\) & \(u_B-\)\\
+\hline
+0 & 0 & 1 & 0 &  &  &  & \\
+1 & 0 & 1 & 0 &  &  &  & \\
+1 & 1 & 0 & 1 &  &  &  & \\
+1 & 0 & 0 & 1 &  &  &  & \\
+\hline
+\end{tabular}
+\end{center}
+\end{block}
+\end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}[label={sec:orge4b7ee1}]{Implementing the sequence A+B+B-A-, latching circuit for \(x_P\)}
-\begin{columns}
-\begin{column}{0.3\columnwidth}
-\begin{center}
-\includegraphics[width=\linewidth]{../figures/AplusBplusBminAmin-withP}
-\end{center}
-\end{column}
-
-\begin{column}{0.7\columnwidth}
-\begin{LaTeX}
+\begin{frame}[label={sec:org14f0fa7}]{Implementing the control law}
 \begin{center}
          \begin{tikzpicture}
-           \node at (0,0.5) {+24V};
-           \node at (6,0.5) {0V};
-           \draw (0,0) to[short, o-]  (0,-3);
-           \draw (6,0) to[short, o-](6,-3);
-           \draw (0,-0.3) to[switch, *-, ] (2,-0.3) to[ opening switch,  ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$x_P$, -*] (6,-0.3);
-           \draw (0,-2) to[switch, *-, label=$x_P$] (2,-2)  to[short,-*] (2,-0.3);
-         \end{tikzpicture}
+           \node at (-2,0.5) {+24V};
+           \node at (8,0.5) {0V};
+           \draw (-2,0) to[short, o-]  (-2,-7);
+           \draw (8,0) to[short, o-](8,-7);
+	   \draw (6, -0.5) to[twoport, label={$u_{A+}$}] (8,-0.5); %\coil{$u_{A+}$};
+           \draw (6,-2.5) to[twoport, label={$u_{A-}$}] (8,-2.5);%\coil{$u_{A-}$};
+	   \draw (6, -4.5) to[twoport, label={$u_{B+}$}] (8,-4.5);%\coil{$u_{B+}$};
+           \draw (6,-6.5) to[twoport, label={$u_{B-}$}] (8,-6.5);% \coil{$u_{B-}$};
+      \end{tikzpicture}
 \end{center}
-\end{LaTeX}
-
-Implement the circuit!
-\end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orga7db220}]{For the report}
-\begin{itemize}
-\item Truth table for the control law
-\item Control law as boolean expression
-\item Circuit diagram for the controller
-\item Screen shot and short video showing working solution in FluidSim
-\item Short video showing working solution in hardware
-\end{itemize}
+
+\begin{frame}[label={sec:org0aa38da}]{Implementing the group transitions}
+\begin{center}
+         \begin{tikzpicture}
+           \node at (-2,0.5) {+24V};
+           \node at (8,0.5) {0V};
+           \draw (-2,0) to[short, o-]  (-2,-7);
+           \draw (8,0) to[short, o-](8,-7);
+	   \draw (6, -0.5) to[twoport, label={$x_{G1}$}] (8,-0.5);%\coil{$x_{G1}$};
+	   \draw (6, -4.5) to[twoport, label={$x_{G2}$}] (8,-4.5);%\coil{$x_{G2}$};
+	   \draw (-2,-2) to[switch, *-, label={$x_{G1}$}] (1,-2);
+	   \draw (-2,-6) to[switch, *-, label={$x_{G2}$}] (1,-6);
+      \end{tikzpicture}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}[label={sec:org163444c}]{Implementing the proximity sensor circuit}
+\begin{center}
+\includegraphics[height=0.9\textheight]{sensor-circuit}
+\end{center}
 \end{frame}
 \end{document}

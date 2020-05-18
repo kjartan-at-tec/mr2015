@@ -1,0 +1,274 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usepackage[american,siunitx]{circuitikz}
+#+LaTex_HEADER: \usetikzlibrary{arrows,shapes,calc,positioning}
+
+#+title: Pneumatic systems
+# #+date: 2019-02-28
+
+* What do I want the students to understand?			   :noexport:
+  - Pneumatic symbols
+  - Latching circuits
+
+* Which activities will the students do? 			   :noexport:
+  1. Fluidsim implementations
+  2. Hardware implementations
+
+
+* Intro    
+** Pneumatic elements
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/actuation-symbols.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny By José Solis}
+#+end_export
+*** Notes                                                          :noexport:
+- Let's look at some common pneumatic elements.
+- To the right we have two common actuators
+  - Single-acting cylinder with spring return. The rod sticking out of the cylinder is
+    called a piston rod, and this part which slides along the walls of the cylinder is called the
+    piston, or piston head.  This cylinder has only one port where 
+    air can enter and exit the cylinder. A port is where you would connect the plastic tubes
+    on elements you saw in the lab. When compressed air is connected to the port, pressure will 
+    build up (quickly or slowly depending on the air flow) and the air pressure on the left side
+    multiplied with the cross-sectional area of the piston head will cause a force which will overcome
+    the spring force and friction and extend the piston. After this, if the port is connected to lower pressure
+    (ambient pressure) the spring force will cause the piston to retract, pushing the air out of 
+    the cylinder.
+  - Then we have a double-acting cylinder. This has two ports, in order to control  the pressure on
+    either side of the piston head. If the piston is extended, then it will stay extended until we 
+    provide compressed air on the right side port in order to move the piston back again.
+  - Below we see the symbol for compressed air supply.
+  - To the left we see a number of different elements for activating valves. The symbols reflect the
+    working principle behind the actuators. Spring, push button, and so on. This last one is a detent
+    button, which means a button which stays pushed when you push and releas it. A second push 
+    releases it.
+** Valves
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/valves-32.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny By José Solis}
+#+end_export
+
+*** Notes                                                          :noexport:
+    - The flow of air is controlled by valves. We have already seen a rather complex valve when we 
+      worked with the pneumatic tank, namely what is called a proportional directional control valve 
+    - The naming of the valves consists of two values, the number of ports, and the number of 
+      positions, or states the valve can be in.
+    - Here we have two boxes, or squares, and each represent a possible position (or state) of the 
+      valve.
+    - For instance, this has three ports: two input ports and one output. So it is a 3/2 valve
+      - It is push-button operated (or activated) on the left side, and spring returned.
+      - Typically, the compressed air source is connected on the left input port, and the exhaust is
+	on the right. So will this valve be normally open, or normally closed?
+      - For a normally open, you would just swop the two squares, to have connection through the valve
+	when it is in the right-most position.
+** Example - 3/2 valve with single acting cylinder
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/valve-32-example.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny By José Solis}
+#+end_export
+
+*** Notes                                                          :noexport:
+    - A 3/2 valve is typically used together with a single-acting cylinder.
+    - Here are two images from a simulation in FluidSIM
+    - To start with we have compressed air on port 1, visualized as this 
+      thick blue line.
+    - Then the push-button is activated to move the valve over to its other position
+    - Now air can flow through the valve to the cylinder.
+    - It takes a little time, though, due to the limitation of flow through the valve
+      and through the tubes connecting the elements.
+    - Eventually (rather fast, typically), air pressure builds up on the left side of 
+      the piston and extends the rod.
+
+* Exercise 1 - Single action piston "Stamping"
+** Exercise - Pressing cheeses
+#+BEGIN_CENTER 
+ \includegraphics[width=0.4\linewidth]{../../figures/cheese-stamping.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny From FESTO Didactic}
+#+end_export
+In cheese production a pneumatic cylinder is used to press cheese into a mold. Design and implement a logic control system for this process step.
+
+*** Notes                                                          :noexport:
+    - This simple exercise is taken from some learning material that FESTO provides.
+    - The idea (which is build up-on in the project) is that you have cheese in a mold as part of an
+      industrial cheese production facility, and the cheese must be pressed into the mold.
+    - Here we are looking at a single cylinder which is extended to press the cheese.
+
+** Activity 1 - Explain briefly (individual)
+#+BEGIN_CENTER 
+ \includegraphics[width=0.5\linewidth]{../../figures/valve-32-example.png}
+#+END_CENTER
+
+Answer each question with 2-4 sentences (send in chat directly to prof)
+
+*** How does a 3/2 valve work?
+*** How does a single-acting cylinder work? 
+
+*** Notes                                                          :noexport:
+    - Before we go into the exercise of controlling the cheese press, I have a simple
+      theoretical activity for you.
+    - Write down answers to the two questions. Paste and send in the chat. To me not to
+      everyone.
+    - And save your answer, because you can use it for your lab report.
+
+** Activity 2 - Complete diagram  (group work)
+*** Figure
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../../figures/cheese-stamping.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny From FESTO Didactic}
+#+end_export
+*** Description
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+The cylinder should initially be retracted. On the push of a button, it extends. The button causes compressed air to open a 3/2 valve, which in turn directs compressed air to a single-acting cylinder which then extends.  
+
+*** Notes                                                          :noexport:
+    - This is a group activity
+    - Consider the following situation (read text)
+    - I will divide you randomly into breakout rooms
+    - The task is to complete the following pneumatic diagram
+ 
+** Activity 2 - Diagram
+   #+begin_export latex
+  \begin{center}
+  \pgfmathsetmacro\sh{0.3}
+  \pgfmathsetmacro\cr{.4} % Cylinder radius
+  \pgfmathsetmacro\cl{2}% Cylinder length
+  \pgfmathsetmacro\el{0.7*\cr} % Open side of cylinder
+  \begin{circuitikz}[triangle/.style = {draw, regular polygon, regular polygon sides=3, inner sep=2pt },]
+
+    % Pneumatic circuit
+    \node[triangle] (source) at ($ (0,0) + (50mm, -24mm) $) {};
+    \node[triangle, left of= source, node distance=5cm] (source2) {};
+    \node[above of=source, node distance=3cm] (valve32) {\includegraphics[width=4cm]{../../figures/32-valve-pneum-spring-return-nc.png}};
+    \node[draw, minimum width=1cm, minimum height=1cm, left of=valve32, node distance=6cm] (unactivated) {}; 
+    \node[draw, minimum width=1cm, minimum height=1cm, right=0mm of unactivated] (activated) {}; 
+
+    \node[coordinate, above of= valve32, node distance=2.9cm] (cylinder) {};
+    \draw[thick] (cylinder) -- ++(0, \cr) -- ++ (\cl, 0) -- ++(0, -\el);
+    \draw[thick] (cylinder) -- ++(0, -\cr) -- ++ (\cl, 0) -- ++(0, \el);
+  \end{circuitikz}
+  \end{center}
+   #+end_export
+
+*** Notes                                                          :noexport:
+    - As you see, there are two valves. One complete here, that controls the flow of air to the 
+      cylinder that should extend.
+    - The other not complete, to control the position of the first valve.
+    - There are two sources of compressed air here. One is for the air that will extend the 
+      cylinder. The other is for air that will control the position of the valve.
+    - It is common to use a different, lower pressure in the control-part of the pneumatic system. 
+    - As usual, you find the slides on canvas, one of you shares the screen with the slide,
+      and then you discuss and draw on the slide.
+
+* Exercise 2 - Double action piston "Push to extend - push to retract"
+** Double-acting cylinder
+#+BEGIN_CENTER 
+ \includegraphics[width=0.7\linewidth]{../../figures/valve-52.png}
+#+END_CENTER
+
+*** Notes                                                          :noexport:
+    
+    - Moving on to the double-acting cylinder
+    - Here we are controlling the extension and retraction of the piston rod with air.
+    - In order to make this work, we make use of a different valve.
+    - What is the nomenclature of this valve. What is it called?
+      - 5/2 valve, pneumatically (or air) operated (or actuated, or piloted).
+    - In one position of the valve, the one which is shown, the compressed air flows
+      from port 1 to port 2 and into the cylinder on the right side. This causes the 
+      cylinder to retract (or stay retracted)
+    - When we push the button on this valve to the left, air will flow through this valve
+      and cause the main valve to change position.
+    - Then compressed air will flow from 1 to 4, and into the left side of the cylinder.
+    - At the same time air is allowed to flow from the right port of the cylinder and
+      through the valve to exhaust (ambient).
+    - Note that the right control-valve is operated by a mechanical switch. This switch will
+      be activated when the piston reaches the position indicated by a1.
+    - So this system has an automatic return, activated when the piston has reached position marked
+      a1. 
+** Double-acting cylinder and the 5/2 valve
+#+BEGIN_CENTER 
+ \includegraphics[width=0.7\linewidth]{../../figures/valve-52.png}
+#+END_CENTER
+
+*** Notes                                                          :noexport:
+    
+
+** Exercise 2 - Push to extend --- push to retract                 :noexport:
+*** Figure
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+#+BEGIN_CENTER 
+ \includegraphics[width=0.99\linewidth]{../../figures/cheese-stamping.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny From FESTO Didactic}
+#+end_export
+*** Description
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+When a button is pressed, the cylinder should extend fully. When another button is pressed, it should retract. Make sure that only one of the valve solenoids is energized at the same time 
+** Activity 3 - Explain briefly (individual)
+Write 2-4 sentences (send in chat directly to prof)
+*** Figure
+    :PROPERTIES:
+    :BEAMER_col: 0.4
+    :END:
+    #+BEGIN_CENTER 
+     \includegraphics[width=\linewidth]{../../figures/valve-52.png}
+    #+END_CENTER
+*** Description
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
+**** How does a 5/2 valve work?
+**** How does a double-acting cylinder work? 
+
+*** Notes                                                          :noexport:
+    - Final activity:
+      - Write a short explanation in your own words how the 5/2 valve and the 
+	double acting cylinder works.
+      - Save your answer for the report!
+
+** Activity 2.1 - Complete diagram (group work)                    :noexport:
+*** Figure
+    :PROPERTIES:
+    :BEAMER_col: 0.3
+    :END:
+#+BEGIN_CENTER 
+ \includegraphics[width=0.99\linewidth]{../../figures/cheese-stamping.png}
+#+END_CENTER
+#+begin_export latex
+{\tiny From FESTO Didactic}
+#+end_export
+
+*** Description
+    :PROPERTIES:
+    :BEAMER_col: 0.7
+    :END:
+When a button is pressed, the cylinder should extend fully. When another button is pressed, it should retract. Make sure that only one of the valve solenoids is energized at the same time 
+

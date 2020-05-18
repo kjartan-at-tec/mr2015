@@ -1,10 +1,10 @@
 (TeX-add-style-hook
- "electro-pneumatics"
+ "pneumatics"
  (lambda ()
    (TeX-add-to-alist 'LaTeX-provided-class-options
                      '(("beamer" "presentation" "aspectratio=1610")))
    (TeX-add-to-alist 'LaTeX-provided-package-options
-                     '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem")))
+                     '(("inputenc" "utf8") ("fontenc" "T1") ("ulem" "normalem") ("circuitikz" "american" "siunitx")))
    (add-to-list 'LaTeX-verbatim-environments-local "semiverbatim")
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "path")
    (add-to-list 'LaTeX-verbatim-macros-with-braces-local "url")
@@ -35,12 +35,9 @@
     "pgfplots"
     "pdfpages"
     "circuitikz")
-   (TeX-add-symbols
-    '("coil" 1))
    (LaTeX-add-labels
-    "sec:orge60d4be"
-    "sec:orgbd55af7"
-    "sec:org0c112cf"
-    "sec:org84149d7"))
+    "sec:orgd4018e1"
+    "sec:orgf0f9c34"
+    "sec:org810d1a1"))
  :latex)
 

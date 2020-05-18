@@ -1,0 +1,29 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning,circuits.logic.US,circuits.logic.IEC}
+
+\begin{document}
+
+\pgfmathsetmacro\ch{1.5}
+\pgfmathsetmacro\cw{3}
+\pgfmathsetmacro\cww{6}
+
+\begin{circuitikz}[scale=1]
+  \node[nand port] (nand1) at (0,0) {};
+  \node[nand port] (nand2) at (\cw,\ch) {};
+  \node[nand port] (nand3) at (\cw, -\ch) {};
+  \node[nand port] (nand4) at (\cww,0) {};
+
+  \draw
+  (nand1.out) |- (nand2.in 2)
+  (nand1.out) |- (nand3.in 1)
+  (nand2.out) |- (nand4.in 1)
+  (nand3.out) |- (nand4.in 2)
+  (nand1.in 1) ++(-0.4, 0) |- (nand2.in 1)
+  (nand1.in 2) ++(-0.4, 0) |- (nand3.in 2)
+  (nand1.in 1) -- ++(-0.8, 0) node[anchor=east] {$a$}
+  (nand1.in 2) -- ++(-0.8, 0) node[anchor=east] {$b$}
+  (nand4.out) node[anchor=west] {$f$};
+\end{circuitikz}
+\end{document}
