@@ -1,4 +1,4 @@
-% Created 2020-08-14 vie 15:00
+% Created 2020-08-17 lun 16:58
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,8 +34,8 @@
 \maketitle
 
 \section{Fitting first-order model}
-\label{sec:org69b8c5a}
-\begin{frame}[label={sec:orge41dbc3}]{First-order system example: A tank}
+\label{sec:orgb0d80fe}
+\begin{frame}[label={sec:org5482f84}]{First-order system example: A tank}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole-no-variables}
 \end{center}
@@ -48,7 +48,7 @@
 
 
 
-\begin{frame}[label={sec:org7ad9778}]{First-order system example: A tank}
+\begin{frame}[label={sec:orgc637c4d}]{First-order system example: A tank}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole-simple}
 \end{center}
@@ -60,7 +60,7 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:orgeabac36}]{Intuition}
+\begin{frame}[label={sec:org716ce32}]{Intuition}
 \includegraphics[width=0.2\linewidth]{../../figures/tank-with-hole-no-variables}
 
 \alert{Individual activity} A constant inflow has been present since forever, but at time \(t_1\) the flow in is suddenly shut off. Which of the responses of the water level \(h(t)\) below is correct?
@@ -139,7 +139,7 @@ xticklabels = {$t_1$},
 \end{frame}
 
 
-\begin{frame}[label={sec:org3174c75}]{Deviation variables}
+\begin{frame}[label={sec:org5e61b3d}]{Deviation variables}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole}
 \end{center}
@@ -154,7 +154,7 @@ Flow in: \(z(t) = z_0 + w(t)\). Level of water: \(h(t) = h_0 + y(t)\). The const
 \alert{Individual activity} Given \(h_0\) determine the operating point for the inflow, \(z_0\), such that the system is in equilibrium at the operating point.
 \end{frame}
 
-\begin{frame}[label={sec:org01d85ed}]{Intuition}
+\begin{frame}[label={sec:orgcda5272}]{Intuition}
 Which change \(y(t)\) in the water level corresponds to a step change \(w(t)\) in the inflow? 
 
 \begin{center}
@@ -164,7 +164,7 @@ Which change \(y(t)\) in the water level corresponds to a step change \(w(t)\) i
 
 
 
-\begin{frame}[label={sec:org04a1096}]{Fitting a first-order model}
+\begin{frame}[label={sec:orgf2bc8d2}]{Fitting a first-order model}
 Assuming a plant model of first-order with time-constant \(T\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t}{T}}\big)u_H(t)\]
 \def\Tcnst{3}
@@ -199,10 +199,10 @@ Assuming a plant model of first-order with time-constant \(T\)
   \end{tikzpicture}
 \end{center}
 
-\alert{Individual activity} Evaluate the response \(y(t)\) at the time instant \(t=T\)!
+\alert{Individual activity} Evaluate the response \(y(t)\) at the time instant \(t=T\) and for \(t\to\infty\)!
 \end{frame}
 
-\begin{frame}[label={sec:org38f2431}]{Fitting a first-order model}
+\begin{frame}[label={sec:org479e282}]{Fitting a first-order model}
 Assuming a plant model of first-order with time-constant \(T\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t}{T}}\big)u_H(t)\]
 \def\Tcnst{3}
@@ -245,15 +245,15 @@ Assuming a plant model of first-order with time-constant \(T\)
 
 
 \section{CSTR}
-\label{sec:orga25c5d4}
+\label{sec:org8111223}
 
-\begin{frame}[label={sec:org88f4fd1}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:orgeec41f5}]{A Continuous Stirred Tank Reactor}
 \begin{center}
 \includegraphics[height=0.8\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org8757cc0}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:org4ca6a1f}]{A Continuous Stirred Tank Reactor}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{center}
@@ -266,13 +266,13 @@ Assume:
 \begin{itemize}
 \item constant flow \(f\) through the tank reactor
 \item constant temperatures \(T_i\) and \(T_s\)
-\item isothermic reaction (no heat absorbed or generated)
+\item isothermic reaction
 \end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org832cf6b}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:org068a4c2}]{A Continuous Stirred Tank Reactor}
 \begin{center}
 \includegraphics[height=0.4\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
@@ -286,7 +286,7 @@ Energy balance:
 
 
 
-\begin{frame}[label={sec:orgd4cd1b9}]{Intuition}
+\begin{frame}[label={sec:org343c2dd}]{Intuition}
 \begin{center}
 \includegraphics[height=0.3\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
@@ -324,8 +324,8 @@ Energy balance:
 
 
 \section{Fitting first-order model with delay}
-\label{sec:orgf3fba9a}
-\begin{frame}[label={sec:org31419d1}]{Fitting first-order model with delay}
+\label{sec:org9a59b11}
+\begin{frame}[label={sec:orgfc6b4f0}]{Fitting first-order model with delay}
 Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_H(t-\tau)\]
 \def\Tcnst{3}
@@ -364,7 +364,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{frame}
 
 
-\begin{frame}[label={sec:orgddd8c6f}]{Fitting first-order model with delay}
+\begin{frame}[label={sec:org184eb34}]{Fitting first-order model with delay}
 Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_H(t-\tau)\]
 \def\Tcnst{3}
@@ -402,7 +402,170 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \[ y_f = \lim_{t\to\infty} y(t) = u_f K \quad \Rightarrow \quad K = \frac{y_f}{u_f}. \]
 \end{frame}
 
-\begin{frame}[label={sec:org5db92ac}]{First-order model with delay - example}
+\begin{frame}[label={sec:orgebb9488}]{First-order model with delay - example}
+\[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
+\def\Tcnst{2.1}
+\def\tdelay{1}
+\def\ggain{2}
+\def\uampl{0.8}
+\pgfmathsetmacro{\yfinal}{\uampl*\ggain}
+\pgfmathsetmacro{\yone}{0.283*\yfinal}
+\pgfmathsetmacro{\ytwo}{0.632*\yfinal}
+\pgfmathsetmacro{\tone}{\tdelay + \Tcnst/3}
+\pgfmathsetmacro{\two}{\tdelay + \Tcnst}
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+    width=12cm,
+    height=4cm,
+    grid = both,
+    %xtick = {0, \tdelay, \tone, \two},
+    %xticklabels = {0, $\tau$, $\tau+\frac{T}{3}$, $\tau + T$},
+    %ytick = {0, \yone, \ytwo, \uampl, \yfinal},
+    %yticklabels = {0, $0.283y_{f}$, $0.632y_f$, $u_f$, $y_f$},
+    xmin = -0.2,
+    minor y tick num=9,
+    minor x tick num=9,
+    every major grid/.style={red, opacity=0.5},
+    %xlabel = {$t$},
+    clip = false,
+    ]
+      \addplot [thick, green!50!black, smooth, no marks, domain=0:10, samples=16] {\uampl*\ggain*(x>\tdelay)*(1 - exp(-(x-\tdelay)/\Tcnst)} node [coordinate, pos=0.9, pin=-90:{$y(t)$}] {};
+      \addplot [const plot, thick, blue!80!black, no marks, domain=-1:10, samples=100] coordinates {(-1,0) (0,0) (0,\uampl) (10,\uampl)} node [coordinate, pos=0.9, pin=-90:{$u(t)$}] {};
+      \draw[thick, green!70!black, dashed] (axis cs: 10, \yfinal) -- (axis cs: -1, \yfinal, -0.9) node[left, anchor=east] {$y_f = \yfinal$}; 
+      \draw[blue!70!black, dashed] (axis cs: 0, \uampl) -- (axis cs: -1, \uampl, -0.9) node[left, anchor=east] {$u_f = \uampl$}; 
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org5fbabdf}]{First-order model with delay - example}
+\[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
+\def\Tcnst{2.1}
+\def\tdelay{1}
+\def\ggain{2}
+\def\uampl{0.8}
+\pgfmathsetmacro{\yfinal}{\uampl*\ggain}
+\pgfmathsetmacro{\yone}{0.283*\yfinal}
+\pgfmathsetmacro{\ytwo}{0.632*\yfinal}
+\pgfmathsetmacro{\tone}{\tdelay + \Tcnst/3}
+\pgfmathsetmacro{\two}{\tdelay + \Tcnst}
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+    width=12cm,
+    height=4cm,
+    grid = both,
+    %xtick = {0, \tdelay, \tone, \two},
+    %xticklabels = {0, $\tau$, $\tau+\frac{T}{3}$, $\tau + T$},
+    %ytick = {0, \yone, \ytwo, \uampl, \yfinal},
+    %yticklabels = {0, $0.283y_{f}$, $0.632y_f$, $u_f$, $y_f$},
+    xmin = -0.2,
+    minor y tick num=9,
+    minor x tick num=9,
+    every major grid/.style={red, opacity=0.5},
+    %xlabel = {$t$},
+    clip = false,
+    ]
+      \addplot [thick, green!50!black, smooth, no marks, domain=0:10, samples=16] {\uampl*\ggain*(x>\tdelay)*(1 - exp(-(x-\tdelay)/\Tcnst)} node [coordinate, pos=0.9, pin=-90:{$y(t)$}] {};
+      \addplot [const plot, thick, blue!80!black, no marks, domain=-1:10, samples=100] coordinates {(-1,0) (0,0) (0,\uampl) (10,\uampl)} node [coordinate, pos=0.9, pin=-90:{$u(t)$}] {};
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: \two, -0.9) node[below] {$t_2 = \two = \tau + T$}; 
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: -1, \ytwo, -0.9) node[left, anchor=east] {$0.632y_f = \ytwo$}; 
+      \draw[thick, green!70!black, dashed] (axis cs: 10, \yfinal) -- (axis cs: -1, \yfinal, -0.9) node[left, anchor=east] {$y_f = \yfinal$}; 
+      \draw[blue!70!black, dashed] (axis cs: 0, \uampl) -- (axis cs: -1, \uampl, -0.9) node[left, anchor=east] {$u_f = \uampl$}; 
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org2f92d14}]{First-order model with delay - example}
+\[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
+\def\Tcnst{2.1}
+\def\tdelay{1}
+\def\ggain{2}
+\def\uampl{0.8}
+\pgfmathsetmacro{\yfinal}{\uampl*\ggain}
+\pgfmathsetmacro{\yone}{0.283*\yfinal}
+\pgfmathsetmacro{\ytwo}{0.632*\yfinal}
+\pgfmathsetmacro{\tone}{\tdelay + \Tcnst/3}
+\pgfmathsetmacro{\two}{\tdelay + \Tcnst}
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+    width=12cm,
+    height=4cm,
+    grid = both,
+    %xtick = {0, \tdelay, \tone, \two},
+    %xticklabels = {0, $\tau$, $\tau+\frac{T}{3}$, $\tau + T$},
+    %ytick = {0, \yone, \ytwo, \uampl, \yfinal},
+    %yticklabels = {0, $0.283y_{f}$, $0.632y_f$, $u_f$, $y_f$},
+    xmin = -0.2,
+    minor y tick num=9,
+    minor x tick num=9,
+    every major grid/.style={red, opacity=0.5},
+    %xlabel = {$t$},
+    clip = false,
+    ]
+      \addplot [thick, green!50!black, smooth, no marks, domain=0:10, samples=16] {\uampl*\ggain*(x>\tdelay)*(1 - exp(-(x-\tdelay)/\Tcnst)} node [coordinate, pos=0.9, pin=-90:{$y(t)$}] {};
+      \addplot [const plot, thick, blue!80!black, no marks, domain=-1:10, samples=100] coordinates {(-1,0) (0,0) (0,\uampl) (10,\uampl)} node [coordinate, pos=0.9, pin=-90:{$u(t)$}] {};
+      \draw[thick, red, dashed] (axis cs: \tone, \yone) -- (axis cs: \tone, -0.45) node[below] {$t_1 = \tone = \tau + \frac{T}{3}$}; 
+      \draw[thick, red, dashed] (axis cs: \tone, \yone) -- (axis cs: -1,\yone) node[left, anchor=east] {$0.283y_f = \yone$}; 
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: \two, -0.9) node[below] {$t_2 = \two = \tau + T$}; 
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: -1, \ytwo, -0.9) node[left, anchor=east] {$0.632y_f = \ytwo$}; 
+      \draw[thick, green!70!black, dashed] (axis cs: 10, \yfinal) -- (axis cs: -1, \yfinal, -0.9) node[left, anchor=east] {$y_f = \yfinal$}; 
+      \draw[blue!70!black, dashed] (axis cs: 0, \uampl) -- (axis cs: -1, \uampl, -0.9) node[left, anchor=east] {$u_f = \uampl$}; 
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgd57cb3f}]{First-order model with delay - example}
+\[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
+\def\Tcnst{2.1}
+\def\tdelay{1}
+\def\ggain{2}
+\def\uampl{0.8}
+\pgfmathsetmacro{\yfinal}{\uampl*\ggain}
+\pgfmathsetmacro{\yone}{0.283*\yfinal}
+\pgfmathsetmacro{\ytwo}{0.632*\yfinal}
+\pgfmathsetmacro{\tone}{\tdelay + \Tcnst/3}
+\pgfmathsetmacro{\two}{\tdelay + \Tcnst}
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{axis}[
+    width=12cm,
+    height=4cm,
+    grid = both,
+    %xtick = {0, \tdelay, \tone, \two},
+    %xticklabels = {0, $\tau$, $\tau+\frac{T}{3}$, $\tau + T$},
+    %ytick = {0, \yone, \ytwo, \uampl, \yfinal},
+    %yticklabels = {0, $0.283y_{f}$, $0.632y_f$, $u_f$, $y_f$},
+    xmin = -0.2,
+    minor y tick num=9,
+    minor x tick num=9,
+    every major grid/.style={red, opacity=0.5},
+    %xlabel = {$t$},
+    clip = false,
+    ]
+      \addplot [thick, green!50!black, smooth, no marks, domain=0:10, samples=16] {\uampl*\ggain*(x>\tdelay)*(1 - exp(-(x-\tdelay)/\Tcnst)} node [coordinate, pos=0.9, pin=-90:{$y(t)$}] {};
+      \addplot [const plot, thick, blue!80!black, no marks, domain=-1:10, samples=100] coordinates {(-1,0) (0,0) (0,\uampl) (10,\uampl)} node [coordinate, pos=0.9, pin=-90:{$u(t)$}] {};
+      \draw[thick, red, dashed] (axis cs: \tone, \yone) -- (axis cs: \tone, -0.45) node[below] {$t_1 = \tone = \tau + \frac{T}{3}$}; 
+      \draw[thick, red, dashed] (axis cs: \tone, \yone) -- (axis cs: -1,\yone) node[left, anchor=east] {$0.283y_f = \yone$}; 
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: \two, -0.9) node[below] {$t_2 = \two = \tau + T$}; 
+      \draw[thick, orange, dashed] (axis cs: \two, \ytwo) -- (axis cs: -1, \ytwo, -0.9) node[left, anchor=east] {$0.632y_f = \ytwo$}; 
+      \draw[thick, green!70!black, dashed] (axis cs: 10, \yfinal) -- (axis cs: -1, \yfinal, -0.9) node[left, anchor=east] {$y_f = \yfinal$}; 
+      \draw[blue!70!black, dashed] (axis cs: 0, \uampl) -- (axis cs: -1, \uampl, -0.9) node[left, anchor=east] {$u_f = \uampl$}; 
+    \end{axis}
+  \end{tikzpicture}
+\end{center}
+\[ \begin{cases} \tone = \tau + \frac{T}{3}\\ \two = \tau + T \end{cases} \quad \Rightarrow \quad \begin{cases} \tau = \tdelay \\ T = \Tcnst \end{cases}, \qquad  K = \frac{y_f}{u_f} = \frac{\yfinal}{\uampl} = \ggain \]
+\end{frame}
+
+\begin{frame}[label={sec:orge8fbc3b}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -446,5 +609,5 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{frame}
 
 \section{Second-order model}
-\label{sec:org3e50bd5}
+\label{sec:org01ee1e6}
 \end{document}
