@@ -308,6 +308,7 @@
     Assume:
     - constant flow $f$ through the tank reactor
     - constant temperatures $T_i$ and $T_s$
+    - Perfect mixing of the heating jacket
     - isothermic reaction
 
 ** A Continuous Stirred Tank Reactor
