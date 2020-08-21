@@ -1,0 +1,40 @@
+\documentclass[tikz,border=5]{standalone}
+\usetikzlibrary{decorations.pathmorphing}
+\usepackage[detect-all]{siunitx}
+
+\tikzset{
+   ragged border/.style={ decoration={random steps, segment length=1mm, amplitude=0.5mm},
+           decorate,
+   }
+}
+
+\def\ff{0000} % Flow can vary between 0 and 1
+%\def\ff{0.1} % Flow can vary between 0 and 1
+\pgfmathsetmacro{\hf}{min(0.3, \ff)}
+\pgfmathsetmacro{\fb}{\ff + 0.6 + \hf)}
+\pgfmathsetmacro{\fh}{3 + \hf}
+\pgfmathsetmacro{\fangle}{-10 + 10*\ff}
+
+\begin{document}
+  \begin{tikzpicture}
+  %\fill[black!10!cyan]
+  %      decorate[ragged border]{
+  %      (0,\hh) -- (6,\hh)
+  %      }
+  %      -- (6,\hout) -- (6.5,\hout) -- (6.5,0.0) -- (6,0.0) --(6,0) -- (0,0) -- cycle;
+  \fill[black!10!cyan] (-0.5,3) -- (0,3) to[in=90,out=\fangle] (\ff+0.6,0)-- (\fb,0)
+                  to[out=90,in=\fangle] (0,\fh) -- (-0.5,\fh) -- cycle;
+  %\draw[thick] (-0.5,3) -- (0,3) -- (0,0) -- (6,0) -- (6,0.0) -- (6.5,0.0);
+  %\draw[thick] (-0.5,3.3) -- (0,3.3) -- (0,3.5) -- (6,3.5) -- (6,0.3) -- (6.5,0.3);
+  %\draw[|-|] (-0.2,0) --
+  %      node[fill=white,font=\footnotesize,inner ysep=2pt,inner
+  %              xsep=0, anchor=east]{}(-0.2,\hh);
+  %\draw[stealth-] (-0.5,2.75) -- (-1,2.75)
+  %          node[anchor=east,font=\footnotesize,align=right]{};
+  %\draw[-stealth] (6.5,0.15) -- (7.2,0.15)
+  %          node[anchor=west,font=\footnotesize]{};
+  %\node[anchor=north,font=\footnotesize] at (3,3) {};
+  %\node[anchor=north,font=\footnotesize] at (3,2) {};
+  %\node[anchor=north,font=\footnotesize] at (3,1) {};
+\end{tikzpicture}%
+\end{document}
