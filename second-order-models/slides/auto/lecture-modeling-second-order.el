@@ -39,8 +39,8 @@
     "ggain"
     "uampl")
    (LaTeX-add-labels
-    "sec:org6b44978"
-    "sec:org6304eb7"
-    "sec:orga95b64a"))
+    "sec:org37d0da3"
+    "sec:org47215b6"
+    "sec:org614c8f5"))
  :latex)
 

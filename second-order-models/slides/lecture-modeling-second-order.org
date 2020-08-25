@@ -146,6 +146,7 @@
    \def\uampl{0.8}
    \pgfmathsetmacro{\yfinal}{\uampl*\ggain}
    \pgfmathsetmacro{\ytwo}{\yfinal*(1-2*exp(-1))}
+   \pgfmathsetmacro{\ytwofactor}{(1-2*exp(-1))}
    \pgfmathsetmacro{\two}{\tdelay + \Tcnst}
 
    \begin{center}
@@ -157,7 +158,7 @@
        xtick = {0, \two},
        xticklabels = {0,  $\tau$},
        ytick = {0, \ytwo, \uampl, \yfinal},
-       yticklabels = {0, $\ytwo y_f$, $u_f$, $y_f$},
+       yticklabels = {0, $\ytwofactor y_f$, $u_f$, $y_f$},
        xmin = -0.2,
        clip = false,
        %minor y tick num=9,
