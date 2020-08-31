@@ -1,4 +1,4 @@
-% Created 2020-08-25 mar 17:49
+% Created 2020-08-31 lun 13:49
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169, usenames, dvipsnames]{beamer}
 \usepackage[utf8]{inputenc}
@@ -37,10 +37,10 @@
 \maketitle
 
 \section{Repetition - Second-order model critically damped}
-\label{sec:org3dadddc}
-\begin{frame}[label={sec:org5a24ae3}]{Second-order models}
+\label{sec:org1ec931e}
+\begin{frame}[label={sec:org12bcafd}]{Second-order models}
 \end{frame}
-\begin{frame}[label={sec:org2af0d61}]{Two first-order models in series}
+\begin{frame}[label={sec:orga3451a2}]{Two first-order models in series}
 \begin{center}
 \begin{tikzpicture}
   \node {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
@@ -67,7 +67,7 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:org9f798c8}]{Fitting second-order critically-damped model}
+\begin{frame}[label={sec:org304f223}]{Fitting second-order critically-damped model}
 \alert{Model with two identical time-constants.}
 Assuming model 
 \[ \textcolor{green!50!black}{Y(s)} = \frac{K}{(s\tau + 1)^2}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\Big( 1 - (1+\frac{t}{\tau}\big)\mathrm{e}^{-\frac{t}{\tau}}\Big)u_H(t)\]
@@ -108,14 +108,33 @@ Assuming model
 
 
 \section{PID parameter intuition}
-\label{sec:org1f7c4a6}
-\begin{frame}[label={sec:orgd253a3a}]{Feedback control}
+\label{sec:org4283999}
+\begin{frame}[label={sec:orge4c874f}]{Feedback control}
+   \begin{center}
+   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+  { 
+  \node[coordinate] (input) {};
+  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
+  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
+  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
+  \node[coordinate, right of=plant, node distance=2cm] (output) {};
+  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
+ 
+  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
+  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
+  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
+  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
+  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
+}
+\end{tikzpicture}
+\end{center}
 \end{frame}
 
 
-\begin{frame}[label={sec:org312084b}]{The PID controller}
+
+\begin{frame}[label={sec:org4dd2674}]{The PID controller}
 \begin{center}
-  \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+  \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt},scale=0.8, every node/.style={scale=0.8}]
 
     \node[coordinate] (input) {};
     \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
@@ -130,20 +149,16 @@ Assuming model
   \end{tikzpicture}
 \end{center}
 
-\begin{block}{Parallel form (ISA)}
-\begin{align*}
-   F(s) &= K_c\left( 1 + \frac{1}{\tau_I s} + \tau_D s\right) 
-\end{align*}
-\end{block}
+\alert{Parallel form (ISA)}
+\[   F(s) &= k_c\left( 1 + \frac{1}{\tau_i s} + \tau_d s\right) \]
 
-\begin{block}{Series form}
-\[ F(s) = K_c \left(\frac{\tau_Is + 1}{\tau_I s}\right)(\tau_Ds + 1) \]
-\end{block}
+\alert{Series form}
+\[F(s) = K_c \left( \frac{ \tau_I s + 1}{\tau_I s} \right) (\tau_D s + 1) 
+= \underbrace{\frac{K_c(\tau_I + \tau_D)}{\tau_I}}_{k_c} \left(1 + \frac{1}{\underbrace{(\tau_I + \tau_D)}_{\tau_i} s} + \underbrace{\frac{\tau_I\tau_D}{\tau_I + \tau_D}}_{\tau_d}s \right) \]
 \end{frame}
 
 
-
-\begin{frame}[label={sec:org22c95c6}]{The PID - Parallel form}
+\begin{frame}[label={sec:org0922ab0}]{The PID - Parallel form}
 \definecolor{ppc}{rgb}{0.1,0.1,0.6}
 \definecolor{iic}{rgb}{0.6,0.1,0.1}
 \definecolor{ddc}{rgb}{0.1,0.6,0.1}
@@ -153,11 +168,11 @@ Assuming model
 
     \node[coordinate] (input) {};
     \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
-    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_Is}$};
+    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_is}$};
     \node[color=ppc, coordinate, above of=ii, node distance=10mm] (pp)  {};
-    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_Ds$};
+    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_ds$};
     \node[sumnode, right of=ii, node distance=20mm] (sum2) {\tiny $\Sigma$};
-    \node[block, right of=sum2, node distance=20mm] (gain)  {$K_c$};
+    \node[block, right of=sum2, node distance=20mm] (gain)  {$k_c$};
     \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
     \node[coordinate, right of=gain, node distance=20mm] (output) {};
 
@@ -174,11 +189,11 @@ Assuming model
 \end{center}
 
 \begin{align*}
-u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0^{t} e(\xi) d\xi} + \textcolor{ddc}{\tau_D \frac{d}{dt} e(t)} \Big)
+u(t) &= k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi} + \textcolor{ddc}{\tau_d \frac{d}{dt} e(t)} \Big)
 \end{align*}
 \end{frame}
 
-\begin{frame}[label={sec:orgc5aa2af}]{The PID - Parallel form, modified D-part}
+\begin{frame}[label={sec:org2568131}]{The PID - Parallel form, modified D-part}
 \definecolor{ppc}{rgb}{0.1,0.1,0.6}
 \definecolor{iic}{rgb}{0.6,0.1,0.1}
 \definecolor{ddc}{rgb}{0.1,0.6,0.1}
@@ -188,11 +203,11 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
 
     \node[coordinate] (input) {};
     \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
-    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_Is}$};
+    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_is}$};
     \node[color=ppc, coordinate, above of=ii, node distance=10mm] (pp)  {};
-    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_Ds$};
+    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_ds$};
     \node[sumnode, right of=ii, node distance=20mm] (sum2) {\tiny $\Sigma$};
-    \node[block, right of=sum2, node distance=20mm] (gain)  {$K_c$};
+    \node[block, right of=sum2, node distance=20mm] (gain)  {$k_c$};
     \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
     \node[coordinate, right of=gain, node distance=20mm] (output) {};
 
@@ -209,20 +224,20 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
   \end{tikzpicture}
 \end{center}
 
-\[    u(t) = K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_I} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_D \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big) \]
+\[    u(t) = k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_d \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big) \]
 \end{frame}
 
-\begin{frame}[label={sec:org14de0cb}]{The PID - Parallel form}
+\begin{frame}[label={sec:org1c505df}]{The PID - Parallel form}
 \begin{center}
-  \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}, scale=0.5, every node/.style={scale=0.5}]
+  \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}, scale=0.6, every node/.style={scale=0.6}]
 
     \node[coordinate] (input) {};
     \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
-    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_Is}$};
+    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_is}$};
     \node[color=ppc, coordinate, above of=ii, node distance=10mm] (pp)  {};
-    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_Ds$};
+    \node[color=ddc,block, below of=ii, node distance=10mm] (dd)  {$\tau_ds$};
     \node[sumnode, right of=ii, node distance=20mm] (sum2) {\tiny $\Sigma$};
-    \node[block, right of=sum2, node distance=20mm] (gain)  {$K_c$};
+    \node[block, right of=sum2, node distance=20mm] (gain)  {$k_c$};
     \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
     \node[coordinate, right of=gain, node distance=20mm] (output) {};
 
@@ -237,7 +252,7 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
 
   \end{tikzpicture}
   \small
-  \(  u(t) = K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_I} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_D \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big)\)
+  \(  u(t) = k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_d \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big)\)
 \end{center}
 
    \begin{center}
@@ -253,16 +268,18 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
     ymin = -0.5,
     ]
       \addplot[black, no marks, domain=-0.1:8, samples=200] {(x>0)*(1 - (1+x/\TT)*exp(-x/\TT)} node[coordinate, pin=-20:{$y(t)$}, pos=0.4] {};
-      \addplot[pink!70!black, no marks, domain=-0.1:8, samples=200] coordinates {(-0.1, 0) (0,0) (0,1) (8,1)} node[coordinate, pin=90:{$r(t)$}, pos=0.4] {};
+      \addplot[magenta!70!black, no marks, domain=-0.1:8, samples=200] coordinates {(-0.1, 0) (0,0) (0,1) (8,1)} node[coordinate, pin=90:{$r(t)$}, pos=0.4] {};
     \end{axis}
 
  \end{tikzpicture}
 \end{center}
-\alert{Activity} Sketch the error signal \(e(t)\), the derivative signal \(u_D(t)\) and the integral signal \(u_I(t)\) (use \(\tau_I=\tau_D=1\))
+\alert{Activity} Sketch the error signal \(e(t)\), the derivative signal \(u_D(t)\) and the integral signal \(u_I(t)\) (use \(\tau_i=\tau_d=1\))
 \end{frame}
 
-\begin{frame}[label={sec:orgf4f4e70}]{The PID - Parallel form, solution}
-\(u(t) = K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0^{t} e(\xi) d\xi} - \textcolor{ddc}{\tau_D \frac{d}{dt} y(t)} \Big)\)
+\begin{frame}[label={sec:org255e88e}]{The PID - Parallel form, solution}
+\end{frame}
+\begin{frame}[label={sec:org1a8df48}]{The PID - Parallel form, solution}
+\(u(t) = k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_d \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big)\)
    \begin{center}
    \def\TT{1}
    \begin{tikzpicture}
@@ -275,9 +292,9 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
     ymax = 2,
     ]
       \addplot[black, no marks, domain=-0.1:8, samples=200] {(x>0)*(1 - (1+x/\TT)*exp(-x/\TT)} node[coordinate, pin=-20:{$y(t)$}, pos=0.4] {};
-      \addplot[pink!70!black, no marks, domain=-0.1:8, samples=200] coordinates {(-0.1, 0) (0,0) (0,1) (8,1)} node[coordinate, pin=90:{$r(t)$}, pos=0.4] {};
-      \addplot[color=ppc, no marks, domain=0:8, samples=200] {(x>=0)*( (1+x/\TT)*exp(-x/\TT)} node[coordinate, pin=20:{$e(t)$}, pos=0.8] {};
-      \addplot[color=iic, no marks, domain=-0.1:8, samples=200] {(x>0)*(2*(1-exp(-x/\TT)) - \x/\TT*exp(-x/\TT))} node[coordinate, pin=-20:{$u_I(t)$}, pos=0.8] {};
+      \addplot[magenta!70!black, no marks, domain=-0.1:8, samples=200] coordinates {(-0.1, 0) (0,0) (0,1) (8,1)} node[coordinate, pin=90:{$r(t)$}, pos=0.21] {};
+      \addplot[color=ppc, no marks, domain=0:8, samples=200] {(x>=0)*( (1+x/\TT)*exp(-x/\TT)} node[coordinate, pin=20:{$e(t)$}, pos=0.7] {};
+      \addplot[color=iic, no marks, domain=-0.1:8, samples=200] {(x>0)*(2*(1-exp(-x/\TT)) - \x/\TT*exp(-x/\TT))} node[coordinate, pin=-20:{$u_I(t)$}, pos=0.6] {};
       \addplot[color=ddc, no marks, domain=-0.1:8, samples=200] {(x>0)*(-\x/\TT*exp(-x/\TT))} node[coordinate, pin=-20:{$u_D(t)$}, pos=0.4] {};
     \end{axis}
 
@@ -285,7 +302,159 @@ u(t) &= K_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_I} \int_0
 \end{center}
 \end{frame}
 
+\begin{frame}[label={sec:orge3a5031}]{The PID - practical form}
+\definecolor{ppc}{rgb}{0.1,0.1,0.6}
+\definecolor{iic}{rgb}{0.6,0.1,0.1}
+\definecolor{ddc}{rgb}{0.1,0.5,0.1}
 
-\section{PID tuning}
-\label{sec:org9b33ae9}
+\begin{center}
+  \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+
+    \node[coordinate] (input) {};
+    \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
+    \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_is}$};
+    \node[color=ppc, coordinate, above of=ii, node distance=10mm] (pp)  {};
+    \node[color=ddc,block, below of=ii, node distance=13mm] (dd)  {$\frac{\tau_ds}{\frac{\tau_d}{N}s + 1}$};
+    \node[sumnode, right of=ii, node distance=20mm] (sum2) {\tiny $\Sigma$};
+    \node[block, right of=sum2, node distance=20mm] (gain)  {$k_c$};
+    \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
+    \node[coordinate, right of=gain, node distance=20mm] (output) {};
+
+    \draw[->] (input) -- node[above, pos=0.3] {$r(t)$} (sum);
+    \draw[->] (sum) -- node[above, pos=0.2] {$e(t)$} node[coordinate] (mm) {}  (ii);
+    \draw[->] (gain) -- node[above, near end] {$u(t)$} (output);
+    \draw[->] (feedback) -- node[left, near start] {$y(t)$} node[right, pos=0.95] {-} (sum);
+    \draw[->, color=ppc] (mm) |- (pp) -| node[right,] {$u_P(t)$} (sum2);
+    \draw[->, color=ddc] (feedback |- dd) -- node[above, pos=0.95] {-} (dd);
+    \draw[->, color=ddc] (dd) -| node[right,] {$u_D(t)$} (sum2)  ;
+    \draw[->, color=iic] (ii)  -- node[above,] {$u_I(t)$} (sum2);
+    \draw[->] (sum2) -- node[above, near end] {} (gain);
+
+  \end{tikzpicture}
+\end{center}
+
+The parameter \(N\) is chosen to limit the influence of noisy measurements. Typically,
+\[  3 < N < 10 \]
+\end{frame}
+
+\section{PID tuning - (Smith and Corripio) Ziegler Nichols}
+\label{sec:orgb463b90}
+\begin{frame}[label={sec:org777da4e}]{PID tuning}
+\end{frame}
+\begin{frame}[label={sec:org5924c53}]{Method by Smith \& Corripio using table by Ziegler-Nichols}
+Given process model (fitted to response of the system) \[ G(s) = K \frac{\mathrm{e}^{-s\theta}}{\tau s + 1} \] and PID controller
+\[ F(s) = k_c\left( 1 + \frac{1}{\tau_i s} + \tau_d s\right) \]
+Choose the PID parameters according to the following table (Ziegler-Nichols, 1943)
+   \begin{center}
+   \setlength{\tabcolsep}{20pt}
+   \renewcommand{\arraystretch}{1.5}
+   \begin{tabular}{llll}
+   Controller & \(k_c\) & \(\tau_i\) & \(\tau_d\)\\
+  \hline\hline
+  P & \(\frac{\tau}{\theta K}\) &  & \\
+  PI & \(\frac{0.9\tau}{\theta K}\) & \(\frac{\theta}{0.3}\) & \\
+  PID & \(\frac{1.2\tau}{\theta K}\) & \(2\theta\) & \(\frac{\theta}{2}\)\\
+  \hline
+\end{tabular}
+\end{center}
+
+Gives good control for \[0.1 < \frac{\theta}{\tau} < 0.6.\]
+\end{frame}
+
+
+
+\section{Analytical PID tuning}
+\label{sec:orgf9d0d46}
+
+\begin{frame}[label={sec:org7c2fc0d}]{Analytical PID tuning}
+\end{frame}
+\begin{frame}[label={sec:org7e773c4}]{Analytical PID tuning}
+   \begin{center}
+   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+  { 
+  \node[coordinate] (input) {};
+  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
+  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
+  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
+  \node[coordinate, right of=plant, node distance=2cm] (output) {};
+  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
+ 
+  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
+  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
+  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
+  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
+  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
+}
+\end{tikzpicture}
+\end{center}
+
+\alert{Activity}  Solve for \(F(s)\) in the closed-loop transfer function \[G_c(s) = \frac{G(s)F(s)}{1 + G(s)F(s)}\] 
+\end{frame}
+
+\begin{frame}[label={sec:orga2b1e7b}]{Analytical PID tuning - Solution}
+\end{frame}
+\begin{frame}[label={sec:orge752199}]{Analytical PID tuning - Solution}
+Solving for \(F(s)\) in the closed-loop transfer function \(G_c(s) = \frac{G(s)F(s)}{1 + G(s)F(s)}\) 
+
+\[ \big(1 + G(s)F(s)\big) G_c(s) = G(s)F(s)\]
+\[ G_c(s) = \big( 1 - G_c(s)\big) G(s)F(s)\]
+\[F(s) = \frac{\frac{G_c(s)}{G(s)}}{1 - G_c(s)}\]
+\end{frame}
+
+\begin{frame}[label={sec:orgf8652c9}]{Analytic PID tuning - first-order with delay}
+   \begin{center}
+   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+  { 
+  \node[coordinate] (input) {};
+  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
+  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
+  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
+  \node[coordinate, right of=plant, node distance=2cm] (output) {};
+  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
+ 
+  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
+  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
+  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
+  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
+  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
+}
+\end{tikzpicture}
+\end{center}
+
+Given model \(G(s) = K \frac{\mathrm{e}^{-s\theta}}{\tau s + 1}\) of the process and desired closed-loop transfer function \(G_c(s) = \frac{\mathrm{e}^{-s\theta}}{\tau_c s + 1}\)
+
+\alert{Activity}  Show that the controller becomes
+\[ F(s) = \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s + 1 - \mathrm{e}^{-s\theta}} \right) \approx \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s}\right)  = \underbrace{\frac{\tau}{K\tau_c}}_{k_c} \left( 1 + \frac{1}{\underbrace{\tau}_{\tau_i} s} \right).\]
+Which is a PI-controller with \(k_c = \frac{\tau}{K\tau_c}\) and \(\tau_i = \tau\).
+\end{frame}
+
+
+\begin{frame}[label={sec:org64eaf66}]{SIMC-PID tuning rule}
+[ SIMC stands for \emph{SIMple Control} or \emph{Skogestad Internal Model Control} ]
+   \begin{center}
+   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}scale=0.5, every node/.style={scale=0.5}]
+  { 
+  \node[coordinate] (input) {};
+  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
+  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
+  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
+  \node[coordinate, right of=plant, node distance=2cm] (output) {};
+  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
+ 
+  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
+  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
+  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
+  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
+  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
+}
+\end{tikzpicture}
+\end{center}
+
+Given model of the process and desired closed-loop system \[G(s) = K \frac{\mathrm{e}^{-s\theta}}{(\tau_1 s + 1)(\tau_2 s + 1)}, \quad \tau_1 \ge \tau_2; \qquad G_c(s) = \frac{\mathrm{e}^{-s\theta}}{\tau_c s + 1} \] Good robustness is obtained with PID controller
+
+\[F(s) = K_c \left( \frac{ \tau_I s + 1}{\tau_I s} \right) (\tau_d s + 1) 
+= \frac{K_c(\tau_I + \tau_d)}{\tau_I} \left(1 + \frac{1}{(\tau_I + \tau_D) s} + \frac{\tau_I\tau_D}{\tau_I + \tau_D}s \right) \]
+with 
+\[ K_c = \frac{\tau_1}{K(\tau_c + \theta)}, \qquad \tau_I = \min\{\tau_1, 4(\tau_c + \theta)\}, \qquad \tau_d = \tau_2 \]
+\end{frame}
 \end{document}
