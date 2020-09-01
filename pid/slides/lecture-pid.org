@@ -16,7 +16,7 @@
 
 
 #+title: Process Automation Laboratory - PID control
-#+date: 2020-08-31
+#+date: 2020-09-01
 
 * What do I want the students to understand?			   :noexport:
   - Deviation variables
@@ -35,7 +35,7 @@
    \begin{center}
    \begin{tikzpicture}
      \node {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
-     \node at (4.35,-1.6) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
+     \node at (5.3,-2.05) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
    \end{tikzpicture}
    \end{center}
 
@@ -425,8 +425,8 @@ Solving for \(F(s)\) in the closed-loop transfer function \(G_c(s) = \frac{G(s)F
 Given model \(G(s) = K \frac{\mathrm{e}^{-s\theta}}{\tau s + 1}\) of the process and desired closed-loop transfer function \(G_c(s) = \frac{\mathrm{e}^{-s\theta}}{\tau_c s + 1}\)
 
 *Activity*  Show that the controller becomes
-\[ F(s) = \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s + 1 - \mathrm{e}^{-s\theta}} \right) \approx \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s}\right)  = \underbrace{\frac{\tau}{K\tau_c}}_{k_c} \left( 1 + \frac{1}{\underbrace{\tau}_{\tau_i} s} \right).\]
-Which is a PI-controller with \(k_c = \frac{\tau}{K\tau_c}\) and \(\tau_i = \tau\).
+\[ F(s) = \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s + 1 - \mathrm{e}^{-s\theta}} \right) \approx \frac{1}{K} \left( \frac{\tau s + 1}{(\tau_c+\theta) s}\right)  = \underbrace{\frac{\tau}{K(\tau_c+\theta)}}_{k_c} \left( 1 + \frac{1}{\underbrace{\tau}_{\tau_i} s} \right).\]
+Which is a PI-controller with \(k_c = \frac{\tau}{K(\tau_c+\theta)}\) and \(\tau_i = \tau\).
 
 
 ** SIMC-PID tuning rule

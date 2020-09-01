@@ -40,10 +40,10 @@
     "uampl"
     "TT")
    (LaTeX-add-labels
-    "sec:org1ec931e"
-    "sec:org4283999"
-    "sec:orgb463b90"
-    "sec:orgf9d0d46")
+    "sec:orgb83a172"
+    "sec:orgc9a21be"
+    "sec:org9f3779a"
+    "sec:org809eb76")
    (LaTeX-add-xcolor-definecolors
     "ppc"
     "iic"

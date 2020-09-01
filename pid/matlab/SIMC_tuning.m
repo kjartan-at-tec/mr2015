@@ -8,12 +8,12 @@ uf = 0.015;
 yf = 0.88;
 K = yf/uf;
 y1 = 0.2645*yf;
-tau = 58.1; % Observed from bump test
+tau = 9.3; % Observed from bump test starting form empty tanks
 
 % Tuning parameters
 %tauc = tau*0.5; % Aggressive
-%tauc = tau; % Nominal
-tauc = 2*tau; % Cautious
+tauc = tau; % Nominal
+%tauc = 2*tau; % Cautious
 
 % Series form
 Kc = tau/(tauc*K);

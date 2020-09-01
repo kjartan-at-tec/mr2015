@@ -1,0 +1,128 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169, usenames, dvipsnames]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{amssymb}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+
+#+LaTex_HEADER: \newcommand*{\shift}{\operatorname{q}}
+#+LaTex_HEADER:   \definecolor{ppc}{rgb}{0.1,0.1,0.6}
+#+LaTex_HEADER:   \definecolor{iic}{rgb}{0.6,0.1,0.1}
+#+LaTex_HEADER:   \definecolor{ddc}{rgb}{0.1,0.6,0.1}
+
+
+#+title: Process Automation Laboratory - Anti windup
+#+date: 2020-08-31
+
+* What do I want the students to understand?			   :noexport:
+  - Saturation problem
+  - Windup
+  - Anti-windup schemes
+
+* Which activities will the students do?			   :noexport:
+  - Intuition about windup
+  - Implement ant-windup
+
+* Context
+** Two -tank model
+   #+begin_export latex
+   \begin{center}
+   \includegraphics[width=0.8\linewidth]{../../figures/two-tanks-shutoff-valve}
+   \end{center}
+   #+end_export
+
+* Repetition PID
+** Feedback control
+   #+begin_export latex
+   \begin{center}
+   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+  { 
+  \node[coordinate] (input) {};
+  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
+  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
+  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
+  \node[coordinate, right of=plant, node distance=2cm] (output) {};
+  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
+ 
+  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
+  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
+  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
+  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
+  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
+}
+\end{tikzpicture}
+\end{center}
+   #+end_export
+
+   
+
+** The PID controller
+   
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt},scale=0.8, every node/.style={scale=0.8}]
+    
+       \node[coordinate] (input) {};
+       \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
+       \node[block, right of=sum, node distance=20mm] (pid)  {$F(s)$};
+       \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
+       \node[coordinate, right of=pid, node distance=20mm] (output) {};
+
+       \draw[->] (input) -- node[above, pos=0.3] {$r(t)$} (sum);
+       \draw[->] (sum) -- node[above] {$e(t)$} (pid);
+       \draw[->] (pid) -- node[above, near end] {$u(t)$} (output);
+       \draw[->] (feedback) -- node[left, near start] {$y(t)$} node[right, pos=0.95] {-} (sum);
+     \end{tikzpicture}
+   \end{center}
+
+   #+end_export
+
+*Parallel form (ISA)*
+\[   F(s) &= k_c\left( 1 + \frac{1}{\tau_i s} + \tau_d s\right) \]
+
+*Series form*
+\[F(s) = K_c \left( \frac{ \tau_I s + 1}{\tau_I s} \right) (\tau_D s + 1) 
+= \underbrace{\frac{K_c(\tau_I + \tau_D)}{\tau_I}}_{k_c} \left(1 + \frac{1}{\underbrace{(\tau_I + \tau_D)}_{\tau_i} s} + \underbrace{\frac{\tau_I\tau_D}{\tau_I + \tau_D}}_{\tau_d}s \right) \]
+
+** The PID - practical form
+   \definecolor{ppc}{rgb}{0.1,0.1,0.6}
+   \definecolor{iic}{rgb}{0.6,0.1,0.1}
+   \definecolor{ddc}{rgb}{0.1,0.5,0.1}
+   
+   #+begin_export latex
+   \begin{center}
+     \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
+    
+       \node[coordinate] (input) {};
+       \node[sumnode, right of=input, node distance=16mm] (sum) {\tiny $\Sigma$};
+       \node[color=iic,block, right of=sum, node distance=28mm] (ii)  {$\frac{1}{\tau_is}$};
+       \node[color=ppc, coordinate, above of=ii, node distance=10mm] (pp)  {};
+       \node[color=ddc,block, below of=ii, node distance=13mm] (dd)  {$\frac{\tau_ds}{\frac{\tau_d}{N}s + 1}$};
+       \node[sumnode, right of=ii, node distance=20mm] (sum2) {\tiny $\Sigma$};
+       \node[block, right of=sum2, node distance=20mm] (gain)  {$k_c$};
+       \node[coordinate, below of=sum, node distance=12mm] (feedback) {};
+       \node[coordinate, right of=gain, node distance=20mm] (output) {};
+
+       \draw[->] (input) -- node[above, pos=0.3] {$r(t)$} (sum);
+       \draw[->] (sum) -- node[above, pos=0.2] {$e(t)$} node[coordinate] (mm) {}  (ii);
+       \draw[->] (gain) -- node[above, near end] {$u(t)$} (output);
+       \draw[->] (feedback) -- node[left, near start] {$y(t)$} node[right, pos=0.95] {-} (sum);
+       \draw[->, color=ppc] (mm) |- (pp) -| node[right,] {$u_P(t)$} (sum2);
+       \draw[->, color=ddc] (feedback |- dd) -- node[above, pos=0.95] {-} (dd);
+       \draw[->, color=ddc] (dd) -| node[right,] {$u_D(t)$} (sum2)  ;
+       \draw[->, color=iic] (ii)  -- node[above,] {$u_I(t)$} (sum2);
+       \draw[->] (sum2) -- node[above, near end] {} (gain);
+
+     \end{tikzpicture}
+   \end{center}
+   #+end_export
+
+   The parameter \(N\) is chosen to limit the influence of noisy measurements. Typically,
+   \[  3 < N < 10 \]
+
+
+
