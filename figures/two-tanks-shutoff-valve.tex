@@ -27,9 +27,9 @@
 \node[] (h1) at (-3.1, -0.5) {$h_1(t)$};
 \node[] (h2) at (2.55, -2.7) {$h_2(t)$};
 
-\node[circle, draw, left of=h1, node distance=10mm, align=center, inner sep=1pt] (LE) {\sf LE\\101};
-\node[circle, draw,  left of=LE, node distance=12mm, align=center, inner sep=1pt] (LC) {\sf LC\\101};
-\node[coordinate, above of=LC, node distance=2cm] (vlv) {};
+\node[circle, draw, left of=h2, node distance=1cm, align=center, inner sep=1pt] (LE) {\sf LE\\101};
+\node[circle, draw,  left of=LE, node distance=7cm, align=center, inner sep=1pt] (LC) {\sf LC\\101};
+\node[coordinate, above of=LC, node distance=3.9cm] (vlv) {};
 
 \coordinate (vlvdraw) at ($(vlv.north) + (0cm, -0.6cm)$);
 \coordinate (vlvcontr) at ($(vlv.north) + (0cm, -0.9cm)$);
@@ -42,7 +42,12 @@
 
 
 
-\draw[double, thick, double distance=4pt] ($(vlvin) - (2,0)$) -- (vlvin);
+\draw[double, thick, double distance=4pt, ] ($(vlvin) - (2,0)$) -- (vlvin);
+\draw[double, thick, double distance=4pt] (vlvout) -- ($(vlvin) + (2.89,0)$);
+
+\draw (LE) -- ++(2,0.7);
+\draw[dashed] (LE) -- (LC);
+\draw[dashed] (LC) -- (vlvcontr);
 
 \end{tikzpicture}
 \end{document}
