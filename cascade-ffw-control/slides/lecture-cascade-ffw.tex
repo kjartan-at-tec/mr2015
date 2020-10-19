@@ -1,0 +1,127 @@
+% Created 2020-09-29 mar 19:00
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation,aspectratio=169, usenames, dvipsnames]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{khpreamble}
+\usepackage{amssymb}
+\usepgfplotslibrary{groupplots}
+\usepackage{pgfplotstable}
+\newcommand*{\shift}{\operatorname{q}}
+\definecolor{ppc}{rgb}{0.1,0.1,0.6}
+\definecolor{iic}{rgb}{0.6,0.1,0.1}
+\definecolor{ddc}{rgb}{0.1,0.6,0.1}
+\usetheme{default}
+\author{Kjartan Halvorsen}
+\date{2020-09-28}
+\title{Process Automation Laboratory - Cascade control and feed forward control}
+\hypersetup{
+ pdfauthor={Kjartan Halvorsen},
+ pdftitle={Process Automation Laboratory - Cascade control and feed forward control},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{Context and main idea}
+\label{sec:orgf84f686}
+\begin{frame}[label={sec:org46648dd}]{The two-tank model with one level sensor}
+\begin{center}
+\includegraphics[width=\linewidth]{../../figures/two-tanks-shutoff-valve}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgded96b9}]{The two-tank model with two level sensors and one flow sensor}
+\begin{center}
+\includegraphics[width=\linewidth]{../../figures/two-tanks-2LE-FE}
+\end{center}
+
+\alert{Key idea: We can improve the control using more information}
+\end{frame}
+
+\section{Cascade control}
+\label{sec:orgf103e54}
+\begin{frame}[label={sec:org6010b11}]{Cascade control}
+\begin{center}
+\includegraphics[width=\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orga520990}]{Designing the inner loop}
+\begin{center}
+\includegraphics[width=0.6\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+\end{center}
+Have model \(G_1(s) = \frac{K_1}{s\tau_1 + 1} = \frac{51}{51s + 1}\). PI controller \[F_1(s) = k_{c} \left( 1 + \frac{1}{\tau_{i}s}\right) = k_{c} \frac{\tau_{i}s + 1}{\tau_{i}s}\]
+Characteristic equation
+\[ s(s\tau_1 + 1) + k_c \frac{K}{\tau_{i}}(s\tau_{i} + 1) = 0\]
+Choose \(\tau_i\) and \(k_c\) to place the poles at any desired location in the LHP. 
+\end{frame}
+
+\begin{frame}[label={sec:org5bdecd0}]{Exercise}
+Have characteristic equation
+\[ s(s\tau_1 + 1) + k_c \frac{K}{\tau_{i}}(s\tau_{i} + 1) = 0\]
+
+\alert{Choose \(\tau_i = \tau_1\), simplify the characteristic equation, and then determine \(k_c\) which gives a pole in \(s=-\frac{4}{\tau_1}\).}
+\end{frame}
+
+\begin{frame}[label={sec:orga795158}]{Designing the outer loop}
+\begin{center}
+\includegraphics[width=0.6\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+\end{center}
+The output of the outer controller \(F_2(s)\) is the desired level in tank 1. If the inner loop is sufficiently fast, we can approximate that the actual level in tank 1 is equal to the desired level. 
+
+\begin{center}
+\includegraphics[width=0.9\linewidth]{../../figures/block-diagram-cascade-outer-loop}
+\end{center}
+\end{frame}
+
+
+
+\begin{frame}[label={sec:orgda56d20}]{Designing the outer loop, contd}
+Alternatively, we can fit a model to the plant and the inner control-loop
+\begin{center}
+\includegraphics[width=0.9\linewidth]{../../figures/block-diagram-cascade-control-G2}
+\end{center}
+\end{frame}
+
+
+\section{Feed forward from the disturbance}
+\label{sec:orgd7d4967}
+
+\begin{frame}[label={sec:org1ade855}]{Feed forward from the disturbance}
+\begin{center}
+\includegraphics[width=\linewidth]{../../figures/block-diagram-ffw-no-ffw}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org9655309}]{Feed forward from the disturbance}
+\begin{center}
+\includegraphics[width=\linewidth]{../../figures/block-diagram-ffw}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgdc7375e}]{Feed forward from the disturbance}
+\begin{center}
+\includegraphics[width=0.7\linewidth]{../../figures/block-diagram-ffw}
+\end{center}
+
+Clearly if 
+\[ G(s)F_v(s)V(s) = H_v(s)V(s)\]
+the effect of the disturbance cancels. 
+\alert{Activity: Solve for \(F_V(s)\)!}
+\end{frame}
+\end{document}

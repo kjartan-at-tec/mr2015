@@ -1,0 +1,46 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169, usenames, dvipsnames]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{amssymb}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usepackage{pgfplotstable}
+
+#+LaTex_HEADER: \newcommand*{\shift}{\operatorname{q}}
+#+LaTex_HEADER:   \definecolor{ppc}{rgb}{0.1,0.1,0.6}
+#+LaTex_HEADER:   \definecolor{iic}{rgb}{0.6,0.1,0.1}
+#+LaTex_HEADER:   \definecolor{ddc}{rgb}{0.1,0.6,0.1}
+
+
+
+#+title: Process Automation Laboratory  - Anti-windup assignment
+#+date: 2020-10-06
+
+
+* Context
+** The two-tank system
+   \begin{center}
+   \includegraphics[width=0.8\linewidth]{../../figures/two-tanks-shutoff-valve.png}
+   \end{center}
+
+
+* Anti-windup
+
+** Anti-windup using back-calculation - Spot the mistake
+   #+begin_center
+   \includegraphics[height=0.38\textheight]{../../figures/astrom-back-tracking.png}
+   \includegraphics[height=0.42\textheight]{../../figures/back-tracking-review.png}
+   #+end_center
+
+
+** Anti-windup using back-calculation 
+
+   #+begin_center
+   \includegraphics[width=.82\linewidth]{../../figures/antiwindup-review.png}
+   #+end_center
+
+   

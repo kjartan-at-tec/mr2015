@@ -1,0 +1,112 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=169, usenames, dvipsnames]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{amssymb}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usepackage{pgfplotstable}
+
+#+LaTex_HEADER: \newcommand*{\shift}{\operatorname{q}}
+#+LaTex_HEADER:   \definecolor{ppc}{rgb}{0.1,0.1,0.6}
+#+LaTex_HEADER:   \definecolor{iic}{rgb}{0.6,0.1,0.1}
+#+LaTex_HEADER:   \definecolor{ddc}{rgb}{0.1,0.6,0.1}
+
+
+
+#+title: Control Engineering Laboratory - Cascade control and feed forward
+#+date: 2020-09-28
+
+* What do I want the students to understand?			   :noexport:
+  - Saturation problem
+  - Windup
+  - Anti-windup schemes
+
+* Which activities will the students do?			   :noexport:
+  - Intuition about windup
+  - Implement ant-windup
+
+* Context and main idea
+** The two-tank model with one level sensor
+   #+begin_export latex
+   \begin{center}
+   \includegraphics[width=\linewidth]{../../figures/two-tanks-shutoff-valve}
+   \end{center}
+   #+end_export
+
+** The two-tank model with two level sensors and one flow sensor
+   #+begin_export latex
+   \begin{center}
+   \includegraphics[width=\linewidth]{../../figures/two-tanks-2LE-FE}
+   \end{center}
+   #+end_export
+
+   *Key idea: We can improve the control using more information*
+
+* Cascade control
+** Cascade control
+   #+begin_center
+   \includegraphics[width=\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+   #+end_center
+
+** Designing the inner loop
+   #+begin_center
+   \includegraphics[width=0.6\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+   #+end_center
+   Have model $G_1(s) = \frac{K_1}{s\tau_1 + 1} = \frac{51}{51s + 1}$. PI controller \[F_1(s) = k_{c} \left( 1 + \frac{1}{\tau_{i}s}\right) = k_{c} \frac{\tau_{i}s + 1}{\tau_{i}s}\]
+   Characteristic equation
+   \[ s(s\tau_1 + 1) + k_c \frac{K}{\tau_{i}}(s\tau_{i} + 1) = 0\]
+   Choose $\tau_i$ and $k_c$ to place the poles at any desired location in the LHP. 
+
+** Exercise
+   Have characteristic equation
+   \[ s(s\tau_1 + 1) + k_c \frac{K}{\tau_{i}}(s\tau_{i} + 1) = 0\]
+   
+   *Choose \(\tau_i = \tau_1\), and then determine \(k_c\) which gives a pole in \(s=-\frac{4}{\tau_1}\).*
+
+** Designing the outer loop
+   #+begin_center
+   \includegraphics[width=0.6\linewidth]{../../figures/block-diagram-cascade-control.pdf}
+   #+end_center
+   The output of the outer controller $F_2(s)$ is the desired level in tank 1. If the inner loop is sufficiently fast, we can approximate that the actual level in tank 1 is equal to the desired level. 
+  
+   #+begin_center
+   \includegraphics[width=0.9\linewidth]{../../figures/block-diagram-cascade-outer-loop}
+   #+end_center
+   
+   
+
+** Designing the outer loop, contd
+   Alternatively, we can fit a model to the plant and the inner control-loop
+   #+begin_center
+   \includegraphics[width=0.9\linewidth]{../../figures/block-diagram-cascade-control-G2}
+   #+end_center
+   
+   
+* Feed forward from the disturbance
+
+** Feed forward from the disturbance
+
+   #+begin_center
+   \includegraphics[width=\linewidth]{../../figures/block-diagram-ffw-no-ffw}
+   #+end_center
+
+** Feed forward from the disturbance
+
+   #+begin_center
+   \includegraphics[width=\linewidth]{../../figures/block-diagram-ffw}
+   #+end_center
+
+** Feed forward from the disturbance
+
+   #+begin_center
+   \includegraphics[width=0.7\linewidth]{../../figures/block-diagram-ffw}
+   #+end_center
+
+   Clearly,
+   \[ Y(s) = H_V(s)V(s) + G(s)\Big(U_C(s) + F_v(s)V(s)\Big)\]
+   *Activity: Determine \(F_v(s)\) that eliminates the effect of the disturbance!*
+

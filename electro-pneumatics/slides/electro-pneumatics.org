@@ -16,6 +16,28 @@
 
 #+LaTex_HEADER: \newcommand*{\coil}[1]{to[short] ++(0.5, 0) node[coordinate] (orig) {} arc [start angle=180, end angle=150,radius=8mm] (orig) arc [start angle=180, end angle=210,radius=8mm] (orig) ++(1cm, 0) node[coordinate] (coilend) {} arc [start angle=0, end angle=30,radius=8mm] (coilend) arc [start angle=0, end angle=-30,radius=8mm] (coilend) to[short] ++(0.5cm, 0) (orig) ++(0.5, 0.8) node {#1}}
 
+#+LaTex_HEADER: \newcommand*{\etimer}[2]{to[short] node[coordinate, pos=1.0] (orig) {} ++(0.5, 0) ++(0, -5mm) rectangle ++(5mm ,10mm)   (orig)  ++(0, -10mm) node[coordinate] (corner1) {} rectangle ++(5mm,5mm) node[coordinate] (corner2) {} (corner1) to (corner2) (orig) ++(0mm,-5mm) to ++(5mm,-5mm) (orig) ++(5mm, 0) to[short] ++(5mm, 0) (orig) ++(2.5mm, 8mm) node {#1} (orig) ++(2.5mm, 0) node{#2}}
+
+#+LaTex_HEADER:\makeatletter
+#+LaTex_HEADER:%% Push Button
+#+LaTex_HEADER:\pgfcircdeclarebipole{}{\ctikzvalof{bipoles/pushbutton/height 2}}{pushedbutton}{\ctikzvalof{bipoles/pushbutton/height}}{\ctikzvalof{bipoles/pushbutton/width}}{
+#+LaTex_HEADER:    \pgfsetlinewidth{\pgfkeysvalueof{/tikz/circuitikz/bipoles/thickness}\pgfstartlinewidth}
+#+LaTex_HEADER:  \pgf@circ@res@temp=-\pgfkeysvalueof{/tikz/circuitikz/nodes width}\pgf@circ@Rlen
+#+LaTex_HEADER:  \advance\pgf@circ@res@temp by -2\pgfstartlinewidth
+#+LaTex_HEADER:    \pgfpathmoveto{\pgfpoint{\pgf@circ@res@left}{\pgf@circ@res@temp}}
+#+LaTex_HEADER:    \pgfpathlineto{\pgfpoint{\pgf@circ@res@right}{\pgf@circ@res@temp}}
+#+LaTex_HEADER:    \pgfpathmoveto{\pgfpoint{0}{\pgf@circ@res@temp}}
+#+LaTex_HEADER:    \pgfpathlineto{\pgfpoint{0}{\pgf@circ@res@up}}
+#+LaTex_HEADER:    \pgfusepath{draw}
+#+LaTex_HEADER:    \pgftransformshift{\pgfpoint{\pgf@circ@res@left}{0pt}}
+#+LaTex_HEADER:    \pgfnode{ocirc}{center}{}{}{\pgfusepath{draw}}
+#+LaTex_HEADER:    \pgftransformshift{\pgfpoint{2\pgf@circ@res@right}{0pt}}
+#+LaTex_HEADER:    \pgfnode{ocirc}{center}{}{}{\pgfusepath{draw}}
+#+LaTex_HEADER:}
+#+LaTex_HEADER:\def\pgf@circ@pushedbutton@path#1{\pgf@circ@bipole@path{pushedbutton}{#1}}
+#+LaTex_HEADER:\compattikzset{pushed button/.style = {\circuitikzbasekey, /tikz/to path=\pgf@circ@pushedbutton@path, l=#1}}
+#+LaTex_HEADER:\makeatother
+
 #+title: Logic control of electro-pneumatic systems
 # #+date: 2019-03-07
 
@@ -27,8 +49,10 @@
 * Which activities will the students do? 			   :noexport:
   1. Simscape implementation and simulation
 
+* Good preparation material                                       :noexport:
+  - https://youtu.be/BbmocfETTFo Video on solenoids
 * Intro    
-
+  
    
 * Logic control and boolean algebra - simple intro example
 ** Cheese pressing example, sequence A+A-
@@ -44,7 +68,7 @@
     - The cylinder extends to press a piece of cheese into a mold
     - Then it retracts
     - We want this movement to be repeated, and to be automatic.
-    - The sequence we want to generated is denoted A+A-, which is a simple way of expressing what I just said.
+    - The sequence we want to generate is denoted A+A-, which is a simple way of expressing what I just said.
     - Our task is to design a logic controller for this system
 
 ** A logic control loop
@@ -52,7 +76,7 @@
     \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
    #+END_CENTER
 *** Notes                                                          :noexport:
-    - With this very general block diagram, I want to give you my view of logical control, in order to connect the different themes you have seen in this course.
+    - With this very general block diagram, I want to give you my view of logical control, in order to connect logic control with continuous-time control that you have seen previously in this course.
     - The idea here is that we have a system, for instance a pneumatic system, which is designed to carry out a number of operations in an automatic fashion. And it is our job to design a controller for this system.
     - You can think of the simple system in the previous slide.
     - The system, or plant, as we often call it, can be represented as a discrete-time dynamical system.
@@ -64,15 +88,48 @@
 	What is it that changes with time? Write suggestions in chat (to all).
       - The state x consists, as we shall see, of a number of boolean variables, such as cylinder 
 	A is retracted/extended
-    - The input to the system are the control signals u_k. These are the signals to the solenoids
-      controlling the valves. These are also boolean, since each solenoid is either 
-      energized (meaning current flowing through its coil), or not energized (no current)
+    - The input to the system are the control signals u_k. These are the signals controlling the position of the valves which in turn control the flow of compressed air to either extend or retract the pneumatic cylinders. These are also boolean, since the actuation on each side of the 3/2 or 5/2 valve can either be on or off (energized or not)
     - Depending on the input, and on the current state of the system, the state will change.  
-    - Now the controller is a function which takes information about the state of the system (feedback)
-      together with external input, such as switches, start/stop buttons, and decides the input
-      signal u.
+    - Now the controller is a function which takes information about the state of the system (feedback). This must be provided by sendors such as mechanical switches (limit switches) and proximity sensors that can detect whether a pneumatic cylinder is extended or retracted. There can also be external input, such as start/stop buttons. The purpose of the controller (as in continuous-time control) is to determine the appropriate input signal u.
     - This function written as f(x, u_c), is a boolean function, and this will be implemented using 
       electrial switches and relays in a ladder diagram.
+
+** Key components
+   #+begin_export latex
+   {\tiny Sources: FESTO didactic, electroschematics.com, automation-insights.blog}
+   #+end_export
+*** Limit switch
+    :PROPERTIES:
+    :BEAMER_col: 0.33
+    :BEAMER_env: block
+    :END:      
+   #+BEGIN_CENTER 
+    \includegraphics[width=0.4\linewidth]{../../figures/festo-mech-valve-symbol.png}\\
+    \includegraphics[width=0.3\linewidth]{../../figures/festo-limit-switch.jpg}\\
+    \includegraphics[width=0.5\linewidth]{../../figures/festo-mech-valve-section.png}\\
+   #+END_CENTER
+    
+
+*** Solenoid valve
+    :PROPERTIES:
+    :BEAMER_col: 0.33
+    :BEAMER_env: block
+    :END:      
+   #+BEGIN_CENTER 
+    \includegraphics[width=0.7\linewidth]{../../figures/festo-solenoid-52-symbol.png}\\
+    \includegraphics[width=0.45\linewidth]{../../figures/festo-solenoid-52.jpg}\\
+    \includegraphics[width=1.1\linewidth]{../../figures/festo-solenoid-schematic.png}\\
+   #+END_CENTER
+*** Proximity sensor
+    :PROPERTIES:
+    :BEAMER_col: 0.33
+    :BEAMER_env: block
+    :END:      
+    \includegraphics[width=0.4\linewidth]{../../figures/festo-inductive-sensor.png}\\
+    \includegraphics[width=0.6\linewidth]{../../figures/festo-proximity-sensor.jpg}\\
+    \includegraphics[width=0.99\linewidth]{../../figures/electroschematics-inductive-proximity-sensor.png}\\
+    \includegraphics[width=0.99\linewidth]{../../figures/automation-insight-operation_capacitive.jpg}
+
 
 ** Cheese pressing example - Variables
 Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylinder.
@@ -125,11 +182,11 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
     |         0 |         0 |     0 |         0 |
     |         0 |         1 |     0 |         0 |
     |         1 |         0 |     0 |         1 |
-    |         1 |         1 |     0 |         0 |
+    |       (1) |       (1) |   (0) |       (0) |
     |         0 |         0 |     1 |         1 |
     |         0 |         1 |     1 |         0 |
     |         1 |         0 |     1 |         1 |
-    |         1 |         1 |     1 |         1 |
+    |       (1) |       (1) |   (1) |       (1) |
     |-----------+-----------+-------+-----------|
     
 #    \begin{align*} 
@@ -146,7 +203,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
      |-----+---------+-------+-------|
      | $x$ | $u_{c}$ | $u_1$ | $u_2$ |
      |-----+---------+-------+-------|
-     |   0 |       0 |     0 | 0     |
+     |   0 |       0 |     0 | 1     |
      |   1 |       0 |     0 | 1     |
      |   0 |       1 |     1 | 0     |
      |   1 |       1 |     0 | 1     |
@@ -170,11 +227,14 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
       And activating both solenoids will not change the position of the valve, and hence also leave
       it in the same state.
     - Activating both solenoids should be avoided though. If your control law logic does this, then 
-      there is something wrong.
+      there is something wrong with the logic.
     - The control law truth table specifies how u1 and u2 should be chosen, depending on the 
       values of x and uc, or in words, on the state of the cylinder, and the state of the start button.
     - We see that if the cylinder is retracted (x=0), then we should activate u1 (extending the cylinder) only if the start button is pushed. 
-    - Take a minute and express the control law as boolean functions, based on the control law
+    - Take a minute and express the control law as boolean functions, based on the control law. Write your answer in the chat (to me). To express logical complement, or negation, you can use apostrophy x'
+    - Correct answer
+      - u1 = uc * x'   Note: you can use minterms, since there is a one for only one row
+      - u2 = x + uc'   Note: using maxterms (only one zero all other ones) 
 ** Cheese pressing example - implementing the control  law
 
     #+begin_export latex
@@ -189,22 +249,56 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 		      \end{tikzpicture}
 		\end{center}
 		\begin{center}
-		  \begin{tikzpicture}[circuit plc ladder,]
-		    \draw(0,0) to [contact NO={info={normally open}}] ++(2,0);
-		    \draw(4,0) to [contact NC={info={normally closed}}] ++(2,0);
+		  \begin{tikzpicture}
+		    \draw(0,0) to [push button, label={normally open}] ++(2,0);
+		    \draw(5,0) to [pushed button, label={normally closed}] ++(2,0);
 		  \end{tikzpicture}
 		\end{center}
 		\begin{center}
 		  \begin{tikzpicture}
 		    \draw(0,0) to [switch, label={normally open}] ++(2,0);
-		    \draw(4,0) to [opening switch, label={normally closed}] ++(2,0);
+		    \draw(5,0) to [opening switch, label={normally closed}] ++(2,0);
+		  \end{tikzpicture}
+		\end{center}
+		\begin{center}
+		  \begin{tikzpicture}[circuit plc ladder,]
+		    \draw(0,0) to [contact NO={info={normally open}}] ++(2,0);
+		    \draw(5,0) to [contact NC={info={normally closed}}] ++(2,0);
 		  \end{tikzpicture}
 		\end{center}
     #+end_export
 
 * Latching circuit
 ** Intermezzo - An electrical circuit with memory
+   *Relay* 
+   #+begin_export latex
+   \begin{center}
+   \begin{tabular}{cc}
+   \includegraphics[width=0.4\linewidth]{../../figures/howrelayswork.jpg} &
+   \includegraphics[width=0.3\linewidth]{../../figures/festo-relay-principle.png}\\
+   {\tiny From pcbheaven.com} & {\tiny From FESTO didactic}\\
+   \includegraphics[width=0.35\linewidth]{../../figures/festo-relay-switches.png} &
+   \includegraphics[width=0.25\linewidth]{../../figures/festo-relay-box.jpg}\\
+   {\tiny From FESTO didactic} & {\tiny From FESTO didactic}\\
+   \end{tabular}
+   \end{center}
+   #+end_export
+ 
+*** Notes                                                          :noexport:
+    - A relay is an electrical component, that uses one current to switch on and off another current.
+    - The basic principle is that we have a coil of wire around an iron core. When current flow in this
+      wire, a magnetic field is generated. So it is in other words an electro-magnet.
+    - The electromagnet will attract a spring loaded armature, making (or changing) where the armature contacts the connection lugs.
+    - NC stands for normally closed, meaning there is contact from Common to the contact when the relay coil is not energized (activated). This is obvious from the diagram. NO stands for normally open.
+    - The schematic diagram from FESTO shows the same operating principle. Note that each switch has three contacts. 1) Common, 2) NC, 3) NO. 
+    - Often, the same relay operates on several switches. Each switch has three contacts.
+    - We can make the relay stay on by doing the following. Draw
+      - Connect A2 to 0V and 11 to 24V
+      - Connect 14 to A1
+      - Connect 24V to A1 via push button
+      - Connect pushed button just before A1 to break circuit
 
+** Intermezzo - An electrical circuit with memory
 *** Latching circuit
     :PROPERTIES:
     :BEAMER_col: 0.6
@@ -216,10 +310,20 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
                      \begin{tikzpicture}
                        \node at (0,0.5) {+24V};
                        \node at (6,0.5) {0V};
-                       \draw (0,0) to[short, o-]  (0,-3);
-                       \draw (6,0) to[short, o-](6,-3);
-                       \draw (0,-0.3) to[switch, *-, label=$X$] (2,-0.3) to[ opening switch, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label=$R$] (6,-0.3); %\coil{$R$};
-                       \draw (0,-2) to[switch, *-, label=$R$] (2,-2)  to[short,-*] (2,-0.3);
+                       \draw (0,0) to[short, o-]  (0,-2.5);
+                       \draw (6,0) to[short, o-](6,-2.5);
+                       \draw (0,-0.3) to[push button, label={$X$}] (2,-0.3) to[pushed button, label=$Y$, ] (4,-0.3) to[short] (4,-0.3) to[twoport, label={$R$}] (6,-0.3); %\coil{$R$};
+                       \draw (0,-2) to[switch,label={$R$}] (2,-2)  to[short] (2,-0.3);
+                     \end{tikzpicture}
+            \end{center}
+            \begin{center}
+                     \begin{tikzpicture}[circuit plc ladder,]
+                       \node at (0,0.5) {+24V};
+                       \node at (6,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-2.5);
+                       \draw (6,0) to[short, o-](6,-2.5);
+                       \draw (0,-0.3) to[contact NO={info={$X$}},] (2,-0.3) to[ contact NC={info={$Y$}}, ] (4,-0.3) to[short] (4,-0.3) \coil{$R$};
+                       \draw (0,-2) to[contact NO={info={$R$}},] (2,-2)  to[short,] (2,-0.3);
                      \end{tikzpicture}
             \end{center}
 
@@ -297,6 +401,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 
 * The lab assignment
 
+
 ** The lab assignment
 #+BEGIN_CENTER 
  \includegraphics[width=0.4\linewidth]{../../figures/cheese-pressing-two-cylinders}
@@ -307,7 +412,6 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
    #+BEGIN_CENTER 
     \includegraphics[width=0.8\linewidth]{../../figures/logic-control-loop}
    #+END_CENTER
-
 
 ** Implementing the sequence A+B+B-A-
 #+BEGIN_CENTER 
@@ -326,9 +430,9 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
     with
     \[ u_A+ = \begin{cases} 0 & \text{Solenoid extending A is not activated}\\
                                1&\text{Solenoid extending A is activated}\\
-              \end{cases}
+              \end{cases}, \qquad \text{and similar for B}
    \]
-   etc.
+
 #
 #    \[ u_A- = \begin{cases} 0 & \text{Solenoid retracting A is not activated}\\
 #                               1&\text{Solenoid retracting A is activated}\\
@@ -336,7 +440,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 #   \]
 #   Similar for B.
 
-** Implementing the sequence A+B+B-A-, state variables
+** Implementing the sequence A+B+B-A-, state variables             :noexport:
 #+BEGIN_CENTER 
  \includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
  \includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
@@ -350,7 +454,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
                  \end{cases}
    \]
 
-** Implementing the sequence A+B+B-A-, control law
+** Implementing the sequence A+B+B-A-, control law                :noexport:
 #+BEGIN_CENTER 
  \includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
  \includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
@@ -370,7 +474,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 
     
 
-** Implementing the sequence A+B+B-A-, control law
+** Implementing the sequence A+B+B-A-, control law               :noexport:
 #+BEGIN_CENTER 
  \includegraphics[width=0.3\linewidth]{../../figures/AplusBplusBminAmin}
  \includegraphics[width=0.68\linewidth]{../../figures/logic-control-loop}
@@ -398,7 +502,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 #+END_CENTER
 
 ** Implementing the sequence A+B+|B-A-
-   *Dividing the sequence into groups (a.k.a. cascade method)*
+   *Dividing the sequence into groups (a.k.a. cascade method)* Each group contains as many steps as possible without repeating a letter.
    \[ \underbrace{\text{A+B+}}_{\text{Group 1}}| \underbrace{\text{B-A-}}_{\text{Group 2}} \]
    #+begin_export latex
    \begin{center}
@@ -444,9 +548,283 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
     \end{center}
    #+end_export
 
+* Cascade method for A+A-
+** The cascade method applied to A+A-
 
+** The cascade method applied to A+A-
+   Divide the sequence is to groups, where each group is as long as possible without repeating the same letter.
+   \[ \underbrace{\text{A+}}_{\text{Group 1}}| \underbrace{\text{A-}}_{\text{Group 2}} \]
+   #+begin_export latex
+   \begin{center}
+  \begin{tikzpicture}
+  %\pgfplotsset{set layers=default}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 1,
+        xlabels at=all,
+        horizontal sep=1cm,
+        vertical sep=1cm,
+      }, 
+      clip=false,
+      height=3.3cm, width=9.3cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      xtick={0,1,2},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={A},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 0)};
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 1,1);
+      \node at (axis cs: 0.5, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 1,0.02) rectangle (axis cs: 2,1);
+      \node at (axis cs: 1.5, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 0)};
+
+    \end{groupplot}
+  \end{tikzpicture}
+    \end{center}
+   #+end_export
+
+** The cascade method applied to A+A- with delays
+   Let's add some delays. The process is cyclic and automatic. It takes 4 seconds to replace the mold under the press. The cheese needs to be pressed during 2 seconds before the cylinder retracts. 
+   \[ \underbrace{T_{4s} \, \text{A+}}_{\text{Group 1}}| \underbrace{T_{2s}\, \text{A-} }_{\text{Group 2}} \]
+   #+begin_export latex
+   \begin{center}
+  \begin{tikzpicture}
+  %\pgfplotsset{set layers=default}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 1,
+        xlabels at=all,
+        horizontal sep=1cm,
+        vertical sep=1cm,
+      }, 
+      clip=false,
+      height=3.3cm, width=9.3cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      xtick={0,2,3,4,5},
+      xticklabels={0,1,2,3,4=0},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={A},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2,0) (3,1) (4,1) (5, 0)};
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1.5, 0.8) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2,0) (3,1) (4,1) (5, 0)};
+      \draw[<->] (axis cs: 0, 0.1) -- node[above] {\unit{4}{\second}} (axis cs: 2, 0.1);
+      \draw[<->] (axis cs: 3, 1.1) -- node[above] {\unit{2}{\second}} (axis cs: 4, 1.1);
+
+
+    \end{groupplot}
+  \end{tikzpicture}
+    \end{center}
+   #+end_export
+
+
+** State variables
+*** State variables
+    :PROPERTIES:
+    :BEAMER_col: 0.45
+    :BEAMER_env: block
+    :END:      
+
+
+    \[ x = \begin{bmatrix} x_A & x_{G1} & x_{G2} & x_{T4} & x_{T2}\end{bmatrix}^T, \]
+    where
+    \begin{align*}
+     x_{A} &= \begin{cases} 0 & \text{Cylinder A retracted}\\
+                               1& \text{Cylinder A extended}
+                 \end{cases}\\
+    x_{Gi} &= \begin{cases} 0 & \text{Group \(i\) not active}\\
+                               1& \text{Group \(i\) active}
+                 \end{cases}\\
+    x_{Ti} &= \begin{cases} 0 & \text{Timer of \(i\) s not completed}\\
+                               1& \text{Timer of \(i\) s completed}
+                 \end{cases}
+   \end{align*}
+
+*** State transitions
+    :PROPERTIES:
+    :BEAMER_col: 0.55
+    :BEAMER_env: block
+    :END:      
+
+   #+begin_export latex
+   \begin{center}
+  \begin{tikzpicture}
+  %\pgfplotsset{set layers=default}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 5,
+        xlabels at=edge bottom,
+        horizontal sep=1cm,
+        vertical sep=8mm,
+      }, 
+      clip=false,
+      height=2.4cm, width=7.3cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      xtick={0,2,3,4,5},
+      xticklabels={0,1,2,3,4=0},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={$x_A$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2,0) (3,1) (4,1) (5, 0)};
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1.5, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2,0) (3,1) (4,1) (5, 0)};
+
+      \nextgroupplot [ylabel={$x_{G1}$},]
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1.5, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,1) (3, 1) (3,0) (4, 0) (5,0)} ;
+
+      \nextgroupplot [ylabel={$x_{G2}$},]
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1.5, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (3, 0) (3,1) (4, 1) (5,1)};
+
+      \nextgroupplot [ylabel={$x_{T4}$},]
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2,0) (2, 1) (3, 1) (3,0) (5,0)};
+
+      \nextgroupplot [ylabel={$x_{T2}$},]
+      \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 3,1);
+      \node at (axis cs: 1.5, 0.5) {Group 1};
+      \draw[color=black!40, fill=black!40] (axis cs: 3,0.02) rectangle (axis cs: 5,1);
+      \node at (axis cs: 4, 0.5) {Group 2};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (4,0) (4, 1) (5, 1) (5,0)};
+
+    \end{groupplot}
+  \end{tikzpicture}
+    \end{center}
+   #+end_export
+
+** Group transitions    
+
+     #+begin_export latex
+            \begin{center}
+                     \begin{tikzpicture}
+		     \pgfmathsetmacro\zrail{10}
+		     \pgfmathsetmacro\cstart{\zrail -2}
+		     \pgfmathsetmacro\pend{4}
+                       \node at (0,0.5) {+24V};
+                       \node at (\zrail,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-7);
+                       \draw (\zrail,0) to[short, o-](\zrail,-7);
+
+                       \draw (0,-0.3) to[short] (2, -0.3) to[switch, label=$\overline{x_A}$] (\pend,-0.3) to[ opening switch, label=$x_A$, ] ++(2,0) to[short] (\cstart,-0.3) \coil{$G_1$};
+                       \draw (0,-2) to[switch, label=$G_1$] (\pend,-2)  to[short,] (\pend,-0.3);
+
+%                       \draw (0,-3.3) to[short] (2,-3.3) to[switch, label=$x_A$] (\pend,-3.3) to[ opening switch, label=$\overline{x_A}$, ] ++(2,0) to[short] (\cstart,-3.3);
+\draw (\cstart, -3.3) \coil{$G_2$};
+%                       \draw (0,-5) to[switch, label=$G_2$] (\pend,-5)  to[short] (\pend,-3.3);
+                     \end{tikzpicture}
+            \end{center}
+     #+end_export
+
+
+** Group transitions, solution                                     :noexport:
+
+     #+begin_export latex
+            \begin{center}
+                     \begin{tikzpicture}
+		     \pgfmathsetmacro\zrail{10}
+		     \pgfmathsetmacro\cstart{\zrail -2}
+		     \pgfmathsetmacro\pend{4}
+                       \node at (0,0.5) {+24V};
+                       \node at (\zrail,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-7);
+                       \draw (\zrail,0) to[short, o-](\zrail,-7);
+
+                       \draw (0,-0.3) to[short] (2, -0.3) to[switch, label=$\overline{x_A}$] (\pend,-0.3) to[ opening switch, label=$x_A$, ] ++(2,0) to[short] (\cstart,-0.3) \coil{$G_1$};
+                       \draw (0,-2) to[switch, label=$G_1$] (\pend,-2)  to[short,] (\pend,-0.3);
+
+                       \draw (0,-3.3) to[short] (2,-3.3) to[switch, label=$x_A$] (\pend,-3.3) to[ opening switch, label=$\overline{x_A}$, ] ++(2,0) to[short] (\cstart,-3.3) \coil{$G_2$};
+                       \draw (0,-5) to[switch, label=$G_2$] (\pend,-5)  to[short] (\pend,-3.3);
+                     \end{tikzpicture}
+            \end{center}
+     #+end_export
+
+
+** The timers
+     #+begin_export latex
+            \begin{center}
+                     \begin{tikzpicture}
+		     \pgfmathsetmacro\zrail{10}
+		     \pgfmathsetmacro\cstart{\zrail -1.5}
+		     \pgfmathsetmacro\pend{4}
+		     \pgfmathsetmacro\rone{-1.3}
+		     \pgfmathsetmacro\rtwo{-4.3}
+                       \node at (0,0.5) {+24V};
+                       \node at (\zrail,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-5);
+                       \draw (\zrail,0) to[short, o-](\zrail,-5);
+
+                       \draw (0,\rone) to[switch, label=$\overline{x_A}$] (\pend,\rone) to[short,] (\cstart,\rone) \etimer{$T_{4}$}{4};
+                       \draw (0,\rtwo) to[switch, label=$x_A$] (\pend,\rtwo) to[short,] (\cstart,\rtwo) \etimer{$T_{2}$}{2};
+                     \end{tikzpicture}
+            \end{center}
+     #+end_export
+
+** The control law
+     #+begin_export latex
+            \begin{center}
+                     \begin{tikzpicture}
+		     \pgfmathsetmacro\zrail{10}
+		     \pgfmathsetmacro\cstart{\zrail -2}
+		     \pgfmathsetmacro\pend{4}
+		     \pgfmathsetmacro\rone{-1.3}
+		     \pgfmathsetmacro\rtwo{-4.3}
+                       \node at (0,0.5) {+24V};
+                       \node at (\zrail,0.5) {0V};
+                       \draw (0,0) to[short, o-]  (0,-5);
+                       \draw (\zrail,0) to[short, o-](\zrail,-5);
+
+                       \draw (0,\rone) to[switch, label=$x_{G1}$] ++(2cm, 0) to [switch, label=$x_{T4}$] ++(2cm, 0) to[short,] (\cstart,\rone) \coil{$u_{A+}$};
+                       \draw (0,\rtwo) to[switch, label=$x_{G2}$] ++(2cm, 0) to [switch, label=$x_{T2}$] ++(2cm, 0) to[short,] (\cstart,\rtwo) \coil{$u_{A-}$};
+                     \end{tikzpicture}
+            \end{center}
+     #+end_export
+
+
+
+* Continue with lab assignment
 ** Implementing the sequence A+B+|B-A-, state variables
-*** State variables (better)
+*** State variables
     :PROPERTIES:
     :BEAMER_col: 0.45
     :BEAMER_env: block
@@ -515,14 +893,14 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
       \node at (axis cs: 1, 0.5) {Group 1};
       \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
       \node at (axis cs: 3, 0.5) {Group 2};
-      \addplot[red, no marks,ultra thick,] coordinates {(0,1) (1, 1) (2,0) (3, 0) (4,1)};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,1) (2, 1) (2,0) (4, 0) (4,1)};
 
       \nextgroupplot [ylabel={$x_{G2}$},]
       \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
       \node at (axis cs: 1, 0.5) {Group 1};
       \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
       \node at (axis cs: 3, 0.5) {Group 2};
-      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1, 0) (2,1) (3, 1) (4,0)};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2, 0) (2,1) (4, 1) (4,0)};
     \end{groupplot}
   \end{tikzpicture}
     \end{center}
@@ -579,14 +957,14 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
       \node at (axis cs: 1, 0.5) {Group 1};
       \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
       \node at (axis cs: 3, 0.5) {Group 2};
-      \addplot[red, no marks,ultra thick,] coordinates {(0,1) (1, 1) (2,0) (3, 0) (4,1)};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,1) (2, 1) (2,0) (4, 0) (4,1)};
 
       \nextgroupplot [ylabel={$x_{G2}$},]
       \draw[color=black!10, fill=black!10] (axis cs: 0.02,0.02) rectangle (axis cs: 2,1);
       \node at (axis cs: 1, 0.5) {Group 1};
       \draw[color=black!40, fill=black!40] (axis cs: 2,0.02) rectangle (axis cs: 4,1);
       \node at (axis cs: 3, 0.5) {Group 2};
-      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1, 0) (2,1) (3, 1) (4,0)};
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (2, 0) (2,1) (4, 1) (4,0)};
     \end{groupplot}
   \end{tikzpicture}
     \end{center}
@@ -619,10 +997,10 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
                        \node at (8,0.5) {0V};
                        \draw (-2,0) to[short, o-]  (-2,-7);
                        \draw (8,0) to[short, o-](8,-7);
-		       \draw (6, -0.5) to[twoport, label={$u_{A+}$}] (8,-0.5); %\coil{$u_{A+}$};
-                       \draw (6,-2.5) to[twoport, label={$u_{A-}$}] (8,-2.5);%\coil{$u_{A-}$};
-		       \draw (6, -4.5) to[twoport, label={$u_{B+}$}] (8,-4.5);%\coil{$u_{B+}$};
-                       \draw (6,-6.5) to[twoport, label={$u_{B-}$}] (8,-6.5);% \coil{$u_{B-}$};
+		       \draw (6, -0.5) \coil{$u_{A+}$};
+                       \draw (6,-2.5) \coil{$u_{A-}$};
+		       \draw (6, -4.5)\coil{$u_{B+}$};
+                       \draw (6,-6.5)  \coil{$u_{B-}$};
                   \end{tikzpicture}
             \end{center}
 
@@ -638,10 +1016,10 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
                        \node at (8,0.5) {0V};
                        \draw (-2,0) to[short, o-]  (-2,-7);
                        \draw (8,0) to[short, o-](8,-7);
-		       \draw (6, -0.5) to[twoport, label={$x_{G1}$}] (8,-0.5);%\coil{$x_{G1}$};
-		       \draw (6, -4.5) to[twoport, label={$x_{G2}$}] (8,-4.5);%\coil{$x_{G2}$};
-		       \draw (-2,-2) to[switch, *-, label={$x_{G1}$}] (1,-2);
-		       \draw (-2,-6) to[switch, *-, label={$x_{G2}$}] (1,-6);
+		       \draw (6, -0.5) \coil{$x_{G1}$};
+		       \draw (6, -4.5) \coil{$x_{G2}$};
+		       \draw (-2,-2) to[switch, label={$x_{G1}$}] (1,-2);
+		       \draw (-2,-6) to[switch, label={$x_{G2}$}] (1,-6);
                   \end{tikzpicture}
             \end{center}
 

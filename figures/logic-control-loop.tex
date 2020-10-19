@@ -11,8 +11,8 @@
     \node[coordinate, right = 10mm of plant] (measure) {};
     \node[coordinate, right = 10mm of measure] (output) {};
 
-    \node[above = 0.3cm of controller] {controller};
-    \node[above = 0.3cm of plant] {plant};
+    \node[above = 0.3cm of controller] {controller = logic circuit};
+    \node[above = 0.3cm of plant] {plant = pneumatic system};
 
     \draw[->] (input) -- node[above, near start] {$u_{c,k}$} (controller);
     \draw[->] (plant) -- node[above, near end] {$x_{k}$} (output);

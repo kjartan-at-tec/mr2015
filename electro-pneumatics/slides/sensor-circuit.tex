@@ -12,7 +12,7 @@
   \foreach \y/\B/\x in {-1.5/1B1/x_{A}, -4.5/1B2/\overline{x_{A}},
     -7.5/2B1/x_{B}, -10.5/2B2/\overline{x_{B}}}
   {
-    \draw[yshift=\y cm] (6, 1) to[twoport, label={$\x$}] (8,1);
+    \draw[yshift=\y cm] (6, 1) \coil{$\x$}; %to[twoport, label={$\x$}] (8,1);
     \node[yshift=\y cm] at (4, 0) {\includegraphics[width=20mm]{../../figures/inductive-sensor.png}};
     \node[yshift=\y cm] at (4,-1.1) {\B};
     \draw[yshift=\y cm] (3.97, 0.6) |- (6, 1); 
