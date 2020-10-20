@@ -70,31 +70,37 @@
     - We want this movement to be repeated, and to be automatic.
     - The sequence we want to generate is denoted A+A-, which is a simple way of expressing what I just said.
     - Our task is to design a logic controller for this system
+      
+** They Relay
 
-** A logic control loop
-   #+BEGIN_CENTER 
-    \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
-   #+END_CENTER
+   #+begin_export latex
+   \begin{center}
+   \begin{tabular}{cc}
+   \includegraphics[width=0.4\linewidth]{../../figures/howrelayswork.jpg} &
+   \includegraphics[width=0.3\linewidth]{../../figures/festo-relay-principle.png}\\
+   {\tiny From pcbheaven.com} & {\tiny From FESTO didactic}\\
+   \includegraphics[width=0.35\linewidth]{../../figures/festo-relay-switches.png} &
+   \includegraphics[width=0.25\linewidth]{../../figures/festo-relay-box.jpg}\\
+   {\tiny From FESTO didactic} & {\tiny From FESTO didactic}\\
+   \end{tabular}
+   \end{center}
+   #+end_export
+ 
 *** Notes                                                          :noexport:
-    - With this very general block diagram, I want to give you my view of logical control, in order to connect logic control with continuous-time control that you have seen previously in this course.
-    - The idea here is that we have a system, for instance a pneumatic system, which is designed to carry out a number of operations in an automatic fashion. And it is our job to design a controller for this system.
-    - You can think of the simple system in the previous slide.
-    - The system, or plant, as we often call it, can be represented as a discrete-time dynamical system.
-      - What this means is that the state of the system is described by a state vector x, 
-        which changes at discrete times. The sequence of times is denoted with k.
-      - The plant has some dynamics meaning that the state will change from k to k+1, depending
-        on its current state, and on the inputs to the system.
-      - So in the case of the cheese-presser. What would you say is the state of the system? 
-	What is it that changes with time? Write suggestions in chat (to all).
-      - The state x consists, as we shall see, of a number of boolean variables, such as cylinder 
-	A is retracted/extended
-    - The input to the system are the control signals u_k. These are the signals controlling the position of the valves which in turn control the flow of compressed air to either extend or retract the pneumatic cylinders. These are also boolean, since the actuation on each side of the 3/2 or 5/2 valve can either be on or off (energized or not)
-    - Depending on the input, and on the current state of the system, the state will change.  
-    - Now the controller is a function which takes information about the state of the system (feedback). This must be provided by sendors such as mechanical switches (limit switches) and proximity sensors that can detect whether a pneumatic cylinder is extended or retracted. There can also be external input, such as start/stop buttons. The purpose of the controller (as in continuous-time control) is to determine the appropriate input signal u.
-    - This function written as f(x, u_c), is a boolean function, and this will be implemented using 
-      electrial switches and relays in a ladder diagram.
+    - A relay is an electrical component, that uses one current to switch on and off another current.
+    - The basic principle is that we have a coil of wire around an iron core. When current flow in this
+      wire, a magnetic field is generated. So it is in other words an electro-magnet.
+    - The electromagnet will attract a spring loaded armature, making (or changing) where the armature contacts the connection lugs.
+    - NC stands for normally closed, meaning there is contact from Common to the contact when the relay coil is not energized (activated). This is obvious from the diagram. NO stands for normally open.
+    - The schematic diagram from FESTO shows the same operating principle. Note that each switch has three contacts. 1) Common, 2) NC, 3) NO. 
+    - Often, the same relay operates on several switches. Each switch has three contacts.
+    - We can make the relay stay on by doing the following. Draw
+      - Connect A2 to 0V and 11 to 24V
+      - Connect 14 to A1
+      - Connect 24V to A1 via push button
+      - Connect pushed button just before A1 to break circuit
 
-** Key components
+** Other key components
    #+begin_export latex
    {\tiny Sources: FESTO didactic, electroschematics.com, automation-insights.blog}
    #+end_export
@@ -130,6 +136,29 @@
     \includegraphics[width=0.99\linewidth]{../../figures/electroschematics-inductive-proximity-sensor.png}\\
     \includegraphics[width=0.99\linewidth]{../../figures/automation-insight-operation_capacitive.jpg}
 
+
+** A logic control loop
+   #+BEGIN_CENTER 
+    \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
+   #+END_CENTER
+*** Notes                                                          :noexport:
+    - With this very general block diagram, I want to give you my view of logical control, in order to connect logic control with continuous-time control that you have seen previously in this course.
+    - The idea here is that we have a system, for instance a pneumatic system, which is designed to carry out a number of operations in an automatic fashion. And it is our job to design a controller for this system.
+    - You can think of the simple system in the previous slide.
+    - The system, or plant, as we often call it, can be represented as a discrete-time dynamical system.
+      - What this means is that the state of the system is described by a state vector x, 
+        which changes at discrete times. The sequence of times is denoted with k.
+      - The plant has some dynamics meaning that the state will change from k to k+1, depending
+        on its current state, and on the inputs to the system.
+      - So in the case of the cheese-presser. What would you say is the state of the system? 
+	What is it that changes with time? Write suggestions in chat (to all).
+      - The state x consists, as we shall see, of a number of boolean variables, such as cylinder 
+	A is retracted/extended
+    - The input to the system are the control signals u_k. These are the signals controlling the position of the valves which in turn control the flow of compressed air to either extend or retract the pneumatic cylinders. These are also boolean, since the actuation on each side of the 3/2 or 5/2 valve can either be on or off (energized or not)
+    - Depending on the input, and on the current state of the system, the state will change.  
+    - Now the controller is a function which takes information about the state of the system (feedback). This must be provided by sendors such as mechanical switches (limit switches) and proximity sensors that can detect whether a pneumatic cylinder is extended or retracted. There can also be external input, such as start/stop buttons. The purpose of the controller (as in continuous-time control) is to determine the appropriate input signal u.
+    - This function written as f(x, u_c), is a boolean function, and this will be implemented using 
+      electrial switches and relays in a ladder diagram.
 
 ** Cheese pressing example - Variables
 Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylinder.
@@ -270,7 +299,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 
 * Latching circuit
 ** Intermezzo - An electrical circuit with memory
-   *Relay* 
+
    #+begin_export latex
    \begin{center}
    \begin{tabular}{cc}
