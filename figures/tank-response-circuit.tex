@@ -13,7 +13,7 @@
 \begin{document}
 
 \pgfmathsetmacro\circuitheight{8}
-\pgfmathsetmacro\circuitwidth{11}
+\pgfmathsetmacro\circuitwidth{13}
 
 \begin{circuitikz}[scale=1]
   % Power rails
@@ -21,7 +21,7 @@
   \draw (0,0) to [short, -o] ++(\circuitwidth, 0); 
 
 
-  \begin{scope}[xshift=8cm, yshift=2cm]
+  \begin{scope}[xshift=9cm, yshift=2cm]
     \node at (0,0) {\includegraphics[width=3cm]{pressure-transmitter.png}};
     \node[coordinate] (psplus) at (1.2,.3) {};
     \node[coordinate] (psmin) at (1.2,-.4) {};
@@ -33,7 +33,7 @@
   \draw (pssignal |- (0,0) to[sV, color=white, name=S] (pssignal);
   \myscope{S}{0}
 
-  \begin{scope}[xshift=6.5cm, yshift=6cm]
+  \begin{scope}[xshift=7.5cm, yshift=6cm]
     \node[draw, minimum width=2cm, minimum height=1.6cm] (valve) at (0,0) {Valve};
     \node[coordinate, ] (vplus) at (-1.4, 0.6) {}; 
     \draw (valve.west |- vplus)  to [short, -*, color=red] (vplus);
@@ -50,8 +50,9 @@
   \draw (vwhite |- 0,0) to [short,] (vwhite);
   
   \draw (3,0) to[sqV, label={} ] (3,0 |- vblack) to[short] (vblack);
+  \draw (4,0) to[R={50$\,\Omega$}] (4,3) to[short] (4,0 |- vblack);
 
-  \node[coordinate, left of=vblack, node distance=2.5cm] (Osc) {};
+  \node[coordinate, left of=vblack, node distance=3.5cm] (Osc) {};
   \draw (vblack) to[short] (Osc) to[sV, color=white, name=S2] (Osc |- 0,0);
   \myscope{S2}{0}
 \end{circuitikz}

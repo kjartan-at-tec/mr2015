@@ -11,7 +11,7 @@ ytau = 0.2645*yf;
 htau = ytau + h0
 tau = 9.3; % Observed from bump test starting form empty tanks
 tau = 60; % Observed from bump test starting at h=1.275
-tau=30;
+%tau=30;
 
 % Tuning parameters
 tauc = tau*0.5; % Aggressive

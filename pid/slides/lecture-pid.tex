@@ -1,4 +1,4 @@
-% Created 2020-09-01 mar 17:47
+% Created 2021-09-02 Thu 17:27
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169, usenames, dvipsnames]{beamer}
 \usepackage[utf8]{inputenc}
@@ -23,24 +23,24 @@
 \definecolor{ddc}{rgb}{0.1,0.6,0.1}
 \usetheme{default}
 \author{Kjartan Halvorsen}
-\date{2020-09-01}
+\date{\today}
 \title{Process Automation Laboratory - PID control}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
  pdftitle={Process Automation Laboratory - PID control},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
+ pdfcreator={Emacs 26.3 (Org mode 9.4.6)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
 \section{Repetition - Second-order model critically damped}
-\label{sec:orgb83a172}
-\begin{frame}[label={sec:org0c677ab}]{Second-order models}
+\label{sec:orgd8c85bb}
+\begin{frame}[label={sec:org8c495f4}]{Second-order models}
 \end{frame}
-\begin{frame}[label={sec:org867841d}]{Two first-order models in series}
+\begin{frame}[label={sec:org4130cf8}]{Two first-order models in series}
 \begin{center}
 \begin{tikzpicture}
   \node {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
@@ -67,7 +67,7 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:org9159ee7}]{Fitting second-order critically-damped model}
+\begin{frame}[label={sec:org51bc4e6}]{Fitting second-order critically-damped model}
 \alert{Model with two identical time-constants.}
 Assuming model 
 \[ \textcolor{green!50!black}{Y(s)} = \frac{K}{(s\tau + 1)^2}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\Big( 1 - (1+\frac{t}{\tau}\big)\mathrm{e}^{-\frac{t}{\tau}}\Big)u_H(t)\]
@@ -108,8 +108,8 @@ Assuming model
 
 
 \section{PID parameter intuition}
-\label{sec:orgc9a21be}
-\begin{frame}[label={sec:org88cf838}]{Feedback control}
+\label{sec:org9124c70}
+\begin{frame}[label={sec:org21ee677}]{Feedback control}
    \begin{center}
    \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
   { 
@@ -132,7 +132,7 @@ Assuming model
 
 
 
-\begin{frame}[label={sec:org11b01f8}]{The PID controller}
+\begin{frame}[label={sec:org2fb2529}]{The PID controller}
 \begin{center}
   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt},scale=0.8, every node/.style={scale=0.8}]
 
@@ -158,7 +158,7 @@ Assuming model
 \end{frame}
 
 
-\begin{frame}[label={sec:org9cfe9ef}]{The PID - Parallel form}
+\begin{frame}[label={sec:orgae39394}]{The PID - Parallel form}
 \definecolor{ppc}{rgb}{0.1,0.1,0.6}
 \definecolor{iic}{rgb}{0.6,0.1,0.1}
 \definecolor{ddc}{rgb}{0.1,0.6,0.1}
@@ -193,7 +193,7 @@ u(t) &= k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_i} \int_0
 \end{align*}
 \end{frame}
 
-\begin{frame}[label={sec:orga3b87f0}]{The PID - Parallel form, modified D-part}
+\begin{frame}[label={sec:orga5afc99}]{The PID - Parallel form, modified D-part}
 \definecolor{ppc}{rgb}{0.1,0.1,0.6}
 \definecolor{iic}{rgb}{0.6,0.1,0.1}
 \definecolor{ddc}{rgb}{0.1,0.6,0.1}
@@ -227,7 +227,7 @@ u(t) &= k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_i} \int_0
 \[    u(t) = k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_d \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big) \]
 \end{frame}
 
-\begin{frame}[label={sec:org67caeb1}]{The PID - Parallel form}
+\begin{frame}[label={sec:org320807c}]{The PID - Parallel form}
 \begin{center}
   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}, scale=0.6, every node/.style={scale=0.6}]
 
@@ -276,9 +276,9 @@ u(t) &= k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_i} \int_0
 \alert{Activity} Sketch the error signal \(e(t)\), the derivative signal \(u_D(t)\) and the integral signal \(u_I(t)\) (use \(\tau_i=\tau_d=1\))
 \end{frame}
 
-\begin{frame}[label={sec:org66504ff}]{The PID - Parallel form, solution}
+\begin{frame}[label={sec:org0429488}]{The PID - Parallel form, solution}
 \end{frame}
-\begin{frame}[label={sec:orgacb2810}]{The PID - Parallel form, solution}
+\begin{frame}[label={sec:orgb2e7e1a}]{The PID - Parallel form, solution}
 \(u(t) = k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\overbrace{\frac{1}{\tau_i} \int_0^{t} e(\xi) d\xi}^{u_I(t)}} + \textcolor{ddc}{ \underbrace{\tau_d \frac{d}{dt} \big(-y(t)\big)}_{u_D(t)}} \Big)\)
    \begin{center}
    \def\TT{1}
@@ -302,7 +302,7 @@ u(t) &= k_c\Big( \textcolor{ppc}{e(t)} + \textcolor{iic}{\frac{1}{\tau_i} \int_0
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgf12fec4}]{The PID - practical form}
+\begin{frame}[label={sec:org586fa5e}]{The PID - practical form}
 \definecolor{ppc}{rgb}{0.1,0.1,0.6}
 \definecolor{iic}{rgb}{0.6,0.1,0.1}
 \definecolor{ddc}{rgb}{0.1,0.5,0.1}
@@ -338,13 +338,15 @@ The parameter \(N\) is chosen to limit the influence of noisy measurements. Typi
 \end{frame}
 
 \section{PID tuning - (Smith and Corripio) Ziegler Nichols}
-\label{sec:org9f3779a}
-\begin{frame}[label={sec:org06c05bc}]{PID tuning}
+\label{sec:orga158d8d}
+\begin{frame}[label={sec:orgd1f6a5d}]{PID tuning}
 \end{frame}
-\begin{frame}[label={sec:orgb4afb6f}]{Method by Smith \& Corripio using table by Ziegler-Nichols}
+\begin{frame}[label={sec:org71a4d7d}]{Method by Smith \& Corripio using table by Ziegler-Nichols}
+\small
+
 Given process model (fitted to response of the system) \[ G(s) = K \frac{\mathrm{e}^{-s\theta}}{\tau s + 1} \] and PID controller
-\[ F(s) = k_c\left( 1 + \frac{1}{\tau_i s} + \tau_d s\right) \]
-Choose the PID parameters according to the following table (Ziegler-Nichols, 1943)
+   \[ F(s) = k_c\left( 1 + \frac{1}{\tau_i s} + \tau_d s\right) \]
+   Choose the PID parameters according to the following table (Ziegler-Nichols, 1943)
    \begin{center}
    \setlength{\tabcolsep}{20pt}
    \renewcommand{\arraystretch}{1.5}
@@ -363,73 +365,10 @@ Gives good control for \[0.1 < \frac{\theta}{\tau} < 0.6.\]
 
 
 
-\section{Analytical PID tuning}
-\label{sec:org809eb76}
+\section{SIMC}
+\label{sec:org627d95f}
 
-\begin{frame}[label={sec:org07efe71}]{Analytical PID tuning}
-\end{frame}
-\begin{frame}[label={sec:org4df3a8c}]{Analytical PID tuning}
-   \begin{center}
-   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
-  { 
-  \node[coordinate] (input) {};
-  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
-  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
-  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
-  \node[coordinate, right of=plant, node distance=2cm] (output) {};
-  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
- 
-  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
-  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
-  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
-  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
-  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
-}
-\end{tikzpicture}
-\end{center}
-
-\alert{Activity}  Solve for \(F(s)\) in the closed-loop transfer function \[G_c(s) = \frac{G(s)F(s)}{1 + G(s)F(s)}\] 
-\end{frame}
-
-\begin{frame}[label={sec:org5aa30fb}]{Analytical PID tuning - Solution}
-\end{frame}
-\begin{frame}[label={sec:orgc76ca52}]{Analytical PID tuning - Solution}
-Solving for \(F(s)\) in the closed-loop transfer function \(G_c(s) = \frac{G(s)F(s)}{1 + G(s)F(s)}\) 
-
-\[ \big(1 + G(s)F(s)\big) G_c(s) = G(s)F(s)\]
-\[ G_c(s) = \big( 1 - G_c(s)\big) G(s)F(s)\]
-\[F(s) = \frac{\frac{G_c(s)}{G(s)}}{1 - G_c(s)}\]
-\end{frame}
-
-\begin{frame}[label={sec:org4c7f8da}]{Analytic PID tuning - first-order with delay}
-   \begin{center}
-   \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}]
-  { 
-  \node[coordinate] (input) {};
-  \node[sumnode, right of=input] (sum) {\tiny $\sum$};
-  \node[block, right of=sum, node distance=2.6cm] (reg) {$F(s)$};
-  \node[block, right of=reg, node distance=2.6cm] (plant) {$G(s)$};
-  \node[coordinate, right of=plant, node distance=2cm] (output) {};
-  \node[coordinate, below of=plant, node distance=12mm] (feedback) {};
- 
-  \draw[->] (plant) -- node[coordinate, inner sep=0pt] (meas) {} node[near end, above] {$y(t)$} (output);
-  \draw[->] (meas) |- (feedback) -| node[very near end, left] {$-$} (sum);
-  \draw[->] (input) -- node[very near start, above] {$r(t)$} (sum);
-  \draw[->] (sum) -- node[above] {$e(t)$} (reg);
-  \draw[->] (reg) -- node[above] {$u(t)$}(plant);
-}
-\end{tikzpicture}
-\end{center}
-
-Given model \(G(s) = K \frac{\mathrm{e}^{-s\theta}}{\tau s + 1}\) of the process and desired closed-loop transfer function \(G_c(s) = \frac{\mathrm{e}^{-s\theta}}{\tau_c s + 1}\)
-
-\alert{Activity}  Show that the controller becomes
-\[ F(s) = \frac{1}{K} \left( \frac{\tau s + 1}{\tau_c s + 1 - \mathrm{e}^{-s\theta}} \right) \approx \frac{1}{K} \left( \frac{\tau s + 1}{(\tau_c+\theta) s}\right)  = \underbrace{\frac{\tau}{K(\tau_c+\theta)}}_{k_c} \left( 1 + \frac{1}{\underbrace{\tau}_{\tau_i} s} \right).\]
-Which is a PI-controller with \(k_c = \frac{\tau}{K(\tau_c+\theta)}\) and \(\tau_i = \tau\).
-\end{frame}
-
-
-\begin{frame}[label={sec:org47c1e4e}]{SIMC-PID tuning rule}
+\begin{frame}[label={sec:org62fb5a1}]{SIMC-PID tuning rule}
 [ SIMC stands for \emph{SIMple Control} or \emph{Skogestad Internal Model Control} ]
    \begin{center}
    \begin{tikzpicture}[node distance=22mm, block/.style={rectangle, draw, minimum width=15mm}, sumnode/.style={circle, draw, inner sep=2pt}scale=0.5, every node/.style={scale=0.5}]

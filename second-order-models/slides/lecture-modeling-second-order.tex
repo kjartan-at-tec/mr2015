@@ -1,4 +1,4 @@
-% Created 2020-08-25 mar 11:18
+% Created 2021-08-26 Thu 19:04
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -20,22 +20,22 @@
 \newcommand*{\shift}{\operatorname{q}}
 \usetheme{default}
 \author{Kjartan Halvorsen}
-\date{2020-08-17}
+\date{\today}
 \title{Process Automation Laboratory - Modeling second-order systems}
 \hypersetup{
  pdfauthor={Kjartan Halvorsen},
  pdftitle={Process Automation Laboratory - Modeling second-order systems},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
+ pdfcreator={Emacs 26.3 (Org mode 9.4.6)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
 \section{Repetition - Fitting first-order model with delay}
-\label{sec:org37d0da3}
-\begin{frame}[label={sec:org20ab3fb}]{Fitting first-order model with delay}
+\label{sec:org94daa4d}
+\begin{frame}[label={sec:org9cb799e}]{Fitting first-order model with delay}
 Assuming a plant model of first-order with time constant \(T\) and delay \(\theta\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K\mathrm{e}^{-s\theta}}{s\tau + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\theta}{\tau}}\big)u_H(t-\theta)\]
 \def\Tcnst{3}
@@ -73,14 +73,14 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\thet
 \end{frame}
 
 \section{Second-order model critically damped}
-\label{sec:org47215b6}
-\begin{frame}[label={sec:org3b4230e}]{Second-order models}
+\label{sec:org05cf766}
+\begin{frame}[label={sec:org46667a1}]{Second-order models}
 \end{frame}
-\begin{frame}[label={sec:org8957f56}]{Two first-order models in series}
+\begin{frame}[label={sec:org912eb7b}]{Two first-order models in series}
 \begin{center}
 \begin{tikzpicture}
   \node {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
-  \node at (4.35,-1.6) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
+  \node at (5.2,-2.06) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
 \end{tikzpicture}
 \end{center}
 
@@ -104,7 +104,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\thet
 
 
 
-\begin{frame}[label={sec:orgba1ae89}]{Fitting second-order critically-damped model}
+\begin{frame}[label={sec:orgeaac7ac}]{Fitting second-order critically-damped model}
 \alert{Model with two identical time-constants.}
 Assuming model 
 \[ \textcolor{green!50!black}{Y(s)} = \frac{K}{(s\tau + 1)^2}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\Big( 1 - (1+\frac{t}{\tau}\big)\mathrm{e}^{-\frac{t}{\tau}}\Big)u_H(t)\]
@@ -143,7 +143,7 @@ Assuming model
 \end{frame}
 
 
-\begin{frame}[label={sec:org920c5f6}]{Fitting second-order critically-damped model}
+\begin{frame}[label={sec:org8ae4797}]{Fitting second-order critically-damped model}
 \alert{Model with two identical time-constants.}
 Assuming model 
 \[ \textcolor{green!50!black}{Y(s)} = \frac{K}{(s\tau + 1)^2}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\Big( 1 - (1+\frac{t}{\tau}\big)\mathrm{e}^{-\frac{t}{\tau}}\Big)u_H(t)\]
@@ -183,9 +183,9 @@ Assuming model
 \end{frame}
 
 \section{Second-order model under-damped}
-\label{sec:org614c8f5}
+\label{sec:orge4875a1}
 
-\begin{frame}[label={sec:org64dfe99}]{Second-order under-damped models}
+\begin{frame}[label={sec:org4913578}]{Second-order under-damped models}
 A system with ODE
 $$ \ddot{y} + 2\zeta\omega_n\dot{y} + \omega_n^2 y = \omega_n^2 u, $$
 becomes in the Laplace domain
@@ -206,7 +206,7 @@ $$ Y(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2} U(s). $$
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org20199b8}]{Second-order under-damped models}
+\begin{frame}[label={sec:orgaf0b169}]{Second-order under-damped models}
 $$ Y(s) = \frac{\omega_n^2}{s^2 + 2\zeta\omega_n s + \omega_n^2} U(s), \qquad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} $$
 $$     y(t) = 1 - \frac{\mathrm{e}^{-\zeta\omega_nt}}{\sqrt{1-\zeta^2}} \sin\big( \sqrt{1-\zeta^2}\omega_n t + \phi \big) $$
 
@@ -226,7 +226,7 @@ $$     y(t) = 1 - \frac{\mathrm{e}^{-\zeta\omega_nt}}{\sqrt{1-\zeta^2}} \sin\big
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5ab7ad2}]{Second-order under-damped models}
+\begin{frame}[label={sec:org303851d}]{Second-order under-damped models}
 \begin{columns}
 \begin{column}{0.3\columnwidth}
 \begin{center}
@@ -245,7 +245,7 @@ $$     y(t) = 1 - \frac{\mathrm{e}^{-\zeta\omega_nt}}{\sqrt{1-\zeta^2}} \sin\big
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org58591c7}]{Second-order under-damped models}
+\begin{frame}[label={sec:org2b00872}]{Second-order under-damped models}
 \alert{Activity in pairs} Determine the poles of the system!
 \begin{columns}
 \begin{column}{0.3\columnwidth}

@@ -17,10 +17,11 @@
 
 \begin{circuitikz}[scale=1]
   \node at (2.5,2.5) {\includegraphics[width=3cm]{pressure-transmitter.png}};
-  \draw (0,0) to[V, label=18V] (0, \circuitheight) to[short, -o] ++(\circuitwidth, 0); 
+  \draw  (0, \circuitheight) to[V, a=24V] (0,0);
+  \draw[red, thick] (0, \circuitheight) to[short, -o] ++(\circuitwidth, 0); 
   \draw (3.6,5) to [short,-*] (3.6, 2.8);
   \draw (3.6,0) to [short,-*] (3.6, 2.07);
-  \draw (0,0) to [short, -o] ++(\circuitwidth, 0); 
+  \draw[blue, thick] (0,0) to [short, -o] ++(\circuitwidth, 0); 
 
   \draw (3.6,2.46) to[short,*-] ++(1.3, 0) to[sV, color=white, name=S] (4.9, 0);
   \myscope{S}{0}

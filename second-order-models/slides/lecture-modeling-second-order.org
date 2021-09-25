@@ -12,7 +12,7 @@
 #+LaTex_HEADER: \newcommand*{\shift}{\operatorname{q}}
 
 #+title: Process Automation Laboratory - Modeling second-order systems
-#+date: 2020-08-17
+# #+date: 2020-08-17
 
 * What do I want the students to understand?			   :noexport:
   - Deviation variables
@@ -70,7 +70,7 @@
    \begin{center}
    \begin{tikzpicture}
      \node {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
-     \node at (4.35,-1.6) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
+     \node at (5.2,-2.06) {\includegraphics[width=0.4\linewidth]{../../figures/tank-with-hole-no-variables}};
    \end{tikzpicture}
    \end{center}
 

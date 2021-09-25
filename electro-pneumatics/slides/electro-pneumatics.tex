@@ -1,4 +1,4 @@
-% Created 2020-10-26 lun 16:00
+% Created 2021-05-12 mié 19:02
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=1610]{beamer}
 \usepackage[utf8]{inputenc}
@@ -44,34 +44,34 @@
 \compattikzset{pushed button/.style = {\circuitikzbasekey, /tikz/to path=\pgf@circ@pushedbutton@path, l=#1}}
 \makeatother
 \usetheme{default}
-\author{Kjartan Halvorsen}
+\author{Kjartan}
 \date{\today}
 \title{Logic control of electro-pneumatic systems}
 \hypersetup{
- pdfauthor={Kjartan Halvorsen},
+ pdfauthor={Kjartan},
  pdftitle={Logic control of electro-pneumatic systems},
  pdfkeywords={},
  pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.3.6)}, 
+ pdfcreator={Emacs 26.3 (Org mode 9.4.4)}, 
  pdflang={English}}
 \begin{document}
 
 \maketitle
 
 \section{Intro}
-\label{sec:orgcdcd0d1}
+\label{sec:org77d523c}
 
 
 \section{Logic control and boolean algebra - simple intro example}
-\label{sec:orgfcfb1f8}
-\begin{frame}[label={sec:orgff18f6d}]{Cheese pressing example, sequence A+A-}
+\label{sec:org44ecb28}
+\begin{frame}[label={sec:orgdaf1bfc}]{Cheese pressing example, sequence A+A-}
 \begin{center}
 \includegraphics[width=0.5\linewidth]{../../figures/cheese-stamping.png}
 \end{center}
 {\tiny From FESTO Didactic}
 \end{frame}
 
-\begin{frame}[label={sec:orgea6201f}]{They Relay}
+\begin{frame}[label={sec:org004eecc}]{The Relay}
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[width=0.4\linewidth]{../../figures/howrelayswork.jpg} &
@@ -84,7 +84,7 @@
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orga6ef96f}]{Other key components}
+\begin{frame}[label={sec:org0b3fec9}]{Other key components}
 {\tiny Sources: FESTO didactic, electroschematics.com, automation-insights.blog}
 \begin{columns}
 \begin{column}{0.33\columnwidth}
@@ -119,17 +119,17 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:orga327086}]{A logic control loop}
+\begin{frame}[label={sec:orgbf69d22}]{A logic control loop}
 \begin{center}
 \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org51f1787}]{Cheese pressing example - Variables}
+\begin{frame}[label={sec:orgabc5f34}]{Cheese pressing example - Variables}
 \begin{columns}
 \begin{column}{0.5\columnwidth}
 \begin{block}{State variables}
-\(x = \begin{bmatrix} x_R & x_R \end{bmatrix}^T\) with
+\(x = \begin{bmatrix} x_R & x_E \end{bmatrix}^T\) with
 \begin{align*}
 x_R &= \begin{cases} 1 & \text{Cylinder retracted}\\0 & \text{not retracted}\end{cases}\\
 x_E &= \begin{cases} 1 & \text{Cylinder extended}\\0 & \text{not extended}\end{cases}
@@ -153,7 +153,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 \end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[label={sec:orgbf3e172}]{Cheese pressing example - Plant dynamics}
+\begin{frame}[label={sec:org91e6874}]{Cheese pressing example - Plant dynamics}
 \begin{block}{Plant dynamics \(x_{k+1} = g(x_k, u_k)\)}
 \begin{center}
 \begin{tabular}{|cc|cc|cc|}
@@ -175,9 +175,9 @@ Input &  & Current state &  & Next state & \\
 \end{center}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org85c4b53}]{Intermezzo - Maxterms and minterms}
+\begin{frame}[label={sec:org7033b5a}]{Intermezzo - Maxterms and minterms}
 \end{frame}
-\begin{frame}[label={sec:org2613159}]{Minterms}
+\begin{frame}[label={sec:org7e72290}]{Minterms}
 \alert{A minterm is a boolean expression that is TRUE (=1) for one and only one row in the truth table.} For instance \(Y=X_1X_2X_3\) will only be true when \(X_1=X_2=X_3=1\), and \(Y=\not{X_1}X_2\not{X_3}\) will only be true if \(X_1=X_3=0\) and \(X_2=1\). The combination \(Y=X_1X_2X_3 + \not{X_1}X_2\not{X_3}\) will have \alert{only two rows} equal to 1 in the truth table.   
 
 Example:
@@ -203,7 +203,7 @@ Inputs &  &  & Outputs & \\
 \end{frame}
 
 
-\begin{frame}[label={sec:orge3a3622}]{Maxterms}
+\begin{frame}[label={sec:org90d40a9}]{Maxterms}
 \alert{A maxterm is a boolean expression that is FALSE (=0) for one and only one row in the truth table.} For instance \(Y=X_1+X_2+X_3\) will only be false when \(X_1=X_2=X_3=0\), and \(Y=\not{X_1}+X_2+\not{X_3}\) will only be false if \(X_1=X_3=1\) and \(X_2=0\). The combination \(Y=(X_1+X_2+X_3)(\not{X_1}+X_2+\not{X_3})\) will have \alert{only two rows} equal to 0 in the truth table.   
 
 Example:
@@ -231,7 +231,7 @@ Inputs &  &  & Outputs & \\
 
 
 
-\begin{frame}[label={sec:org75c3d14}]{Cheese pressing example - Control law}
+\begin{frame}[label={sec:orgfa54598}]{Cheese pressing example - Control law}
 The system is operating as long as the start button is pressed (\(u_c=1\)). When the button is released, the cylinder should go to the retracted position.
 \begin{block}{Control law \(u_k = f(x, u_c)\)}
 \begin{center}
@@ -256,7 +256,7 @@ The system is operating as long as the start button is pressed (\(u_c=1\)). When
 \end{align*}
 \end{block}
 \end{frame}
-\begin{frame}[label={sec:org7e607ee}]{Cheese pressing example - implementing the control  law}
+\begin{frame}[label={sec:org3142405}]{Cheese pressing example - implementing the control  law}
 \begin{center}
 	 \begin{tikzpicture}
 	   \node at (-2,0.5) {+24V};
@@ -288,8 +288,8 @@ The system is operating as long as the start button is pressed (\(u_c=1\)). When
 \end{frame}
 
 \section{Latching circuit}
-\label{sec:orgf584dcf}
-\begin{frame}[label={sec:org459c718}]{Intermezzo - An electrical circuit with memory}
+\label{sec:org5c4998b}
+\begin{frame}[label={sec:orgabb3d15}]{Intermezzo - An electrical circuit with memory}
 \begin{center}
 \begin{tabular}{cc}
 \includegraphics[width=0.4\linewidth]{../../figures/howrelayswork.jpg} &
@@ -302,7 +302,7 @@ The system is operating as long as the start button is pressed (\(u_c=1\)). When
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org701a217}]{Intermezzo - An electrical circuit with memory}
+\begin{frame}[label={sec:org0c4b2d5}]{Intermezzo - An electrical circuit with memory}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{block}{Latching circuit}
@@ -354,17 +354,17 @@ The system is operating as long as the start button is pressed (\(u_c=1\)). When
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orga7fd13e}]{Electrical circuits in FluidSim}
+\begin{frame}[label={sec:org745af3f}]{Electrical circuits in FluidSim}
 \begin{center}
 \includegraphics[width=0.9\linewidth]{../../figures/fluidsim-ladder.png}
 \end{center}
 \end{frame}
 
 \section{The lab assignment}
-\label{sec:orgc58c296}
+\label{sec:org1af065b}
 
 
-\begin{frame}[label={sec:orgb52ad6b}]{The lab assignment}
+\begin{frame}[label={sec:org57fecea}]{The lab assignment}
 \begin{center}
 \includegraphics[width=0.4\linewidth]{../../figures/cheese-pressing-two-cylinders}
  \includegraphics[width=0.58\linewidth]{../../figures/AplusBplusBminAmin}
@@ -375,13 +375,13 @@ The system is operating as long as the start button is pressed (\(u_c=1\)). When
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgc4fa9cd}]{Implementing the sequence A+B+B-A-}
+\begin{frame}[label={sec:org98b82d3}]{Implementing the sequence A+B+B-A-}
 \begin{center}
 \includegraphics[width=0.8\linewidth]{../../figures/AplusBplusBminAmin}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgf95b987}]{Implementing the sequence A+B+B-A-, control signal}
+\begin{frame}[label={sec:org868145a}]{Implementing the sequence A+B+B-A-, control signal}
 \begin{center}
 \includegraphics[width=0.42\linewidth]{../../figures/AplBplBminAmin-pneum.png}
 \includegraphics[width=0.58\linewidth]{../../figures/logic-control-loop}
@@ -397,7 +397,7 @@ with
 \end{block}
 \end{frame}
 
-\begin{frame}[label={sec:org65632f8}]{Implementing the sequence A+B+B-A-, the problem}
+\begin{frame}[label={sec:orgaa0dce6}]{Implementing the sequence A+B+B-A-, the problem}
 \alert{The correct control signal (action) is not uniquely defined by the position of the cylinders}
 \begin{center}
 \includegraphics[width=0.5\linewidth]{../../figures/AplusBplusBminAmin}\\
@@ -405,7 +405,7 @@ with
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org5280cce}]{Implementing the sequence A+B+|B-A-}
+\begin{frame}[label={sec:org98dc36e}]{Implementing the sequence A+B+|B-A-}
 \alert{Dividing the sequence into groups (a.k.a. cascade method)} Each group contains as many steps as possible without repeating a letter.
 \[ \underbrace{\text{A+B+}}_{\text{Group 1}}| \underbrace{\text{B-A-}}_{\text{Group 2}} \]
  \begin{center}
@@ -452,11 +452,11 @@ with
 \end{frame}
 
 \section{Cascade method for A+A-}
-\label{sec:org9bb80ed}
-\begin{frame}[label={sec:org07b67f6}]{The cascade method applied to A+A-}
+\label{sec:org38949cd}
+\begin{frame}[label={sec:orge6fc451}]{The cascade method applied to A+A-}
 \end{frame}
 
-\begin{frame}[label={sec:orgb6e5c7b}]{The cascade method applied to A+A-}
+\begin{frame}[label={sec:org931b70a}]{The cascade method applied to A+A-}
 Divide the sequence is to groups, where each group is as long as possible without repeating the same letter.
 \[ \underbrace{\text{A+}}_{\text{Group 1}}| \underbrace{\text{A-}}_{\text{Group 2}} \]
  \begin{center}
@@ -496,7 +496,7 @@ Divide the sequence is to groups, where each group is as long as possible withou
   \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org1f4ec65}]{The cascade method applied to A+A- with delays}
+\begin{frame}[label={sec:org6799cc7}]{The cascade method applied to A+A- with delays}
 Let's add some delays. The process is cyclic and automatic. It takes 4 seconds to replace the mold under the press. The cheese needs to be pressed during 2 seconds before the cylinder retracts. 
 \[ \underbrace{T_{4s} \, \text{A+}}_{\text{Group 1}}| \underbrace{T_{2s}\, \text{A-} }_{\text{Group 2}} \]
  \begin{center}
@@ -541,7 +541,7 @@ Let's add some delays. The process is cyclic and automatic. It takes 4 seconds t
 \end{frame}
 
 
-\begin{frame}[label={sec:orge245dca}]{State variables}
+\begin{frame}[label={sec:org2b97870}]{State variables}
 \begin{columns}
 \begin{column}{0.45\columnwidth}
 \begin{block}{State variables}
@@ -642,7 +642,7 @@ where
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5a10650}]{Group transitions}
+\begin{frame}[label={sec:org4c51cce}]{Group transitions}
             \begin{center}
                      \begin{tikzpicture}
 		     \pgfmathsetmacro\zrail{10}
@@ -664,7 +664,7 @@ where
 \end{frame}
 
 
-\begin{frame}[label={sec:org1daaecc}]{The timers}
+\begin{frame}[label={sec:orgeb60281}]{The timers}
 \begin{center}
          \begin{tikzpicture}
 	 \pgfmathsetmacro\zrail{10}
@@ -683,7 +683,7 @@ where
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org9ddb98b}]{The control law}
+\begin{frame}[label={sec:org1acaec0}]{The control law}
 \begin{center}
          \begin{tikzpicture}
 	 \pgfmathsetmacro\zrail{10}
@@ -705,8 +705,8 @@ where
 
 
 \section{Continue with lab assignment}
-\label{sec:orge19ad7e}
-\begin{frame}[label={sec:org2e6efcb}]{The lab assignment}
+\label{sec:orga7d433b}
+\begin{frame}[label={sec:org9021141}]{The lab assignment}
 \begin{center}
 \includegraphics[width=0.4\linewidth]{../../figures/cheese-pressing-two-cylinders}
  \includegraphics[width=0.58\linewidth]{../../figures/AplusBplusBminAmin}
@@ -717,7 +717,7 @@ where
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgf164847}]{Implementing the sequence A+B+|B-A-, state variables}
+\begin{frame}[label={sec:orgeb23543}]{Implementing the sequence A+B+|B-A-, state variables}
 \begin{columns}
 \begin{column}{0.45\columnwidth}
 \begin{block}{State variables}
@@ -812,7 +812,7 @@ with
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:org5b9fd51}]{Implementing the sequence A+B+|B-A-, control law}
+\begin{frame}[label={sec:org73c61fa}]{Implementing the sequence A+B+|B-A-, control law}
 \begin{columns}
 \begin{column}{0.28\columnwidth}
 \begin{block}{State transitions}
@@ -908,7 +908,7 @@ with
 \end{frame}
 
 
-\begin{frame}[label={sec:orgaaca8ed}]{Implementing the control law}
+\begin{frame}[label={sec:org63667d3}]{Implementing the control law}
 \begin{center}
          \begin{tikzpicture}
            \node at (-2,0.5) {+24V};
@@ -924,7 +924,7 @@ with
 \end{frame}
 
 
-\begin{frame}[label={sec:orgf7b6a4a}]{Implementing the group transitions}
+\begin{frame}[label={sec:org5e89d0e}]{Implementing the group transitions}
 \begin{center}
          \begin{tikzpicture}
            \node at (-2,0.5) {+24V};
@@ -941,7 +941,7 @@ with
 
 
 
-\begin{frame}[label={sec:orgfad6fc4}]{Implementing the proximity sensor circuit}
+\begin{frame}[label={sec:orgdd9fd59}]{Implementing the proximity sensor circuit}
 \begin{center}
 \includegraphics[height=0.9\textheight]{sensor-circuit}
 \end{center}

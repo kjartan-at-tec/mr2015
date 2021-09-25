@@ -71,7 +71,7 @@
     - The sequence we want to generate is denoted A+A-, which is a simple way of expressing what I just said.
     - Our task is to design a logic controller for this system
       
-** They Relay
+** The Relay
 
    #+begin_export latex
    \begin{center}
@@ -166,7 +166,7 @@
      :BEAMER_col: 0.5
      :END:      
 **** State variables
-     \(x = \begin{bmatrix} x_R & x_R \end{bmatrix}^T\) with
+     \(x = \begin{bmatrix} x_R & x_E \end{bmatrix}^T\) with
      \begin{align*}
      x_R &= \begin{cases} 1 & \text{Cylinder retracted}\\0 & \text{not retracted}\end{cases}\\
      x_E &= \begin{cases} 1 & \text{Cylinder extended}\\0 & \text{not extended}\end{cases}
