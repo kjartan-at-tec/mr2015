@@ -44,6 +44,8 @@
   \end{scope}
   \draw[blue] (vmin) to[short] (vmin |- 0,0);
   \draw[red] (vplus) to[short] (vplus |- 0,\circuitheight);
+  \draw[blue] (vmin) to (yneg);
+  \draw[blue] (vmin) to (refneg);
 
   \begin{scope}[xshift=10cm, yshift=4cm]
     \node[draw, minimum width=2cm, minimum height=1.6cm] (valve) at (0,0) {Valve};
@@ -58,6 +60,7 @@
   \end{scope}
   \draw[blue] (vvmin) to[short] (vvmin |- 0,0);
   \draw[red] (vvplus) to[short] (vvplus |- 0,\circuitheight);
+  \draw[blue] (vwhite) to[short] (vvmin);
 
   
   \begin{scope}[xshift=14cm, yshift=4cm]
