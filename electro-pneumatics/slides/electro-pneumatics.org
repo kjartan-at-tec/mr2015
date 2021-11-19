@@ -497,7 +497,7 @@ Activating solenoid UA+ extends the cylinder, activating  UA- retracts the cylin
 * The lab assignment
 
 
-** The lab assignment
+** The assignment
 #+BEGIN_CENTER 
  \includegraphics[width=0.4\linewidth]{../../figures/cheese-pressing-two-cylinders}
   \includegraphics[width=0.58\linewidth]{../../figures/AplusBplusBminAmin}
