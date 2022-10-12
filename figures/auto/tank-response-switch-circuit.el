@@ -2,7 +2,7 @@
  "tank-response-switch-circuit"
  (lambda ()
    (TeX-add-to-alist 'LaTeX-provided-package-options
-                     '(("inputenc" "utf8") ("circuitikz" "american")))
+                     '(("inputenc" "utf8") ("circuitikz" "american" "siunitx")))
    (TeX-run-style-hooks
     "latex2e"
     "standalone"

@@ -1,0 +1,25 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{7}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1, european voltages]
+  %\draw (0,-0.1*\circuitheight) node[ground] {$0$V} to[short] (0,0);
+  \draw (0,0) to[sqV, label=$v(t)$] (0, \circuitheight) to[R=$50\Omega$] (0.3*\circuitwidth, \circuitheight)
+  to[short,-*] (0.4*\circuitwidth, \circuitheight) to[short] (\circuitwidth, \circuitheight)
+  to[R=$R$] (\circuitwidth, 0.67*\circuitheight)
+  to[L=$L$] (\circuitwidth, 0.33*\circuitheight);
+  \draw (0,0) to[short, -o] (0.4*\circuitwidth, 0) to (\circuitwidth, 0) to[pC=$C$] (\circuitwidth, 0.33*\circuitheight);
+  \draw (0.65*\circuitwidth, \circuitheight) to[R, a=$100\Omega$] (0.65*\circuitwidth, 0);
+
+  \draw[blue!70, dashed] (-0.2*\circuitwidth, -0.15*\circuitheight) rectangle (0.3*\circuitwidth, 1.15*\circuitheight);
+  \node[blue!70, anchor=south west] at (0.3*\circuitwidth, -0.15*\circuitheight) {Function generator};
+
+  \draw[line width=0pt,]  (0.65*\circuitwidth, \circuitheight) to[open,v^<=$u(t)$] (0.65*\circuitwidth, 0);
+\end{circuitikz}
+\end{document}

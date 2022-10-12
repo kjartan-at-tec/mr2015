@@ -1,0 +1,25 @@
+\documentclass[margin=5mm]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american,siunitx]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+
+\begin{document}
+
+\pgfmathsetmacro\ch{6}
+\pgfmathsetmacro\cw{5}
+
+\begin{circuitikz}[scale=1]
+  %\node[push button] (pb) at (0.5*\cw, 0.5*\ch) {}; 
+  \draw (0,\ch) to[american voltage source, label=10V] (0, 0); 
+  
+  \draw (0.5*\cw, \ch) to[R=$R_2$ ] (0.5*\cw, 0.5*\ch);
+  \draw (\cw, \ch) to[R, l2=$R_1$ and \SI{68}{\ohm}] (\cw, 0.5*\ch);
+  \draw (0.5*\cw, 0.5*\ch) to[push button] (\cw, 0.5*\ch);
+  \draw (\cw, 0.5*\ch) to[R, l2=$R_3$ and \SI{47}{\ohm}] (\cw, 0);
+  \draw (\cw, 0.5*\ch) to[short, -*] (1.5*\cw, 0.5*\ch);
+  \draw (0,0) to[short, -o] (1.5*\cw, 0);
+  \draw (0, \ch) to[short] (\cw, \ch);
+  \draw (1.5*\cw, 0.5*\ch) to[european resistor, l=valve] (1.5*\cw, 0);
+  
+\end{circuitikz}
+\end{document}

@@ -1,0 +1,27 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning,circuits.logic.US,circuits.logic.IEC}
+
+\begin{document}
+
+\pgfmathsetmacro\circuitheight{6}
+\pgfmathsetmacro\circuitwidth{7}
+
+\begin{circuitikz}[scale=1]
+  \node[or port] (or1) at (0,0) {};
+  \node[and port] (and1) at (1,-2) {};
+  \node[or port] (and2) at (4,-1) {};
+
+  \draw
+  %(or1.out) -- node[coordinate, pos=0.6] (branch) {} (nand1.in 1)
+  %(branch) |- (nand1.in 2)
+  (or1.out) -| (and2.in 1)
+  (and1.out) -| (and2.in 2)
+  (and2.out) --  ++(1,0) node[above] {$f$}
+  (or1.in 1) node[anchor=east] {$x$}
+  (or1.in 2) node[anchor=east] {$y$}
+  (and1.in 2) -- ++(-1, 0) node[anchor=east] {$z$}
+  (or1.in 2) |- (and1.in 1);
+\end{circuitikz}
+\end{document}

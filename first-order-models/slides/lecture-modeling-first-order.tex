@@ -1,4 +1,4 @@
-% Created 2021-08-19 Thu 17:47
+% Created 2022-02-14 Mon 16:17
 % Intended LaTeX compiler: pdflatex
 \documentclass[presentation,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
@@ -34,8 +34,8 @@
 \maketitle
 
 \section{Fitting first-order model}
-\label{sec:orgca8c9f6}
-\begin{frame}[label={sec:org6022261}]{First-order system example: A tank}
+\label{sec:org3e4b441}
+\begin{frame}[label={sec:org5be9d62}]{First-order system example: A tank}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole-no-variables}
 \end{center}
@@ -48,7 +48,7 @@
 
 
 
-\begin{frame}[label={sec:orgde4504a}]{First-order system example: A tank}
+\begin{frame}[label={sec:orgf133466}]{First-order system example: A tank}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole-simple}
 \end{center}
@@ -60,7 +60,7 @@
 \end{frame}
 
 
-\begin{frame}[label={sec:org42acba5}]{Intuition}
+\begin{frame}[label={sec:orga98de4f}]{Intuition}
 \includegraphics[width=0.2\linewidth]{../../figures/tank-with-hole-no-variables}
 
 \alert{Individual activity} A constant inflow has been present since forever, but at time \(t_1\) the flow in is suddenly shut off. Which of the responses of the water level \(h(t)\) below is correct?
@@ -139,7 +139,7 @@ xticklabels = {$t_1$},
 \end{frame}
 
 
-\begin{frame}[label={sec:orge1d1a40}]{Deviation variables}
+\begin{frame}[label={sec:org287505b}]{Deviation variables}
 \begin{center}
 \includegraphics[width=0.7\linewidth]{../../figures/tank-with-hole}
 \end{center}
@@ -154,7 +154,7 @@ Flow in: \(z(t) = z_0 + w(t)\). Level of water: \(h(t) = h_0 + y(t)\). The const
 \alert{Individual activity} Given \(h_0\) determine the operating point for the inflow, \(z_0\), such that the system is in equilibrium at the operating point.
 \end{frame}
 
-\begin{frame}[label={sec:orgc3faefa}]{Intuition}
+\begin{frame}[label={sec:orga0fe692}]{Intuition}
 Which change \(y(t)\) in the water level corresponds to a step change \(w(t)\) in the inflow? 
 
 \begin{center}
@@ -164,7 +164,7 @@ Which change \(y(t)\) in the water level corresponds to a step change \(w(t)\) i
 
 
 
-\begin{frame}[label={sec:org237f19c}]{Fitting a first-order model}
+\begin{frame}[label={sec:org18de56c}]{Fitting a first-order model}
 Assuming a plant model of first-order with time-constant \(T\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t}{T}}\big)u_H(t)\]
 \def\Tcnst{3}
@@ -202,7 +202,7 @@ Assuming a plant model of first-order with time-constant \(T\)
 \alert{Individual activity} Evaluate the response \(y(t)\) at the time instant \(t=T\) and for \(t\to\infty\)!
 \end{frame}
 
-\begin{frame}[label={sec:orgbb67976}]{Fitting a first-order model}
+\begin{frame}[label={sec:org90be63e}]{Fitting a first-order model}
 Assuming a plant model of first-order with time-constant \(T\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t}{T}}\big)u_H(t)\]
 \def\Tcnst{3}
@@ -245,15 +245,15 @@ Assuming a plant model of first-order with time-constant \(T\)
 
 
 \section{CSTR}
-\label{sec:org63c92d8}
+\label{sec:orgf15baf4}
 
-\begin{frame}[label={sec:org86f683c}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:org8673876}]{A Continuous Stirred Tank Reactor}
 \begin{center}
 \includegraphics[height=0.8\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org315c48d}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:org1afa60f}]{A Continuous Stirred Tank Reactor}
 \begin{columns}
 \begin{column}{0.6\columnwidth}
 \begin{center}
@@ -274,7 +274,7 @@ Assume:
 \end{columns}
 \end{frame}
 
-\begin{frame}[label={sec:orgca7623b}]{A Continuous Stirred Tank Reactor}
+\begin{frame}[label={sec:org5610c92}]{A Continuous Stirred Tank Reactor}
 \begin{center}
 \includegraphics[height=0.4\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
@@ -288,7 +288,7 @@ Energy balance:
 
 
 
-\begin{frame}[label={sec:orgcb60eff}]{Intuition}
+\begin{frame}[label={sec:orgb7fa36e}]{Intuition}
 \begin{center}
 \includegraphics[height=0.3\textheight]{../../figures/stirred_tank_heat_exchange}
 \end{center}
@@ -326,8 +326,8 @@ Energy balance:
 
 
 \section{Fitting first-order model with delay}
-\label{sec:org4da89d4}
-\begin{frame}[label={sec:orgd4c7560}]{Fitting first-order model with delay}
+\label{sec:org7256e37}
+\begin{frame}[label={sec:org25e96b5}]{Fitting first-order model with delay}
 Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_H(t-\tau)\]
 \def\Tcnst{3}
@@ -366,7 +366,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{frame}
 
 
-\begin{frame}[label={sec:orgb4c2701}]{Fitting first-order model with delay}
+\begin{frame}[label={sec:org549b156}]{Fitting first-order model with delay}
 Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\)
 \[  \quad \textcolor{green!50!black}{Y(s)} = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}\textcolor{blue!80!black}{U(s)} \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad \textcolor{green!50!black}{y(t)} = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_H(t-\tau)\]
 \def\Tcnst{3}
@@ -404,7 +404,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \[ y_f = \lim_{t\to\infty} y(t) = u_f K \quad \Rightarrow \quad K = \frac{y_f}{u_f}. \]
 \end{frame}
 
-\begin{frame}[label={sec:orgd2f9e32}]{First-order model with delay - example}
+\begin{frame}[label={sec:orgfac1186}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -442,7 +442,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org01be687}]{First-order model with delay - example}
+\begin{frame}[label={sec:org94303f6}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -482,7 +482,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:org9d59a42}]{First-order model with delay - example}
+\begin{frame}[label={sec:org6f7bdb2}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -524,7 +524,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{center}
 \end{frame}
 
-\begin{frame}[label={sec:orgd6024cf}]{First-order model with delay - example}
+\begin{frame}[label={sec:org30baf93}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -567,7 +567,7 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \[ \begin{cases} \tone = \tau + \frac{T}{3}\\ \two = \tau + T \end{cases} \quad \Rightarrow \quad \begin{cases} \tau = \tdelay \\ T = \Tcnst \end{cases}, \qquad  K = \frac{y_f}{u_f} = \frac{\yfinal}{\uampl} = \ggain \]
 \end{frame}
 
-\begin{frame}[label={sec:org5ee71dd}]{First-order model with delay - example}
+\begin{frame}[label={sec:orga46c2fa}]{First-order model with delay - example}
 \[  \quad Y(s) = \frac{K\mathrm{e}^{-s\tau}}{sT + 1}U(s) \quad \overset{U(s) = \frac{u_f}{s}}{\Longrightarrow} \quad y(t) = u_f K\big( 1 - \mathrm{e}^{-\frac{t-\tau}{T}}\big)u_s(t-\tau)\]
 \def\Tcnst{2.1}
 \def\tdelay{1}
@@ -611,5 +611,5 @@ Assuming a plant model of first-order with time constant \(T\) and delay \(\tau\
 \end{frame}
 
 \section{Second-order model}
-\label{sec:orgfaccc8e}
+\label{sec:org7024000}
 \end{document}

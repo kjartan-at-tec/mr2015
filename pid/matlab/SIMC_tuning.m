@@ -33,5 +33,16 @@ N=10;
 tau_t = sqrt(taui*taud)
 
 
+%% PID control root locus
+
+s = tf('s');
+G = K/(s*tau + 1)^2
+F = (1 + 1/(80*s) + 40*s/(40/100*s + 1))
+
+figure(2)
+clf
+rlocus(G*F)
+
+
 
 
