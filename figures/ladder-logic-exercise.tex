@@ -1,0 +1,42 @@
+\documentclass[]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[american]{circuitikz}
+\usetikzlibrary{arrows,shapes,calc,positioning}
+\usetikzlibrary{circuits.plc.ladder}
+
+\usepackage{graphicx}
+
+
+%\newcommand*{\coil}[1]{to[short] ++(0.5, 0) node[coordinate] (orig) {} arc [start angle=180, end angle=150,radius=8mm] (orig) arc [start angle=180, end angle=210,radius=8mm] (orig) ++(1cm, 0) node[coordinate] (coilend) {} arc [start angle=0, end angle=30,radius=8mm] (coilend) arc [start angle=0, end angle=-30,radius=8mm] (coilend) to[short] ++(0.5cm, 0) (orig) ++(0.5, 0.8) node {#1}}
+
+\begin{document}
+
+\small
+
+
+\pgfmathsetmacro\rightrail{8}
+\pgfmathsetmacro\rungone{-1}
+\pgfmathsetmacro\pdist{1.5}
+\pgfmathsetmacro\rungtwo{-4}
+
+\begin{tikzpicture}[circuit plc ladder, scale=1.5]
+
+  % Rails
+  \draw (0,0) to[short, o-]  (0,-7);
+  \draw (\rightrail,0) to[short, o-] (\rightrail,-7);
+
+  % First rung
+  \draw (0, \rungone) to[contact NO={info={``Aext''}, info'={I0.2}},]  (2, \rungone) to[contact NC={info={PB\\ ``Reset''}, info'={I0.1}},]
+  (3.5, \rungone) to[short] (6,\rungone) to[coil={info={``Pressed''},info'={M0.0}},] (\rightrail, \rungone);
+  \draw (0, \rungone -\pdist) to[contact NO={info={``Pressed''}, info'={M0.0}},] (2, \rungone - \pdist) to[short,] (2, \rungone);
+
+  % Second rung
+  \draw (0, \rungtwo) to[contact NO={info={PB ``Start''}, info'={I0.0}},]  (2, \rungtwo) to[contact NC={info={``Pressed''},info'={M 0.0}},]
+  (4, \rungtwo) to[contact NC={info={``Aext''}, info'={I0.2}},] (6,\rungtwo) to[coil={info={``Valve''}, info'={Q0.0}},] (\rightrail, \rungtwo);
+  \draw (0, \rungtwo -\pdist) to[contact NO={info={``Valve''}, info'={Q0.0}}] (4, \rungtwo - \pdist) to[short,] (4, \rungtwo);
+
+
+  
+\end{tikzpicture}
+
+\end{document}
