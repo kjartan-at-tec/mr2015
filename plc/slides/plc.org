@@ -1,0 +1,433 @@
+#+OPTIONS: toc:nil
+# #+LaTeX_CLASS: koma-article 
+
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [presentation,aspectratio=1610]
+#+OPTIONS: H:2
+
+#+LaTex_HEADER: \usepackage{khpreamble}
+#+LaTex_HEADER: \usepackage{pgfplots}
+#+LaTex_HEADER: \usepackage{pdfpages}
+#+LaTex_HEADER: \usepackage{circuitikz}
+#+LaTex_HEADER: \usepgfplotslibrary{groupplots}
+#+LaTex_HEADER: \usetikzlibrary{positioning}
+#+LaTex_HEADER: \usetikzlibrary{positioning,circuits.plc.ladder}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\bar{#1}}}
+#+LaTex_HEADER: \renewcommand*{\not}[1]{\ensuremath{\overline{#1}}}
+
+#+title: Programmable Logic Controllers
+# #+date: 2019-03-14
+
+* What do I want the students to understand?			   :noexport:
+  - Ladder diagrams
+  - Counter and timer elements
+  - PLC programming
+
+* Which activities will the students do? 			   :noexport:
+
+
+* Sequential logic
+
+** Pressing cheese
+#+BEGIN_CENTER 
+ \includegraphics[width=0.5\linewidth]{../../figures/cheese-pressing-two-cylinders}
+#+END_CENTER
+
+** A logic control loop
+   #+BEGIN_CENTER 
+    \includegraphics[width=\linewidth]{../../figures/logic-control-loop}
+   #+END_CENTER
+
+** Pressing cheese
+*** Fig
+     :PROPERTIES:
+     :BEAMER_col: 0.4
+     :END:      
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/cheese-pressing-two-cylinders}
+#+END_CENTER
+
+#+beamer: \pause
+
+*** Sequence
+     :PROPERTIES:
+     :BEAMER_col: 0.6
+     :END:      
+
+     
+#+begin_export latex
+  \begin{tikzpicture}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 3,
+        xlabels at=all,
+        horizontal sep=1cm,
+        vertical sep=1cm,
+      }, 
+      clip=false,
+      height=3cm, width=8cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      xtick={0,1,2,3,4},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={$x_A$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+      \nextgroupplot [ylabel={$x_B$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+      %\nextgroupplot [ylabel={$x_P$},]
+      %\addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,1) (4, 0)};
+    \end{groupplot}
+  \end{tikzpicture}
+
+#+end_export
+
+
+** Pressing cheese
+*** Fig
+     :PROPERTIES:
+     :BEAMER_col: 0.4
+     :END:      
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../../figures/cheese-pressing-two-cylinders}
+#+END_CENTER
+
+*** Sequence
+     :PROPERTIES:
+     :BEAMER_col: 0.6
+     :END:      
+
+#+begin_export latex
+  \begin{tikzpicture}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 3,
+        xlabels at=all,
+        horizontal sep=1cm,
+        vertical sep=1cm,
+      }, 
+      clip=false,
+      height=3cm, width=8cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      xtick={0,1,2,3,4},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={$x_A$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (3,1) (4, 0)};
+      \nextgroupplot [ylabel={$x_B$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+      \nextgroupplot [ylabel={$x_P$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,1) (4, 0)};
+    \end{groupplot}
+  \end{tikzpicture}
+
+#+end_export
+
+
+* PLC
+** The Siemens S7 series PLC
+#+BEGIN_CENTER 
+ \includegraphics[width=0.8\linewidth]{../../figures/s7-1500.jpeg}
+#+END_CENTER
+
+#+begin_export latex
+{\footnotesize From Siemens}
+#+end_export
+
+
+** Programming
+   Three ways to program the Siemens s7 series
+   1. *Ladder diagram (LAD)*
+   2. Function Block Diagram (FBD)
+   3. Structured Control Language (SCL)
+
+** Execution
+#+BEGIN_CENTER 
+\includegraphics[width=0.7\linewidth]{../../figures/plc-scan.png}
+#+END_CENTER
+
+* Ladder diagrams
+#+begin_export latex
+\def\ladderend{12}
+\def\rungone{-0.5}
+\def\rungtwo{-4.5}
+\def\rungthree{-7.5}
+\def\relayr{1.5}
+#+end_export
+
+** PLC Ladder diagrams
+   Equivalent to circuit diagram for control logic using relays
+
+** Basics
+#+begin_export latex
+       \begin{center}
+       \begin{tikzpicture}[circuit plc ladder,]
+       \draw (0,0) to[short, o-]  (0,-2.5);
+       \draw (\ladderend,0) to[short, o-](\ladderend,-2.5);
+       \draw (0, \rungone) to[contact NO={info={$X$}},] (2, \rungone) to[ contact NC={info={$Y$}}, ] (4,\rungone) to[short] (6.5, \rungone) to [coil={info={$R$}},] (\ladderend, \rungone) ;
+       \draw (0, \rungone-\relayr) to[contact NO={info={$R$}},] (2, \rungone-\relayr)  to[short,] (2,\rungone);
+       \end{tikzpicture}
+       \end{center}
+#+end_export
+
+
+** A cascade
+#+begin_export latex
+\footnotesize
+       \begin{center}
+       \begin{tikzpicture}[circuit plc ladder, scale=0.8,]
+       \draw (0,0) to[short, o-]  (0,-9);
+       \draw (\ladderend,0) to[short, o-](\ladderend,-9);
+       
+       \draw (0, \rungone) to[contact NO={info={$X_1$}},] (2, \rungone) to[contact NO={info={$R_3$}},] (4, \rungone)  to[ contact NC={info={$R_3$}}, ] (6,\rungone)  to [short,] (6.5, \rungone) to [coil={info={$R_1$}},] (\ladderend, \rungone) ;
+       \draw (0, \rungone-0.8*\relayr) to[contact NO={info={Start}},] (4, \rungone-0.8*\relayr)  to[short,] (4,\rungone);
+       \draw (0, \rungone-1.8*\relayr) to[contact NO={info={$R_1$}},] (4, \rungone-1.8*\relayr)  to[short,] (4,\rungone);
+
+       \draw (0, \rungtwo) to[contact NO={info={$X_2$}},] (2, \rungtwo) to[contact NO={info={$R_1$}},] (4, \rungtwo)  to[ contact NC={info={$R_3$}}, ] (6,\rungtwo)  to [short,] (6.5, \rungtwo) to [coil={info={$R_2$}},] (\ladderend, \rungtwo) ;
+       \draw (0, \rungtwo-\relayr) to[contact NO={info={$R_2$}},] (4, \rungtwo-\relayr)  to[short,] (4,\rungtwo);
+       
+       \draw (0, \rungthree) to[contact NO={info={$X_3$}},] (2, \rungthree) to[contact NO={info={$R_2$}},] (4, \rungthree)  to[ contact NC={info={$R_1$}}, ] (6,\rungthree)  to [short,] (6.5, \rungthree) to [coil={info={$R_3$}},] (\ladderend, \rungthree) ;
+       \draw (0, \rungthree-\relayr) to[contact NO={info={$R_3$}},] (4, \rungthree-\relayr)  to[short,] (4,\rungthree);
+
+
+       \end{tikzpicture}
+       \end{center}
+#+end_export
+
+
+
+* More ladder diagrams                                             :noexport:
+** Timer
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/plc-TON-operation.png}
+#+END_CENTER
+
+** Timer example, PT=2
+
+\includegraphics[width=0.6\linewidth]{../figures/plc-TON-operation.png}
+
+#+begin_export latex
+  \begin{center}
+  \begin{tikzpicture}
+      \begin{groupplot} [
+        group style={
+          group name=timeplot,
+          group size=1 by 3,
+          xlabels at=edge bottom,
+          horizontal sep=1cm,
+          vertical sep=6mm,
+        }, 
+        clip=false,
+        height=2.5cm, width=10cm,
+        axis line style={->},
+        axis lines=left,
+        xlabel={time },
+        ylabel={},
+        ytick=\empty,
+        xtick=\empty,
+        xmin=0, xmax=10,
+        ymin=0, ymax=1.2,
+        % grid=both,
+        % xtick=\empty,
+        % ytick=\XNOLL,
+        % yticklabel=$x_0$,
+        ]
+        \nextgroupplot [ylabel={IN}, xtick={1,2,4,8},]
+        \addplot[ red, no marks, ultra thick,] coordinates {(0,0) (1,0) (1, 1) (2,1) (2, 0) (4, 0) (4,1) (8,1) (8,0) (10,0)};
+        \nextgroupplot [ylabel={ET},ymax=3, height=4cm]
+        \addplot[dashed, no marks] coordinates {(0,2) (10,2)} node[pos=0.99, pin=10:{PT=2}] {};
+        \nextgroupplot [ylabel={Q}, ]
+        %\addplot[ no marks,thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+      \end{groupplot}
+    \end{tikzpicture}
+  \end{center}
+#+end_export#+BEGIN_LaTeX
+
+** Counter
+
+#+BEGIN_CENTER 
+ \includegraphics[width=\linewidth]{../figures/plc-CTU-operation.png}
+#+END_CENTER
+
+** Counter example, PV=3
+ \includegraphics[width=0.6\linewidth]{../figures/plc-CTU-operation.png}
+
+#+begin_export latex
+  \begin{center}
+  \begin{tikzpicture}
+      \begin{groupplot} [
+        group style={
+          group name=timeplot,
+          group size=1 by 4,
+          xlabels at=edge bottom,
+          horizontal sep=1cm,
+          vertical sep=6mm,
+        }, 
+        clip=false,
+        height=2cm, width=10cm,
+        axis line style={->},
+        axis lines=left,
+        xlabel={time },
+        ylabel={},
+        ytick=\empty,
+        xtick=\empty,
+        xmin=0, xmax=10,
+        ymin=0, ymax=1.2,
+        % grid=both,
+        % xtick=\empty,
+        % ytick=\XNOLL,
+        % yticklabel=$x_0$,
+        ]
+        \nextgroupplot [ylabel={CU}, ]
+        \addplot[ red, no marks, ultra thick,] coordinates {(0,0) (1,0) (1, 1) (2,1) (2, 0) (3, 0) (3,1) (5,1) (5,0) (6,0) (6,1) (6.5,1) (6.5,0) (7,0) (7,1) (8,1) (8,0) (8.5,0) (8.5, 1) (9,1) (9,0) (10,0)};
+        \nextgroupplot [ylabel={R}]
+        \addplot[ red, no marks, ultra thick,] coordinates {(0,0) (4,0) (4, 1) (4.5,1) (4.5, 0) (10, 0)};
+        \nextgroupplot [ylabel={CV},height=4cm]
+        \nextgroupplot [ylabel={Q}, ]
+        %\addplot[ no marks,thick,] coordinates {(0,0) (1,0) (2, 1) (3,0) (4, 0)};
+      \end{groupplot}
+    \end{tikzpicture}
+  \end{center}
+
+#+end_export
+
+
+** Set output 1 high with 2s delay
+
+#+begin_export latex
+     \begin{center}
+     \begin{circuitikz}
+       \ctikzset{bipoles/thickness=1, bipoles/capacitor/height=0.4}
+       % Rail
+       \draw[thick] (0,0) to[short,o-] (0,-5.3);
+       % Latching circuit
+       \draw[thick] (0,-1) to[C=I0.0,*-] (3, -1) to[C=I0.1, ] (6,-1) to[short,] (9,-1) arc (180:110:\relayr) (9,-1) arc (180:250:\relayr) (10,-1) arc (0:70:\relayr) (10,-1) arc (0:-70:\relayr) (10,-1) to[short] (\ladderend, -1) (\ladderend,-0.6) to[short] (\ladderend,-1.4);
+       \node at (9.5, -0.4) {M};
+       \draw[thin] (4.4, -1.2) -- (4.6, -0.8); 
+       \draw[thick] (0,-3) to[C, l_=M, *-] (3,-3) to[short] (3,-1);
+       % TON
+       \draw[thick] (0,-5) to[C=M,*-] (4, -5);
+        
+     \end{circuitikz}
+     \end{center}
+#+end_export
+
+
+
+** Set output 1 high with 2s delay
+
+#+begin_export latex
+     \begin{center}
+     \begin{circuitikz}
+       \ctikzset{bipoles/thickness=1, bipoles/capacitor/height=0.4}
+       % Rail
+       \draw[thick] (0,0) to[short,o-] (0,-5.3);
+       % Latching circuit
+       \draw[thick] (0,-1) to[C=I0.0,*-] (3, -1) to[C=I0.1, ] (6,-1) to[short,] (9,-1) arc (180:110:\relayr) (9,-1) arc (180:250:\relayr) (10,-1) arc (0:70:\relayr) (10,-1) arc (0:-70:\relayr) (10,-1) to[short] (\ladderend, -1) (\ladderend,-0.6) to[short] (\ladderend,-1.4);
+       \node at (9.5, -0.4) {M};
+       \draw[thin] (4.4, -1.2) -- (4.6, -0.8); 
+       \draw[thick] (0,-3) to[C, l_=M, *-] (3,-3) to[short] (3,-1);
+       % TON
+       \draw[thick] (0,-5) to[C=M,*-] (4, -5) to[short] (7,-5) arc (180:110:\relayr) (7,-5) arc (180:250:\relayr) (8,-5) arc (0:70:\relayr) (8,-5) arc (0:-70:\relayr) (8,-5) to[short] (9,-5) arc (180:110:\relayr) (9,-5) arc (180:250:\relayr) (10,-5) arc (0:70:\relayr) (10,-5) arc (0:-70:\relayr) (10,-5) to[short] (\ladderend, -5) (\ladderend,-0.6) to[short] (\ladderend,-5.4);
+       \node at (9.5, -4.4) {Q0.1};
+       \node at (7.5, -5) {TON};
+       \node at (7.5, -5.7) {2s};
+        
+     \end{circuitikz}
+     \end{center}
+
+#+end_export
+
+
+** Set output 1 high after hitting button 4 times
+#+begin_export latex
+     \begin{center}
+     \begin{circuitikz}
+       \ctikzset{bipoles/thickness=1, bipoles/capacitor/height=0.4}
+       % Rail
+       \draw[thick] (0,0) to[short,o-] (0,-2.3);
+       % Button
+       \draw[thick] (0,-1) to[C=I0.0,*-] (4.1, -1) ;
+       \draw[thick] (\ladderend,-0.7) to[short] (\ladderend,-1.3);
+     \end{circuitikz}
+     \end{center}
+
+#+end_export
+
+
+** Set output 1 high after hitting button 4 times
+
+#+begin_export latex
+     \begin{center}
+     \begin{circuitikz}
+       \ctikzset{bipoles/thickness=1, bipoles/capacitor/height=0.4}
+       % Rail
+       \draw[thick] (0,0) to[short,o-] (0,-2.3);
+       % Button
+       \draw[thick] (0,-1) to[C=I0.0,*-] (4.1, -1) ;
+       \node at (5,-0.87) {\includegraphics[width=23mm]{../figures/plc-CTU.png}};
+       \draw[thick] (5.9,-1)  to[short,] (9,-1) arc (180:110:\relayr) (9,-1) arc (180:250:\relayr) (10,-1) arc (0:70:\relayr) (10,-1) arc (0:-70:\relayr) (10,-1) to[short] (\ladderend, -1) (\ladderend,-0.6) to[short] (\ladderend,-1.4);
+       \node at (9.5, -0.4) {Q0.1};
+       \node at (3.5, -1.8) {4};
+     \end{circuitikz}
+     \end{center}
+
+#+end_export
+
+* The assignment                                                   :noexport:
+** The assignment: Press the cheese several times
+\begin{center}
+  \begin{tikzpicture}
+    \begin{groupplot} [
+      group style={
+        group name=timeplot,
+        group size=1 by 2,
+        xlabels at=edge bottom,
+        horizontal sep=1cm,
+        vertical sep=1cm,
+      }, 
+      clip=false,
+      height=3.3cm, width=9.3cm,
+      axis line style={->},
+      axis lines=left,
+      xlabel={time },
+      ylabel={},
+      ytick={0,1},
+      %xtick={0,1,2,3,4},
+      % grid=both,
+      % xtick=\empty,
+      % ytick=\XNOLL,
+      % yticklabel=$x_0$,
+      ]
+      \nextgroupplot [ylabel={$x_A$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,1) (2, 1) (12,1) (13, 0)};
+      \nextgroupplot [ylabel={$x_B$},]
+      \addplot[red, no marks,ultra thick,] coordinates {(0,0) (1,0) (2, 1) (3,1) (4, 0) (5,0) (6,1) (7,1) (8, 0) (9,0) (10,1) (11,1) (12,0) (13,0)};
+      \draw[red, thin] (axis cs: 4,0) -- (axis cs: 4,-0.5);
+      \draw[red, thin] (axis cs: 5,0) -- (axis cs: 5,-0.5);
+      \draw[<->] (axis cs: 4,-0.48) -- node[below] {\unit{1}{\second}} (axis cs: 5, -0.48);
+      \draw[red, thin] (axis cs: 2,1) -- (axis cs: 2,-0.5);
+      \draw[red, thin] (axis cs: 3,1) -- (axis cs: 3,-0.5);
+      \draw[<->] (axis cs: 2,-0.48) -- node[below] {\unit{1}{\second}} (axis cs: 3, -0.48);
+    \end{groupplot}
+  \end{tikzpicture}
+\end{center}
+
+** Resources
+   - https://en.wikibooks.org/wiki/Introductory_PLC_Programming
+   - https://euroec.by/assets/files/siemens/s71200_easy_book_en-US_en-US.pdf
